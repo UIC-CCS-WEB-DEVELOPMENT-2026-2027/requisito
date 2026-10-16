@@ -1,0 +1,152 @@
+.services {
+  background: #ffffff;
+  padding: 30px 0 48px;
+}
+
+.services__inner {
+  max-width: 1728px;
+  margin: 0 auto;
+  padding: 0 44px;
+}
+
+.services__intro {
+  margin-bottom: 24px;
+}
+
+.services__title {
+  font-family: "Lexend", "Segoe UI", system-ui, sans-serif;
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 115%;
+  letter-spacing: -1.4px;
+  color: #14265b;
+  margin: 0 0 10px;
+}
+
+.services__subtitle {
+  font-family: "Lexend", "Segoe UI", system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 150%;
+  color: #506991;
+  margin: 0;
+  max-width: 720px;
+}
+
+.services__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  align-items: stretch;
+}
+
+.services__card {
+  border: 1px solid #c9ddfb;
+  border-radius: 14px;
+  background: #ffffff;
+  min-height: 245px;
+  padding: 20px 24px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 8px rgba(20, 38, 91, 0.03);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.services__card:hover {
+  border-color: #94bff7;
+  box-shadow: 0 10px 24px rgba(20, 84, 170, 0.1);
+}
+
+.services__icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 13px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+}
+
+.services__icon svg {
+  width: 28px;
+  height: 28px;
+}
+
+.services__card-title {
+  font-family: "Lexend", "Segoe UI", system-ui, sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 125%;
+  letter-spacing: -0.2px;
+  color: #14265b;
+  margin: 0 0 10px;
+}
+
+.services__card-desc {
+  font-family: "Lexend", "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 150%;
+  color: #506991;
+  flex: 1;
+  margin: 0 0 16px;
+}
+
+.services__card .btn {
+  margin-top: auto;
+  align-self: flex-start;
+  flex: 0 0 auto;
+}
+
+@media (max-width: 1200px) {
+  .services__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .services__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .services {
+    padding: 28px 0 40px;
+  }
+
+  .services__title {
+    font-size: 32px;
+    letter-spacing: -1px;
+  }
+
+  .services__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .services__card {
+    padding: 20px;
+    min-height: 0;
+  }
+}
+
+@media (max-width: 900px) {
+  .services__inner {
+    padding: 0 24px;
+  }
+
+  .services__title {
+    font-size: 30px;
+  }
+
+  .services__subtitle {
+    font-size: 16px;
+  }
+
+  .services__card-title {
+    font-size: 18px;
+  }
+
+  .services__card-desc {
+    font-size: 15px;
+  }
+}

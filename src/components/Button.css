@@ -1,0 +1,32 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: fit-content;
+  min-height: 36px;
+  box-sizing: border-box;
+  padding: 8px 14px;
+  border-radius: 7px;
+  font-family: "Lexend", "Segoe UI", system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.btn--primary {
+  color: #ffffff;
+  background: #1264c4;
+}
+
+.btn--primary:hover {
+  color: #ffffff;
+  background: #0d4d9b;
+}
+
+.btn:focus-visible {
+  outline: 3px solid #9bc8ff;
+  outline-offset: 2px;
+}

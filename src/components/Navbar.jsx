@@ -1,53 +1,23 @@
-﻿import { useId, useState } from "react";
+import { useId, useState } from "react";
 import "./Navbar.css";
 
-const LINKS = [
-  { label: "Home", href: "#home" },
-  { label: "Explore Services", href: "#explore-services", primary: true },
-  { label: "How It Works", href: "#how-it-works" },
-  { label: "Verified Requirements", href: "#verified-requirements" },
-  { label: "About", href: "#about" },
-  { label: "Help / FAQ", href: "#help" },
-];
+const LINKS = ["Home", "Explore Services", "How It Works", "Verified Requirements", "About", "Help / FAQ"];
 
-export default function Navbar({ active = "Home" }) {
+export default function Navbar({ onHome, onNavigate, active = "Home" }) {
   const [open, setOpen] = useState(false);
   const menuId = useId();
-
   return (
     <header className="site-nav">
       <div className="site-nav__inner">
-        <a className="site-nav__logo" href="#home" aria-label="Requisito home">
-          Requisito
-        </a>
-
-        <button
-          type="button"
-          className="site-nav__toggle"
-          aria-expanded={open}
-          aria-controls={menuId}
-          aria-label={open ? "Close menu" : "Open menu"}
-          onClick={() => setOpen((o) => !o)}
-        >
+        <button className="site-nav__logo" onClick={() => { onHome(); setOpen(false); }} aria-label="Requisito home">Requisito</button>
+        <button className="site-nav__toggle" type="button" aria-expanded={open} aria-controls={menuId} aria-label={open ? "Close menu" : "Open menu"} onClick={() => setOpen((value) => !value)}>
           <span aria-hidden="true" />
         </button>
-
-        <nav
-          id={menuId}
-          className={`site-nav__menu${open ? " is-open" : ""}`}
-          aria-label="Primary"
-        >
+        <nav id={menuId} className={`site-nav__menu${open ? " is-open" : ""}`} aria-label="Primary">
           <ul>
-            {LINKS.map(({ label, href, primary }) => (
+            {LINKS.map((label) => (
               <li key={label}>
-                <a
-                  href={href}
-                  className={primary ? "is-primary" : undefined}
-                  aria-current={label === active ? "page" : undefined}
-                  onClick={() => setOpen(false)}
-                >
-                  {label}
-                </a>
+                <a href={`#${label.toLowerCase().replaceAll(" ", "-").replace("/", "")}`} className={label === active ? "is-active" : undefined} aria-current={label === active ? "page" : undefined} onClick={(event) => { event.preventDefault(); if (label === "Home") onHome(); else onNavigate(label); setOpen(false); }}>{label}</a>
               </li>
             ))}
           </ul>
