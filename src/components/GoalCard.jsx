@@ -1,12 +1,10 @@
-import './SprintCards.css'
-
 // Props: title, description, stepsCount.
 function GoalCard({ title, description, stepsCount }) {
   return (
-    <article className="sprint-card">
-      <h2>{title}</h2>
-      <p>{description}</p>
-      <p className="card-detail">{stepsCount} steps</p>
+    <article className="goal-card">
+      <h2 className="goal-card-title">{title}</h2>
+      <p className="goal-card-description">{description}</p>
+      <p className="goal-card-description">{stepsCount > 0 ? stepsCount + ' sample steps' : 'Checklist content coming soon'}</p>
     </article>
   )
 }

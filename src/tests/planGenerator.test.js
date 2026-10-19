@@ -1,7 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { generatePlan } from '../utils/planGenerator.js'
-import { getChecklistPlan, getRequirementsByGoal, getPlanningQuestions } from '../data/helpers.js'
+import { getChecklistPlan, getRequirementsByGoal, getPlanningQuestions, getGoals, getSummaryCounts } from '../data/helpers.js'
 
 const goal = (...requirements) => ({ id: 'test', requirements })
 
@@ -69,4 +69,17 @@ test('unknown goal yields a visible warning and questions are isolated copies', 
   const questions = getPlanningQuestions()
   questions[0].options[0].label = 'changed'
   assert.notEqual(getPlanningQuestions()[0].options[0].label, 'changed')
+})
+
+test('retains upstream placeholder goals without showing the First Job plan for them', () => {
+  const goals = getGoals()
+  assert.equal(goals.length, 5)
+  assert.equal(goals[0].title, 'First Job')
+  assert.equal(getSummaryCounts().goals, goals.length)
+  for (const goal of goals.slice(1)) {
+    assert.equal(typeof goal.id, 'number')
+    assert.equal(goal.stepsCount, 0)
+    assert.deepEqual(getChecklistPlan(goal.id).steps, [])
+    assert.deepEqual(getRequirementsByGoal(goal.id), [])
+  }
 })

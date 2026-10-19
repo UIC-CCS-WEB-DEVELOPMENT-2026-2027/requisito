@@ -95,6 +95,14 @@
   width: 100%;
 }
 
+.goal-card-link .goal-card {
+  width: 100%;
+}
+
+.goal-card-link:focus-visible .goal-card {
+  border-color: var(--accent);
+}
+
 .goal-card-link:hover .sprint-card {
   border-color: var(--accent);
   background: var(--accent-bg);

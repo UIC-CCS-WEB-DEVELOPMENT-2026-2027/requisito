@@ -4,10 +4,10 @@ The exact schema is in [data-contract.md](data-contract.md).
 Arrays are named exports: goals, requirements, documents.
 Pages import the four functions from src/data/helpers.js, never the arrays.
 
-- getGoals(): one First Job goal, numeric ID 1, stepsCount 6.
+- getGoals(): five goals, with First Job first (numeric ID 1, stepsCount 6). Other goals are placeholders with stepsCount 0.
 - getRequirementsByGoal(1): six requirements. Unknown IDs return [].
 - getDocuments(): four fictional document tracker entries.
-- getSummaryCounts(): { goals: 1, requirementsDone: 0, documentsExpiring: 1 }.
+- getSummaryCounts(): { goals: 5, requirementsDone: 0, documentsExpiring: 1 }.
 
 All requirement sources are empty and statuses unverified. Dates, quantities,
 and document statuses are samples for human verification. No real ID numbers

@@ -31,3 +31,9 @@ Dates are fixture values, not proof of completed verification. Document dates
 and valid/expiring statuses are fictional tracker examples, not personal records
 or computed expiry results. A human must verify requirements, quantities, dates,
 and official sources before these samples are used as real guidance.
+
+## Integration with main
+
+Szianzey's four additional placeholder goals are retained with numeric IDs 2-5
+and stepsCount 0. First Job remains ID 1 with all six sample requirements.
+Placeholder goals show an empty-state message rather than another goal's plan.
