@@ -1,8 +1,19 @@
 import './SprintCards.css'
+import { formatDate } from '../utils/formatDate.js'
 
-// Props: lastVerified (YYYY-MM-DD sample date).
 function StatusBadge({ lastVerified }) {
-  return <span className="status-badge">Last verified: {lastVerified}</span>
+  return (
+    <span className="status-badge">
+      {lastVerified ? (
+        <>
+          Last verified:{' '}
+          <time dateTime={lastVerified}>{formatDate(lastVerified)}</time>
+        </>
+      ) : (
+        'Not yet verified'
+      )}
+    </span>
+  )
 }
 
 export default StatusBadge
