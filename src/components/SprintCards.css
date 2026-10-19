@@ -113,6 +113,51 @@
   overflow-wrap: anywhere;
 }
 
+.planning-questions,
+.planning-field {
+  display: grid;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.planning-field label {
+  color: var(--text-h);
+  font-weight: 600;
+}
+
+.planning-field select {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--surface);
+  color: var(--text-h);
+  font: inherit;
+  padding: 0.65rem;
+}
+
+.planning-field select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.generated-plan {
+  padding: 0;
+  list-style: none;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.generated-plan > li {
+  min-width: 0;
+}
+
+.plan-step-number {
+  margin: 0 0 0.5rem;
+  color: var(--accent);
+  font-weight: 700;
+}
+
 @media (max-width: 520px) {
   .summary-grid,
   .sprint-grid {
