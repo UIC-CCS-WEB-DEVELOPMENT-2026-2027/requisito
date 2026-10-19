@@ -2,7 +2,24 @@
   display: flex;
   flex: 1;
   flex-direction: column;
+  min-width: 0;
   width: 100%;
+}
+
+.disclaimer-banner {
+  border-bottom: 1px solid var(--border);
+  background: var(--accent-bg);
+  color: var(--text-h);
+  padding: 0.85rem clamp(1rem, 5vw, 3rem);
+  text-align: center;
+}
+
+.disclaimer-banner p {
+  max-width: 720px;
+  margin: 0 auto;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
 }
 
 .site-header {
@@ -101,15 +118,26 @@
 }
 
 .site-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
   border-top: 1px solid var(--border);
   color: var(--text);
   font-size: 0.9rem;
   padding: 1.25rem clamp(1rem, 5vw, 3rem);
   text-align: center;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
 }
 
 .site-footer p {
   margin: 0;
+}
+
+.site-footer .footer-description {
+  max-width: 36rem;
+  font-size: 0.85rem;
 }
 
 .return-link {

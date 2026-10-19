@@ -1,4 +1,6 @@
 import { Link, NavLink, Outlet } from 'react-router-dom'
+import DisclaimerBanner from './DisclaimerBanner.jsx'
+import Footer from './Footer.jsx'
 import '../App.css'
 
 function Layout() {
@@ -23,13 +25,13 @@ function Layout() {
         </div>
       </header>
 
+      <DisclaimerBanner />
+
       <main className="main-content">
         <Outlet />
       </main>
 
-      <footer className="site-footer">
-        <p>Requisito</p>
-      </footer>
+      <Footer />
     </div>
   )
 }
