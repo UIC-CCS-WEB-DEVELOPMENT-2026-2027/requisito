@@ -1,6 +1,7 @@
 import StatusBadge from './StatusBadge.jsx'
 import './SprintCards.css'
 
+// Props: label, notes, copies, sourceUrl, lastVerified.
 function RequirementCard({ label, notes, copies, sourceUrl, lastVerified }) {
   return (
     <article className="sprint-card requirement-card">

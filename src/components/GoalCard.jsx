@@ -1,3 +1,4 @@
+// Props: title, description, stepsCount.
 function GoalCard({ title, description, stepsCount }) {
   return (
     <article className="goal-card">

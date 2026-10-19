@@ -18,4 +18,24 @@ export default defineConfig([
       parserOptions: { ecmaFeatures: { jsx: true } },
     },
   },
+  {
+    // The original standalone preview shares globals through ordered script tags.
+    files: ['requisito-plain/*.js'],
+    languageOptions: {
+      sourceType: 'script',
+    },
+    rules: {
+      'no-unused-vars': ['error', { vars: 'local', args: 'after-used' }],
+    },
+  },
+  {
+    files: ['requisito-plain/app.js'],
+    languageOptions: {
+      globals: {
+        generatePlan: 'readonly',
+        baseRequirements: 'readonly',
+        ID_GROUP: 'readonly',
+      },
+    },
+  },
 ])

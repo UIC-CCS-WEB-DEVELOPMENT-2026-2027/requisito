@@ -187,7 +187,8 @@
 }
 
 .generated-plan > li .requirement-card {
-  min-height: 100%;
+  min-height: 0;
+  height: auto;
 }
 
 .sprint-grid.generated-plan {

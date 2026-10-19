@@ -1,6 +1,7 @@
 import './SprintCards.css'
 import { formatDate } from '../utils/formatDate.js'
 
+// Props: type, issueDate, status.
 function DocumentCard({ type, issueDate, status }) {
   const normalizedStatus = status.toLowerCase()
   const statusLabels = {

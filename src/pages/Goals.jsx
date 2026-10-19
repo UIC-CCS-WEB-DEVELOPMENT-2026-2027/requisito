@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import GoalCard from '../components/GoalCard.jsx'
 import { getGoals } from '../data/helpers.js'
 
+// Props: none. Goal data comes from helpers.js.
 function Goals() {
   const goals = getGoals()
   return (

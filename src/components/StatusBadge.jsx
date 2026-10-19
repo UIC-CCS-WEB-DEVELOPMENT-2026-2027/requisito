@@ -1,6 +1,7 @@
 import './SprintCards.css'
 import { formatDate } from '../utils/formatDate.js'
 
+// Props: lastVerified.
 function StatusBadge({ lastVerified }) {
   return (
     <span className="status-badge">

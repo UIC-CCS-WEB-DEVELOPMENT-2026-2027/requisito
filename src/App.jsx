@@ -6,6 +6,8 @@ import Checklist from './pages/Checklist.jsx'
 import Documents from './pages/Documents.jsx'
 import QuestionFlow from './pages/QuestionFlow.jsx'
 import NotFound from './pages/NotFound.jsx'
+import Login from './pages/Login.jsx'
+import ProtectedRoute from './components/ProtectedRoute.jsx'
 
 // Props: none.
 function App() {
@@ -13,9 +15,10 @@ function App() {
     <Routes>
       <Route element={<Layout />}>
         <Route path="/" element={<Home />} />
-        <Route path="/goals" element={<Goals />} />
-        <Route path="/checklist" element={<Checklist />} />
-        <Route path="/documents" element={<Documents />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/goals" element={<ProtectedRoute><Goals /></ProtectedRoute>} />
+        <Route path="/checklist" element={<ProtectedRoute><Checklist /></ProtectedRoute>} />
+        <Route path="/documents" element={<ProtectedRoute><Documents /></ProtectedRoute>} />
         <Route path="/questions" element={<QuestionFlow />} />
         <Route path="*" element={<NotFound />} />
       </Route>

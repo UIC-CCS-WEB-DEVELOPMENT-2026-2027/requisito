@@ -37,3 +37,41 @@ and official sources before these samples are used as real guidance.
 Szianzey's four additional placeholder goals are retained with numeric IDs 2-5
 and stepsCount 0. First Job remains ID 1 with all six sample requirements.
 Placeholder goals show an empty-state message rather than another goal's plan.
+
+## Auth (mock, front-end only)
+
+This is a UI demo of the Phase 2 login flow, not real authentication or an
+authorization boundary. The Login page displays:
+"Demo sign-in: no real authentication yet. Full login arrives in Phase 2."
+
+`AuthProvider` wraps the app in `main.jsx`. `useAuth()` must be called inside
+that provider and exposes:
+
+- `isSignedIn`: boolean, initially false.
+- `signIn(email)`: accepts a well-formed email and sets the demo boolean to true.
+  The email is not retained in context. The form checks a minimum of eight
+  password characters before calling this function; it never passes the
+  password into context.
+- `signOut()`: sets the demo boolean to false.
+
+State exists only in React memory. Refreshing signs the user out. No password,
+token, or auth state is stored in localStorage or sessionStorage, sent to a
+server, or logged. Use made-up input rather than actual account details.
+The form clears the password after every submit attempt, including invalid
+attempts, and disables submission while its callback is pending.
+
+Home and Login are public. Goals, Checklist, and Documents redirect signed-out
+visitors to `/login` through `ProtectedRoute`. Successful demo sign-in navigates
+to Home. Footer and DisclaimerBanner remain on every route. The existing
+catalog record fields and four data helpers are unchanged.
+
+Build, lint, and existing planner tests pass. Browser checks covered validation,
+password visibility, sign-in/sign-out, gated navigation, refresh sign-out, and
+360px/768px/1280px layouts in light and dark mode. The interface is illustrative:
+any syntactically valid email plus eight or more password characters is accepted.
+
+Real authentication in Phase 2 must add server-side identity verification,
+password hashing through a suitable authentication service or server, sessions
+or tokens with expiry and logout invalidation, HTTPS, rate limiting, and
+server-enforced authorization for every private resource. The demo gate alone
+does not provide these capabilities.

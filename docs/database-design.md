@@ -5,6 +5,10 @@
 **Status:** Draft complete; teammate review waived at the project owner's request. No backend, migrations, authentication,
 database connection, or document upload is implemented by this draft.
 
+The frontend now includes an in-memory demo sign-in flow described in
+`data-contract.md`. It does not implement the real login, authorization, or
+database access proposed here.
+
 ## Pitch
 
 Week 2 uses static arrays to demonstrate a First Job checklist. Phase 2 proposes
