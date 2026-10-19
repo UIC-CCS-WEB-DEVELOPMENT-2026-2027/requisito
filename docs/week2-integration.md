@@ -1,5 +1,8 @@
 # Week 2 integration audit
 
+This file records the pre-release audit. Final deployment and board verification
+evidence is recorded on release issues #20 and #35 after production QA.
+
 ## Scope and provenance
 
 This integration retains teammate commits without rewriting history:
@@ -12,8 +15,9 @@ This integration retains teammate commits without rewriting history:
 | #43 | Szianzey's GoalCard steps count | Merged |
 | #44 | Szianzey's RequirementCard, StatusBadge, DocumentCard, date formatting, responsive layout | Merged |
 
-The local demo-sign-in branch adds the mock-auth UI and integration fixes.
-Its PR/merge evidence must be recorded after GitHub confirms the merge.
+PR #58 merged the mock-auth UI and integration fixes. A follow-up applies the
+project owner's selected purple single-card sign-in design, replacing the teal
+split layout while retaining that earlier version in Git history.
 Legacy PR #15 (Bruce-Jeff Navbar/Button work) remains open and is outside the
 Week 2 integration scope. No open Szianzey Week 2 PR remained at audit time.
 
@@ -44,7 +48,7 @@ Week 2 integration scope. No open Szianzey Week 2 PR remained at audit time.
 | #28 Documents | PR #44; shared-data wiring retained by this integration |
 | #22, #25 Responsive work | PR #44 plus integrated browser checks |
 | #9 Generator | PR #42 plus React adapter tests |
-| #17, #18, #32, #33 | Earlier main commits contain deployment, README, static data, and database draft; link the integration PR after its merge is confirmed |
+| #17, #18, #32, #33 | Earlier main commits contain deployment, README, static data, and database draft; merged PR #58 records the integration and retained implementation |
 | #20, #35 Integration/release | Requires merged integration PR, successful live deployment, phone QA, and board verification |
 | #29 Responsive follow-up | Do not infer completion just from the branch name; link confirmed PR evidence and test results |
 | #30, #31, #36, #37, #38, #39 | Remain open; this release does not claim missing specs, research, test-plan documents, or teammate QA were completed |
@@ -67,6 +71,7 @@ substitute for checking the actual board through approved GitHub access.
   or government ID numbers are included.
 
 GitHub CLI is authorized for the Requisito Kanban board (organization project
-16). Cards #13 and #14 were found Done while legacy PR #15 remained open; they
-must return to review. Record the integration PR, deployment result, and final
-board reconciliation when confirmed; do not treat pending checks as completed.
+16). Cards #13 and #14 were found Done while legacy PR #15 remained open and
+were returned to review. PR #58 is confirmed merged. Final release evidence and
+board reconciliation will be recorded on #20/#35; pending release checks in
+this pre-release snapshot must not be read as completed checks.
