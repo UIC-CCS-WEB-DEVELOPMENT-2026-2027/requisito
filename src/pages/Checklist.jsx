@@ -1,58 +1,93 @@
 import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
+import EmptyState from '../components/EmptyState.jsx'
 import RequirementCard from '../components/RequirementCard.jsx'
-import { getChecklistPlan, getPlanningQuestions, getGoals } from '../data/helpers.js'
+import { getGoals, getRequirementsByGoal } from '../data/helpers.js'
 
-// Props: none. Questions and generated plan data come only from helpers.js.
+// Props: none. Requirements come from helpers.js.
 function Checklist() {
-  const [answers, setAnswers] = useState({})
   const [searchParams] = useSearchParams()
-  const goalId = Number(searchParams.get('goal') ?? 1)
-  const goal = getGoals().find((item) => item.id === goalId)
-  const questions = goalId === 1 ? getPlanningQuestions() : []
-  const plan = getChecklistPlan(goalId, answers)
-  const done = plan.steps.filter((step) => step.requirement?.status === 'done').length
+  const goalId = searchParams.get('goal')
+  const numericGoalId = goalId === null ? null : Number(goalId)
+  const requirements = Number.isInteger(numericGoalId)
+    ? getRequirementsByGoal(numericGoalId)
+    : []
+  const goal = getGoals().find((item) => item.id === numericGoalId)
+
   return (
     <section className="page-content" aria-labelledby="checklist-title">
-      <p className="eyebrow">{goal?.title ?? 'Unknown goal'}</p>
-      <h1 id="checklist-title">Your preparation checklist</h1>
-      <p className="sample-notice">Sample content, to be verified against official sources. Requirements, dependency order, and dates are illustrative. All content remains unverified; a sample Last verified date is not proof of review.</p>
-      {goal && goal.stepsCount === 0 && <p className="sample-notice">No checklist data is available for this goal yet. Select First Job to try the sample planner.</p>}
-      <div className="planning-questions">
-        {questions.map((question) => (
-          <div className="planning-field" key={question.id}>
-            <label htmlFor={question.id}>{question.label}</label>
-            <select id={question.id} value={answers[question.id] ?? ''} onChange={(event) => setAnswers((current) => ({ ...current, [question.id]: event.target.value }))}>
-              {question.options.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
-            </select>
-          </div>
-        ))}
-        {questions.length > 0 && <p>Your sample plan updates when you change an answer. Confirm actual requirements with your employer and the relevant agency.</p>}
-      </div>
-      <div className="checklist-progress" role="status">
-        <p>{plan.steps.length} ordered steps; {done} done (sample data)</p>
-        <progress aria-label="Sample requirements completion" value={done} max={plan.steps.length || 1} />
-      </div>
-      {plan.warnings.length > 0 && (
-        <div className="sample-notice" role="alert">
-          <h2>Plan needs attention</h2>
-          <ul>{plan.warnings.map((warning) => <li key={warning}>{warning}</li>)}</ul>
-          {plan.unresolved.length > 0 && <p>Not ordered: {plan.unresolved.map((item) => item.title).join(', ')}. Confirm the plan before following it.</p>}
-        </div>
+      <p className="eyebrow">{goal?.title ?? 'Checklist'}</p>
+      <h1 id="checklist-title">Checklist</h1>
+      <p className="page-description">
+        These are the documents you need, in order.
+      </p>
+      {requirements.length > 0 ? (
+        <>
+          <p className="sample-notice">
+            Sample content, to be verified against official sources.
+            Requirements, order, and dates are illustrative.
+          </p>
+          <ChecklistView
+            key={goalId}
+            initialRequirements={requirements}
+          />
+        </>
+      ) : (
+        <EmptyState message="No requirements found for this goal." />
       )}
-      <ol className="sprint-grid generated-plan" aria-label="Ordered preparation steps">
-        {plan.steps.map((step) => (
-          <li key={step.id}>
-            <p className="plan-step-number">Step {step.order}</p>
-            {step.requirement ? (
-              <RequirementCard label={step.requirement.label} notes={step.requirement.notes} copies={step.requirement.copies} sourceUrl={step.requirement.sourceUrl} lastVerified={step.requirement.lastVerified} />
-            ) : (
-              <article className="sprint-card"><h2>{step.title}</h2><p>Complete any one: {step.options.map((option) => option.title).join(', ')}</p></article>
-            )}
+    </section>
+  )
+}
+
+function ChecklistView({ initialRequirements }) {
+  const [items, setItems] = useState(() =>
+    initialRequirements.map((req) => ({ ...req, status: 'pending' })),
+  )
+  const total = items.length
+  const completed = items.filter((item) => item.status === 'done').length
+
+  const handleToggle = (id) => {
+    setItems((prev) =>
+      prev.map((item) =>
+        item.id === id
+          ? {
+              ...item,
+              status: item.status === 'done' ? 'pending' : 'done',
+            }
+          : item,
+      ),
+    )
+  }
+
+  return (
+    <>
+      <div className="checklist-progress">
+        <p className="checklist-progress-label" aria-live="polite">
+          {completed} of {total} completed
+        </p>
+        <progress
+          aria-label="Requirements completed"
+          value={completed}
+          max={total}
+        />
+      </div>
+      <ol className="sprint-grid generated-plan" aria-label="Requirements">
+        {items.map((item, index) => (
+          <li key={item.id}>
+            <p className="plan-step-number">Step {index + 1}</p>
+            <RequirementCard
+              label={item.label}
+              notes={item.notes}
+              copies={item.copies}
+              sourceUrl={item.sourceUrl}
+              lastVerified={item.lastVerified}
+              isDone={item.status === 'done'}
+              onToggle={() => handleToggle(item.id)}
+            />
           </li>
         ))}
       </ol>
-    </section>
+    </>
   )
 }
 
