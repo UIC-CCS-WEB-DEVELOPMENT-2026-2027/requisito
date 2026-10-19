@@ -1,3 +1,4 @@
+// Props: none.
 function DisclaimerBanner() {
   return (
     <aside className="disclaimer-banner" aria-label="Project disclaimer">
