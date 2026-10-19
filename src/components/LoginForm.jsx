@@ -40,7 +40,7 @@ function LoginForm({ onSubmit, error = '' }) {
   }
 
   return (
-    <form className="login-form" onSubmit={handleSubmit} noValidate aria-label="Demo sign-in">
+    <form className="login-form" onSubmit={handleSubmit} noValidate aria-label="Demo sign-in" aria-busy={isSubmitting}>
       <div className="login-field">
         <label htmlFor="login-email">Email</label>
         <input id="login-email" name="email" type="email" autoComplete="email" required value={email} onChange={(event) => setEmail(event.target.value)} aria-invalid={Boolean(errors.email)} aria-describedby="login-email-error" />
@@ -56,7 +56,11 @@ function LoginForm({ onSubmit, error = '' }) {
         <p id="login-password-error" className="login-error" aria-live="polite">{errors.password}</p>
       </div>
       <p className="login-error" aria-live="polite">{error || submitError}</p>
-      <button className="primary-button login-submit" type="submit" disabled={isSubmitting}>{isSubmitting ? 'Signing in...' : 'Sign in to demo'}</button>
+      <button className="primary-button login-submit" type="submit" disabled={isSubmitting}>
+        {isSubmitting && <span className="login-spinner" aria-hidden="true" />}
+        {isSubmitting ? 'Signing in...' : 'Sign in to demo'}
+        {!isSubmitting && <span className="login-button-arrow" aria-hidden="true">&rarr;</span>}
+      </button>
     </form>
   )
 }
