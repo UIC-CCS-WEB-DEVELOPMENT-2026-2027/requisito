@@ -1,5 +1,9 @@
 # Goal selection and question flow wireframes
 
+Historical prototype: the Week 2 static sprint supersedes this questionnaire
+flow with Home, Goals, Checklist, and Documents. `/questions` now redirects to
+`/checklist`. See `data-contract.md` for the current shared data format.
+
 ## Screens
 
 - **Goal selection (`/goals`)** presents three sample goals as selectable cards. A selected card is highlighted, and continuing without a selection displays a prompt.

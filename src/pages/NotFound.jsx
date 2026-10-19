@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 
+// Props: none.
 function NotFound() {
   return (
     <section className="page-content" aria-labelledby="not-found-title">

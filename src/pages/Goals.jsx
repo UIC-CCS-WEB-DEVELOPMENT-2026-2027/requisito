@@ -1,76 +1,21 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { goals } from '../data/goalFlow.js'
+import { Link } from 'react-router-dom'
+import GoalCard from '../components/GoalCard.jsx'
+import { getGoals } from '../data/helpers.js'
 
-function Goals({ selectedGoalId, onSelectGoal }) {
-  const [showSelectionError, setShowSelectionError] = useState(false)
-  const navigate = useNavigate()
-
-  function continueToQuestions() {
-    if (!selectedGoalId) {
-      setShowSelectionError(true)
-      return
-    }
-
-    setShowSelectionError(false)
-    navigate('/questions')
-  }
-
+// Props: none. Goal data comes from helpers.js.
+function Goals() {
+  const goals = getGoals()
   return (
-    <section className="page-content flow-content" aria-labelledby="goals-title">
-      <p className="eyebrow">Step 1 · Choose a goal</p>
-      <h1 id="goals-title">What would you like to achieve?</h1>
-      <p className="page-description">
-        Choose one goal to shape a short set of questions and a practical plan
-        that fits what matters to you.
-      </p>
-
-      <div className="goal-grid" role="group" aria-label="Available goals">
-        {goals.map((goal, index) => {
-          const selected = selectedGoalId === goal.id
-          return (
-            <button
-              key={goal.id}
-              aria-pressed={selected}
-              className={`goal-card${selected ? ' is-selected' : ''}`}
-              onClick={() => {
-                onSelectGoal(goal.id)
-                setShowSelectionError(false)
-              }}
-              type="button"
-            >
-              <span className="goal-card-topline">
-                <span className="goal-number">0{index + 1}</span>
-                <span aria-hidden="true" className="selection-indicator">
-                  {selected ? '✓' : ''}
-                </span>
-              </span>
-              <span className="goal-card-title">{goal.title}</span>
-              <span className="goal-card-description">{goal.description}</span>
-            </button>
-          )
-        })}
-      </div>
-
-      <div className="flow-actions">
-        <p
-          aria-live="polite"
-          className="form-message"
-          role={showSelectionError ? 'alert' : undefined}
-        >
-          {showSelectionError
-            ? 'Choose a goal before continuing.'
-            : selectedGoalId
-              ? 'You can change your choice at any time.'
-              : 'Select one goal to get started.'}
-        </p>
-        <button
-          className="primary-button"
-          onClick={continueToQuestions}
-          type="button"
-        >
-          Continue <span aria-hidden="true">→</span>
-        </button>
+    <section className="page-content" aria-labelledby="goals-title">
+      <p className="eyebrow">Preparation goals</p>
+      <h1 id="goals-title">Choose your next step.</h1>
+      <p className="page-description">Start with First Job and explore its sample requirements.</p>
+      <div className="sprint-grid">
+        {goals.map((goal) => (
+          <Link className="goal-card-link" to="/checklist" key={goal.id}>
+            <GoalCard title={goal.title} description={goal.description} stepsCount={goal.stepsCount} />
+          </Link>
+        ))}
       </div>
     </section>
   )

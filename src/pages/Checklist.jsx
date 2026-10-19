@@ -1,105 +1,23 @@
-import { useNavigate } from 'react-router-dom'
-import { getGoal } from '../data/goalFlow.js'
+import RequirementCard from '../components/RequirementCard.jsx'
+import { getRequirementsByGoal } from '../data/helpers.js'
 
-function Checklist({
-  goalId,
-  answers,
-  completedTasks,
-  onCompletedTasksChange,
-  onStartOver,
-}) {
-  const navigate = useNavigate()
-  const goal = getGoal(goalId)
-
-  if (!goal) {
-    return null
-  }
-
-  const completedCount = goal.checklist.filter(
-    (_, index) => completedTasks[index],
-  ).length
-  const progress = (completedCount / goal.checklist.length) * 100
-
+// Props: none. The First Job requirement list comes from helpers.js.
+function Checklist() {
+  const requirements = getRequirementsByGoal(1)
+  const done = requirements.filter((requirement) => requirement.status === 'done').length
   return (
-    <section className="page-content flow-content" aria-labelledby="checklist-title">
-      <p className="eyebrow">Step 3 · Your action plan</p>
-      <h1 id="checklist-title">Your Action Plan</h1>
-      <p className="page-description">
-        A few manageable next steps to help you work toward{' '}
-        <strong>{goal.title.toLowerCase()}</strong>.
-      </p>
-
-      {answers[0] && (
-        <p className="plan-focus">
-          Your focus: <strong>{answers[0]}</strong>
-        </p>
-      )}
-
+    <section className="page-content" aria-labelledby="checklist-title">
+      <p className="eyebrow">First Job</p>
+      <h1 id="checklist-title">Your preparation checklist</h1>
+      <p className="sample-notice">Sample content, to be verified against official sources. All requirements are unverified. Dates shown as ?Last verified? are sample values, not evidence of verification.</p>
       <div className="checklist-progress">
-        <div className="checklist-progress-label">
-          <span>Plan progress</span>
-          <span>
-            {completedCount} of {goal.checklist.length} complete
-          </span>
-        </div>
-        <progress
-          aria-label="Checklist completion progress"
-          max="100"
-          value={progress}
-        />
+        <p>{done} of {requirements.length} requirements done (static sample)</p>
+        <progress aria-label="Sample requirements completion" value={done} max={requirements.length || 1} />
       </div>
-
-      <ul className="checklist-items">
-        {goal.checklist.map((task, index) => {
-          const isComplete = Boolean(completedTasks[index])
-          return (
-            <li
-              className={`checklist-item${isComplete ? ' is-complete' : ''}`}
-              key={task}
-            >
-              <label>
-                <input
-                  checked={isComplete}
-                  onChange={(event) =>
-                    onCompletedTasksChange((currentTasks) => ({
-                      ...currentTasks,
-                      [index]: event.target.checked,
-                    }))
-                  }
-                  type="checkbox"
-                />
-                <span>{task}</span>
-              </label>
-            </li>
-          )
-        })}
-      </ul>
-
-      <div className="flow-actions checklist-actions">
-        <p className="form-message">
-          {completedCount === goal.checklist.length
-            ? 'Everything is checked off. Nice work!'
-            : 'Small steps count. You can update your progress anytime.'}
-        </p>
-        <div className="button-group">
-          <button
-            className="secondary-button"
-            onClick={() => navigate('/questions')}
-            type="button"
-          >
-            Review answers
-          </button>
-          <button
-            className="primary-button"
-            onClick={() => {
-              onStartOver()
-              navigate('/goals')
-            }}
-            type="button"
-          >
-            Start again
-          </button>
-        </div>
+      <div className="sprint-grid">
+        {requirements.map((requirement) => (
+          <RequirementCard key={requirement.id} label={requirement.label} notes={requirement.notes} copies={requirement.copies} sourceUrl={requirement.sourceUrl} lastVerified={requirement.lastVerified} />
+        ))}
       </div>
     </section>
   )

@@ -3,6 +3,7 @@ import DisclaimerBanner from './DisclaimerBanner.jsx'
 import Footer from './Footer.jsx'
 import '../App.css'
 
+// Props: none. Shared shell for every route.
 function Layout() {
   return (
     <div className="app-shell">
@@ -20,6 +21,9 @@ function Layout() {
             </NavLink>
             <NavLink to="/checklist">
               Checklist
+            </NavLink>
+            <NavLink to="/documents">
+              Documents
             </NavLink>
           </nav>
         </div>
