@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <title>Requisito plan generator preview</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="root">
+    <div class="app-shell">
+      <header class="site-header">
+        <div class="header-content">
+          <a class="brand" href="index.html">Requisito</a>
+        </div>
+      </header>
+
+      <main class="main-content">
+        <section class="page-content flow-content" aria-labelledby="page-title">
+          <p class="eyebrow">Issue #9 &middot; Plan generation</p>
+          <h1 id="page-title">Plan generator preview</h1>
+          <p class="page-description">
+            Change the answers below and the ordered checklist updates. The data is made-up
+            sample data, not verified government requirements.
+          </p>
+
+          <fieldset class="question-fieldset">
+            <legend>Your answers</legend>
+            <div class="answer-list">
+              <div class="field">
+                <label for="civil">Civil status</label>
+                <select id="civil">
+                  <option value="">Not answered</option>
+                  <option value="single">Single</option>
+                  <option value="married">Married</option>
+                </select>
+              </div>
+
+              <label class="answer-option">
+                <input type="checkbox" id="passport">
+                <span>
+                  <span class="option-title">Already counting a passport as a goal item</span>
+                  <small>Satisfies the &ldquo;any one accepted ID&rdquo; group, so that step disappears.</small>
+                </span>
+              </label>
+
+              <label class="answer-option">
+                <input type="checkbox" id="cycle">
+                <span>
+                  <span class="option-title">Add a circular dependency</span>
+                  <small>Barangay clearance and NBI clearance would each require the other.</small>
+                </span>
+              </label>
+            </div>
+          </fieldset>
+
+          <h2 class="plan-title">Your action plan</h2>
+          <ol id="steps" class="checklist-items"></ol>
+          <div id="problems"></div>
+
+          <details>
+            <summary>Raw result</summary>
+            <pre id="raw"></pre>
+          </details>
+
+          <p class="form-message note">
+            Goal: first job. Top-level items: NBI clearance, TIN, SSS number, PhilHealth number.
+            Everything else is pulled in as a dependency.
+          </p>
+        </section>
+      </main>
+
+      <footer class="site-footer"><p>Requisito</p></footer>
+    </div>
+  </div>
+
+  <!-- Order matters: logic, then data, then the page code that uses them -->
+  <script src="planGenerator.js"></script>
+  <script src="sampleData.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
