@@ -7,7 +7,7 @@
   border: 1px solid var(--border);
   border-radius: 12px;
   background: var(--surface);
-  padding: 1.25rem;
+  padding: 1rem;
   overflow-wrap: anywhere;
 }
 
@@ -37,6 +37,22 @@
   font-weight: 600;
 }
 
+.requirement-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.requirement-card .card-detail,
+.requirement-card .status-badge,
+.requirement-card .source-link {
+  align-self: flex-start;
+}
+
+.requirement-card .source-link {
+  margin-top: auto;
+  padding-top: 0.5rem;
+}
+
 .status-badge {
   display: inline-flex;
   justify-self: start;
@@ -55,11 +71,23 @@
   font-weight: 700;
 }
 
+.status-expiring-soon,
+.status-expired {
+  border: 1px solid var(--accent-border);
+}
+
+.status-expired {
+  background: var(--border);
+}
+
 .source-link {
   display: inline-flex;
+  min-width: 0;
   align-items: center;
   justify-self: start;
   min-height: 44px;
+  max-width: 100%;
+  overflow-wrap: anywhere;
   color: var(--accent);
 }
 
@@ -71,16 +99,14 @@
 .summary-grid,
 .sprint-grid {
   display: grid;
+  min-width: 0;
   gap: 1rem;
   margin-top: 1.5rem;
+  grid-template-columns: minmax(0, 1fr);
 }
 
-.summary-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.sprint-grid {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+.sprint-grid > li {
+  min-width: 0;
 }
 
 .goal-card-link {
@@ -160,19 +186,45 @@
   min-width: 0;
 }
 
+.generated-plan > li .requirement-card {
+  min-height: 100%;
+}
+
+.sprint-grid.generated-plan {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.document-grid {
+  padding: 0;
+  list-style: none;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.document-grid > li {
+  min-width: 0;
+}
+
+.document-card {
+  min-height: 100%;
+}
+
 .plan-step-number {
   margin: 0 0 0.5rem;
   color: var(--accent);
   font-weight: 700;
 }
 
-@media (max-width: 520px) {
+@media (min-width: 521px) {
   .summary-grid,
   .sprint-grid {
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .summary-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .sprint-card {
-    padding: 1rem;
+    padding: 1.25rem;
   }
 }
