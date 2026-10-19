@@ -91,6 +91,7 @@
 
 .login-field input {
   width: 100%;
+  max-width: 28rem;
   min-width: 0;
   min-height: 46px;
   border: 1px solid var(--text);
@@ -116,25 +117,9 @@
   box-shadow: 0 0 0 5px rgb(119 56 183 / 12%);
 }
 
-.password-input-row {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 0.5rem;
+.login-error-live {
+  min-height: 1.45em;
 }
-
-.login-form .secondary-button {
-  min-width: 58px;
-  min-height: 46px;
-  border-color: var(--text);
-  border-radius: 7px;
-  background: var(--surface);
-  color: var(--text-h);
-  padding: 0.65rem 0.75rem;
-  font-size: 1rem;
-  transition: background-color 150ms ease, border-color 150ms ease;
-}
-
-.login-form .secondary-button:hover { background: var(--accent-bg); border-color: var(--accent); }
 
 .login-card .login-error {
   min-height: 1.45em;
@@ -145,7 +130,15 @@
   line-height: 1.45;
 }
 
-.login-form > .login-error:empty { min-height: 0; margin-block: -0.5rem; }
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
 
 .login-hint {
   margin: 0;
@@ -174,17 +167,6 @@
 .login-back-link:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
-}
-
-.login-form .login-submit:disabled { cursor: wait; opacity: 0.7; }
-
-.login-spinner {
-  width: 1rem;
-  height: 1rem;
-  border: 2px solid currentColor;
-  border-top-color: transparent;
-  border-radius: 50%;
-  animation: login-spin 800ms linear infinite;
 }
 
 .login-back-link {
@@ -226,16 +208,13 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes login-spin { to { transform: rotate(360deg); } }
-
 @media (prefers-color-scheme: dark) {
   .login-card .login-error { color: #ffb4ab; }
   .login-field input[aria-invalid='true'] { border-color: #ffb4ab; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .login-card,
-  .login-spinner { animation: none; }
+  .login-card { animation: none; }
   .login-page *,
   .login-page *::before,
   .login-page *::after { transition: none; }
