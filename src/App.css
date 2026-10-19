@@ -29,6 +29,7 @@
 
 .header-content {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 1.5rem;
@@ -39,6 +40,9 @@
 }
 
 .brand {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
   color: var(--text-h);
   font-size: 1.35rem;
   font-weight: 700;
@@ -48,11 +52,16 @@
 
 .site-nav {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 0.5rem;
 }
 
 .site-nav a {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
   border-radius: 6px;
   color: var(--text);
   font-size: 0.95rem;
@@ -141,7 +150,9 @@
 }
 
 .return-link {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   margin-top: 1.5rem;
   border-radius: 6px;
   background: var(--accent-bg);
@@ -493,7 +504,7 @@
 
   .site-nav {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.25rem;
   }
 
