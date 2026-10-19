@@ -22,6 +22,7 @@ All requirements, dependencies, quantities, dates, and document statuses are ill
 - An employer-clearance question that filters the generated plan.
 - Requirement cards with sample verification dates; empty source links stay hidden.
 - Four fictional document tracker entries showing valid or expiring status.
+- Demo sign-in with in-memory access to Goals, Checklist, and Documents; refresh signs out. This is not real authentication.
 - Shared footer, government-affiliation disclaimer, and responsive navigation.
 - Home, Goals, Checklist, Documents, and not-found routes; the legacy Questions route redirects to Checklist.
 - React Router refresh support through Vercel rewrites.
@@ -64,6 +65,13 @@ To check the production build:
 ```sh
 npm run build
 ```
+
+## Demo sign-in
+
+Open `/login` and use made-up input: a well-formed email and at least eight
+password characters. No real account exists and no credentials are saved or sent
+to a server. Successful sign-in opens Home; then use the navigation to explore.
+See [the mock-auth contract](docs/data-contract.md#auth-mock-front-end-only).
 
 ## Deployment
 

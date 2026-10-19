@@ -1,13 +1,27 @@
 import './SprintCards.css'
+import { formatDate } from '../utils/formatDate.js'
 
-// Props: type, issueDate (YYYY-MM-DD), status (valid or expiring).
+// Props: type, issueDate, status.
 function DocumentCard({ type, issueDate, status }) {
+  const normalizedStatus = status.toLowerCase()
+  const statusLabels = {
+    valid: 'Valid',
+    expiring: 'Expiring soon',
+    'expiring soon': 'Expiring soon',
+    expired: 'Expired',
+  }
+  const statusLabel = statusLabels[normalizedStatus] ?? status
+  const statusClass = normalizedStatus.replace(/\s+/g, '-')
+
   return (
-    <article className="sprint-card">
+    <article className="sprint-card document-card">
       <h2>{type}</h2>
-      <p>Issue date: <time dateTime={issueDate}>{issueDate}</time></p>
-      <span className={status === 'expiring' ? 'status-badge status-expiring' : 'status-badge'}>
-        {status === 'expiring' ? 'Expiring' : 'Valid'}
+      <p>
+        Issued:{' '}
+        <time dateTime={issueDate}>{formatDate(issueDate)}</time>
+      </p>
+      <span className={`status-badge status-${statusClass}`}>
+        {statusLabel}
       </span>
     </article>
   )

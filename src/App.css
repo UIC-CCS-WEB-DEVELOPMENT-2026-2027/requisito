@@ -17,7 +17,7 @@
 .disclaimer-banner p {
   max-width: 720px;
   margin: 0 auto;
-  font-size: 0.875rem;
+  font-size: 1rem;
   line-height: 1.6;
   overflow-wrap: anywhere;
 }
@@ -30,13 +30,14 @@
 .header-content {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1.5rem;
+  min-width: 0;
+  align-items: stretch;
+  flex-direction: column;
+  gap: 0.75rem;
   width: min(100%, 1126px);
   min-height: 76px;
   margin: 0 auto;
-  padding: 1rem clamp(1rem, 5vw, 3rem);
+  padding: 1rem clamp(1rem, 5vw, 3rem) 0.75rem;
 }
 
 .brand {
@@ -51,23 +52,26 @@
 }
 
 .site-nav {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem;
+  display: grid;
+  min-width: 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.25rem;
 }
 
 .site-nav a {
-  display: inline-flex;
+  display: flex;
+  min-width: 0;
   min-height: 44px;
   align-items: center;
   justify-content: center;
   border-radius: 6px;
   color: var(--text);
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-weight: 600;
-  padding: 0.55rem 0.85rem;
+  padding: 0.6rem 0.35rem;
   text-decoration: none;
+  text-align: center;
+  overflow-wrap: anywhere;
   transition:
     background-color 150ms ease,
     color 150ms ease;
@@ -89,14 +93,16 @@
 .main-content {
   display: flex;
   flex: 1;
+  min-width: 0;
   justify-content: center;
   width: min(100%, 1126px);
   margin: 0 auto;
-  padding: clamp(3rem, 8vw, 6rem) clamp(1rem, 7vw, 5rem);
+  padding: 3rem clamp(1rem, 7vw, 5rem);
 }
 
 .page-content {
   width: 100%;
+  min-width: 0;
   max-width: 720px;
 }
 
@@ -112,7 +118,7 @@
 .page-content h1 {
   margin: 0 0 1rem;
   color: var(--text-h);
-  font-size: clamp(2.25rem, 7vw, 3.5rem);
+  font-size: clamp(2rem, 7vw, 3.5rem);
   font-weight: 650;
   letter-spacing: -0.055em;
   line-height: 1.1;
@@ -122,8 +128,9 @@
 .page-description {
   max-width: 560px;
   color: var(--text);
-  font-size: 1.05rem;
+  font-size: 1rem;
   line-height: 1.7;
+  overflow-wrap: anywhere;
 }
 
 .site-footer {
@@ -133,7 +140,7 @@
   gap: 0.35rem;
   border-top: 1px solid var(--border);
   color: var(--text);
-  font-size: 0.9rem;
+  font-size: 1rem;
   padding: 1.25rem clamp(1rem, 5vw, 3rem);
   text-align: center;
   line-height: 1.6;
@@ -146,7 +153,7 @@
 
 .site-footer .footer-description {
   max-width: 36rem;
-  font-size: 0.85rem;
+  font-size: 1rem;
 }
 
 .return-link {
@@ -194,7 +201,7 @@
 .summary-card h3 {
   margin: 0;
   color: var(--text-h);
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-weight: 650;
   line-height: 1.4;
   overflow-wrap: anywhere;
@@ -213,12 +220,13 @@
 .summary-card-description {
   margin: 0;
   color: var(--text);
-  font-size: 0.92rem;
+  font-size: 1rem;
   line-height: 1.55;
   overflow-wrap: anywhere;
 }
 
 .flow-content {
+  min-width: 0;
   max-width: 800px;
 }
 
@@ -263,7 +271,7 @@
 .goal-card-title {
   margin: 0;
   color: var(--text-h);
-  font-size: 1.05rem;
+  font-size: 1.125rem;
   font-weight: 700;
   line-height: 1.4;
   overflow-wrap: anywhere;
@@ -272,9 +280,17 @@
 .goal-card-description {
   margin: 0.5rem 0 0;
   color: var(--text);
-  font-size: 0.92rem;
+  font-size: 1rem;
   line-height: 1.55;
   overflow-wrap: anywhere;
+}
+
+.goal-card-steps-count {
+  margin: auto 0 0;
+  padding-top: 1rem;
+  color: var(--text);
+  font-size: 0.875rem;
+  line-height: 1.4;
 }
 
 .goal-grid > li {
@@ -295,16 +311,19 @@
 
 .flow-actions {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  min-width: 0;
+  align-items: stretch;
+  flex-direction: column;
   gap: 1rem;
   margin-top: 1.5rem;
 }
 
 .form-message {
+  min-width: 0;
   margin: 0;
-  font-size: 0.9rem;
+  font-size: 1rem;
   line-height: 1.5;
+  overflow-wrap: anywhere;
 }
 
 .form-message[role='alert'] {
@@ -314,6 +333,7 @@
 .primary-button,
 .secondary-button {
   display: inline-flex;
+  min-width: 0;
   min-height: 46px;
   align-items: center;
   justify-content: center;
@@ -324,7 +344,8 @@
   font: inherit;
   font-weight: 650;
   padding: 0.7rem 1rem;
-  white-space: nowrap;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
 }
 
 .primary-button {
@@ -358,12 +379,20 @@
 .question-progress-label,
 .checklist-progress-label {
   display: flex;
+  min-width: 0;
+  flex-wrap: wrap;
   justify-content: space-between;
   gap: 0.75rem;
   margin-bottom: 0.55rem;
   color: var(--text-h);
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: 600;
+}
+
+.question-progress-label span,
+.checklist-progress-label span {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .question-progress progress,
@@ -404,11 +433,13 @@
 }
 
 .question-fieldset legend {
+  max-width: 100%;
   margin-bottom: 1rem;
   color: var(--text-h);
   font-size: 1.25rem;
   font-weight: 650;
   line-height: 1.45;
+  overflow-wrap: anywhere;
 }
 
 .answer-list {
@@ -419,7 +450,8 @@
 .answer-option {
   position: relative;
   display: flex;
-  min-height: 58px;
+  min-width: 0;
+  min-height: 56px;
   align-items: center;
   gap: 0.85rem;
   border: 1px solid var(--border);
@@ -428,6 +460,11 @@
   cursor: pointer;
   padding: 0.85rem 1rem;
   line-height: 1.45;
+}
+
+.answer-option > span:last-child {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .answer-option:hover,
@@ -467,17 +504,25 @@
 
 .button-group {
   display: flex;
+  width: 100%;
+  min-width: 0;
   flex-wrap: wrap;
-  justify-content: flex-end;
+  justify-content: flex-start;
   gap: 0.65rem;
 }
 
+.button-group > button {
+  flex: 1 1 auto;
+}
+
 .plan-focus {
+  min-width: 0;
   margin: 1.5rem 0 0;
   border-left: 3px solid var(--accent);
   background: var(--accent-bg);
   padding: 0.8rem 1rem;
   line-height: 1.5;
+  overflow-wrap: anywhere;
 }
 
 .checklist-progress {
@@ -500,12 +545,18 @@
 
 .checklist-item label {
   display: flex;
+  min-width: 0;
   min-height: 60px;
   align-items: flex-start;
   gap: 0.85rem;
   cursor: pointer;
   padding: 1rem;
   line-height: 1.5;
+}
+
+.checklist-item label > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .checklist-item input {
@@ -530,52 +581,47 @@
   margin-top: 1.5rem;
 }
 
-@media (max-width: 520px) {
+@media (min-width: 521px) {
   .header-content {
-    align-items: stretch;
-    flex-direction: column;
-    gap: 0.75rem;
-    padding-block: 1rem 0.75rem;
+    flex-wrap: wrap;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 1rem clamp(1rem, 5vw, 3rem);
   }
 
   .site-nav {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.25rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
   }
 
   .site-nav a {
-    padding: 0.6rem 0.35rem;
-    text-align: center;
+    padding: 0.55rem 0.85rem;
   }
 
   .main-content {
-    padding-top: 3rem;
-    padding-bottom: 3rem;
+    padding: clamp(3rem, 8vw, 6rem) clamp(1rem, 7vw, 5rem);
   }
 
-  .flow-actions,
-  .question-actions,
-  .checklist-actions {
-    align-items: stretch;
-    flex-direction: column;
-  }
-
-  .flow-actions > .primary-button,
-  .button-group > button {
-    flex: 1;
+  .flow-actions {
+    align-items: center;
+    flex-direction: row;
   }
 
   .button-group {
-    width: 100%;
+    width: auto;
+    justify-content: flex-end;
+  }
+
+  .button-group > button {
+    flex: 0 1 auto;
   }
 
   .question-fieldset legend {
-    font-size: 1.15rem;
-  }
-
-  .answer-option {
-    min-height: 56px;
+    font-size: 1.25rem;
   }
 }
 
