@@ -1,5 +1,4 @@
-// Sample goals. Only First Job has checklist data; other goals remain placeholders.
-export const goals = [
+[
   {
     "id": 1,
     "title": "First Job",

@@ -1,18 +1,21 @@
-import { goals } from './goals.js'
-import { requirements } from './requirements.js'
-import { documents } from './documents.js'
+import goals from './goals.json' with { type: 'json' }
+import requirements from './requirements.json' with { type: 'json' }
+import documents from './documents.json' with { type: 'json' }
 import { planningQuestions, planningRules } from './planningRules.js'
 import { generatePlan } from '../utils/planGenerator.js'
 
+// Return copies so callers can use goals without changing the sample catalog.
 export function getGoals() {
   return goals.map((goal) => ({ ...goal }))
 }
 
+// Return copies of matching requirements to keep the sample catalog unchanged.
 export function getRequirementsByGoal(goalId) {
   return requirements.filter((requirement) => requirement.goalId === goalId)
     .map((requirement) => ({ ...requirement }))
 }
 
+// Return copies so callers can use documents without changing the sample records.
 export function getDocuments() {
   return documents.map((document) => ({ ...document }))
 }
