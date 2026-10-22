@@ -73,7 +73,7 @@ test('unknown goal yields a visible warning and questions are isolated copies', 
 
 test('retains upstream placeholder goals without showing the First Job plan for them', () => {
   const goals = getGoals()
-  assert.equal(goals.length, 5)
+  assert.equal(goals.length, 6)
   assert.equal(goals[0].title, 'First Job')
   assert.equal(getSummaryCounts().goals, goals.length)
   for (const goal of goals.slice(1)) {

@@ -1,5 +1,7 @@
 # Week 2 shared data contract
 
+Last updated: 2026-10-22 — issue #45 mock JSON catalogs and empty-goal fixture.
+
 Issue #32 was read before implementation. It names the four helpers but does not
 specify conflicting field names or statuses. This contract follows the Week 2
 sprint instructions and supersedes the earlier draft usage note.
@@ -24,6 +26,16 @@ Pages obtain data only through these helpers. Components receive data only as
 props. Counts use the exact statuses `done` and `expiring`.
 
 ## Sample content
+
+Catalog records live in `src/data/goals.json`, `src/data/requirements.json`,
+and `src/data/documents.json`. Helpers import these JSON arrays; their exported
+function names, parameters, and return shapes are unchanged. JSON contains only
+data, so explanations of the fictional records are kept here.
+
+Goal ID 6, "Sample goal (no requirements)", is a visible test fixture on the
+Goals page. Its stepsCount is 0 and no requirement references it.
+`getRequirementsByGoal(6)` returns `[]` to exercise the Checklist empty state.
+The catalog now contains six goals, including the four existing placeholders.
 
 First Job has six sample requirements, each with copies 1, notes "Sample note",
 sourceUrl "", lastVerified "2026-10-19", and status "unverified".

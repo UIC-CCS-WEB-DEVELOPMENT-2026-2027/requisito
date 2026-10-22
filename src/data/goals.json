@@ -28,5 +28,11 @@
     "title": "SSS and PhilHealth",
     "description": "Get the documents needed to register with SSS and PhilHealth.",
     "stepsCount": 0
+  },
+  {
+    "id": 6,
+    "title": "Sample goal (no requirements)",
+    "description": "Fictional goal for testing the checklist empty state.",
+    "stepsCount": 0
   }
 ]

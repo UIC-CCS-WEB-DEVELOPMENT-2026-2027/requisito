@@ -20,6 +20,7 @@ export function getDocuments() {
   return documents.map((document) => ({ ...document }))
 }
 
+// Derive dashboard counts from the catalog so totals follow the sample records.
 export function getSummaryCounts() {
   return {
     goals: goals.length,
@@ -28,6 +29,7 @@ export function getSummaryCounts() {
   }
 }
 
+// Copy questions and options so callers cannot change the sample choices.
 export function getPlanningQuestions() {
   return planningQuestions.map((question) => ({
     ...question,
@@ -35,8 +37,7 @@ export function getPlanningQuestions() {
   }))
 }
 
-// Adapter only: public catalog records keep numeric IDs and the Week 2 fields.
-// Plan steps are a separate view model, not additional catalog fields.
+// Adapt catalog records into plan steps while preserving numeric IDs and catalog fields.
 export function getChecklistPlan(goalId, answers = {}) {
   const goal = goals.find((item) => item.id === goalId)
   if (!goal) {
