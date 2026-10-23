@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import EmptyState from '../components/EmptyState.jsx'
 import RequirementCard from '../components/RequirementCard.jsx'
+import ChatAssistant from '../components/ChatAssistant.jsx'
 import { getGoals, getRequirementsByGoal } from '../data/helpers.js'
 
 // Props: none. Requirements come from helpers.js.
@@ -35,6 +36,7 @@ function Checklist() {
       ) : (
         <EmptyState message="No requirements found for this goal." />
       )}
+      <ChatAssistant key={goalId} />
     </section>
   )
 }
