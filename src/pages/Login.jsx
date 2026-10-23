@@ -1,8 +1,15 @@
-import { Link } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 import LoginForm from '../components/LoginForm.jsx'
+import { useAuth } from '../context/AuthContext.jsx'
 
-// Props: none. Sign-in currently validates input only.
+// Props: none. Signed-in users are sent straight to the goals screen.
 function Login() {
+  const { isSignedIn } = useAuth()
+
+  if (isSignedIn) {
+    return <Navigate to="/goals" replace />
+  }
+
   return (
     <section className="page-content login-page" aria-labelledby="login-title">
       <div className="login-card">
@@ -13,7 +20,7 @@ function Login() {
           <p className="login-intro">A clearer path through your paperwork.</p>
         </div>
         <LoginForm />
-        <p className="login-notice"><span className="login-demo-label">Input validation preview</span>Account sign-in is not available yet.</p>
+        <p className="login-notice"><span className="login-demo-label">Demo account</span>Use any valid email and a password with at least 8 characters.</p>
         <Link className="login-back-link" to="/"><span aria-hidden="true">&larr;</span> Back to Home</Link>
       </div>
     </section>

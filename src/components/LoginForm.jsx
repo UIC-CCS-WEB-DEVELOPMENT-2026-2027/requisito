@@ -1,17 +1,21 @@
 import { useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext.jsx'
 import './LoginForm.css'
 
-// Props: none. Real sign-in is not available yet.
+// Props: none. The demo sign-in completes the app flow for protected routes.
 function LoginForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [errors, setErrors] = useState({})
   const emailRef = useRef(null)
   const passwordRef = useRef(null)
+  const navigate = useNavigate()
+  const { signIn } = useAuth()
 
   function handleValidSubmit(cleanEmail) {
-    // Real sign-in is a future issue.
-    void cleanEmail
+    signIn(cleanEmail)
+    navigate('/goals', { replace: true })
   }
 
   function handleSubmit(e) {
