@@ -1,0 +1,39 @@
+name: Source watch
+
+on:
+  schedule:
+    - cron: '17 12 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  check-sources:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository with GitHub CLI
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh repo clone "$GITHUB_REPOSITORY" "$RUNNER_TEMP/requisito"
+      - name: Check sources and create review pull request
+        working-directory: ${{ runner.temp }}/requisito
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          node scripts/source-watch.mjs
+          if git diff --quiet -- docs/source-watch-report.md data/source-watch-state.json; then
+            echo "No source-watch changes to propose."
+            exit 0
+          fi
+          branch="source-watch/${GITHUB_RUN_ID}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$branch"
+          git add docs/source-watch-report.md data/source-watch-state.json
+          git commit -m "Report civic source changes"
+          git push --set-upstream origin "$branch"
+          gh pr create \
+            --title "Review source-watch results" \
+            --body "Automated source-watch report. Review changed or unreachable sources and re-verify records manually; this workflow does not edit civic records."

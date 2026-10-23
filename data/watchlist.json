@@ -1,0 +1,62 @@
+[
+  {
+    "id": "central-911",
+    "url": "https://davaocity.gov.ph/departments/social-services/central-911/",
+    "label": "Central 911"
+  },
+  {
+    "id": "central-911-20222",
+    "url": "https://www.davaocity.gov.ph/?p=20222",
+    "label": "Central 911 related announcement"
+  },
+  {
+    "id": "dccc",
+    "url": "https://hrmo.davaocity.gov.ph/launching-of-the-davao-city-contact-center-dccc/",
+    "label": "Davao City Contact Center"
+  },
+  {
+    "id": "city-information-office",
+    "url": "https://davaocity.gov.ph/departments/public-administration/cmo-public-information-production/",
+    "label": "City Information Office"
+  },
+  {
+    "id": "business-bureau",
+    "url": "https://davaocity.gov.ph/business-bureau/",
+    "label": "Business Bureau"
+  },
+  {
+    "id": "business-permit-2023",
+    "url": "https://davaocity.gov.ph/uncategorized/davao-city-to-continue-hybrid-processing-for-one-stop-shop-renewal-of-mayors-permit-for-2023/",
+    "label": "2023 business permit announcement"
+  },
+  {
+    "id": "city-health-office",
+    "url": "https://www.davaocity.gov.ph/?p=2412",
+    "label": "City Health Office"
+  },
+  {
+    "id": "health-card-january-2026",
+    "url": "https://davaocity.gov.ph/health/health-card-issuance-starts-january-7/",
+    "label": "Health card issuance announcement"
+  },
+  {
+    "id": "health-card-related",
+    "url": "https://www.davaocity.gov.ph/?p=17203",
+    "label": "Health card related announcement"
+  },
+  {
+    "id": "psa-davao-city",
+    "url": "https://rsso11.psa.gov.ph/content/population-davao-city-based-results-2015-census-population",
+    "label": "Davao City population source"
+  },
+  {
+    "id": "city-government-home",
+    "url": "https://davaocity.gov.ph/",
+    "label": "Davao City official website"
+  },
+  {
+    "id": "comelec",
+    "url": "https://comelec.gov.ph",
+    "label": "COMELEC official website"
+  }
+]

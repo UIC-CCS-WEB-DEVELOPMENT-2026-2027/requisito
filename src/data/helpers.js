@@ -6,6 +6,13 @@ import barangays from './barangays.json' with { type: 'json' }
 import officials from './officials.json' with { type: 'json' }
 import cityFacts from './cityFacts.json' with { type: 'json' }
 import updates from './updates.json' with { type: 'json' }
+import history from './history.json' with { type: 'json' }
+import budget from './budget.json' with { type: 'json' }
+import procurement from './procurement.json' with { type: 'json' }
+import briefs from './briefs.json' with { type: 'json' }
+import elections from './elections.json' with { type: 'json' }
+import accountability from './accountability.json' with { type: 'json' }
+import sourceWatchState from '../../data/source-watch-state.json' with { type: 'json' }
 import { planningQuestions, planningRules } from './planningRules.js'
 import { generatePlan } from '../utils/planGenerator.js'
 
@@ -68,6 +75,31 @@ export function getUpdates() {
   return updates.map((item) => ({ ...item }))
 }
 
+export function getHistory() {
+  return history.map((item) => ({ ...item }))
+    .sort((left, right) => (right.year ?? -Infinity) - (left.year ?? -Infinity))
+}
+
+export function getBudget() {
+  return budget.map((item) => ({ ...item }))
+}
+
+export function getProcurement() {
+  return procurement.map((item) => ({ ...item }))
+}
+
+export function getBriefs() {
+  return briefs.map((item) => ({ ...item, steps: [...item.steps], whatYouNeed: [...item.whatYouNeed] }))
+}
+
+export function getElections() {
+  return elections.map((item) => ({ ...item }))
+}
+
+export function getAccountability() {
+  return accountability.map((item) => ({ ...item }))
+}
+
 // Return copies of matching requirements to keep the sample catalog unchanged.
 export function getRequirementsByGoal(goalId) {
   return requirements.filter((requirement) => requirement.goalId === goalId)
@@ -92,16 +124,23 @@ export function getSummaryCounts() {
 export function searchAll(query) {
   const normalizedQuery = query.trim().toLowerCase()
   const searchable = {
-    services,
-    barangays: barangays.filter((item) => !item.isSample),
-    requirements,
-    updates,
+    services: withoutSamples(services),
+    barangays: withoutSamples(barangays),
+    requirements: withoutSamples(requirements),
+    updates: withoutSamples(updates),
+    history: withoutSamples(history),
+    briefs: withoutSamples(briefs),
+    budget: withoutSamples(budget),
+    procurement: withoutSamples(procurement),
+    elections: withoutSamples(elections),
+    accountability: withoutSamples(accountability),
   }
   return Object.fromEntries(Object.entries(searchable).map(([type, records]) => [
     type,
     normalizedQuery
       ? records.filter((record) => searchableText(record).includes(normalizedQuery))
-        .map((record) => type === 'services' ? copyService(record) : { ...record })
+        .map((record) => type === 'services' ? copyService(record) :
+          type === 'briefs' ? { ...record, steps: [...record.steps], whatYouNeed: [...record.whatYouNeed] } : { ...record })
       : [],
   ]))
 }
@@ -109,12 +148,18 @@ export function searchAll(query) {
 // Derive verification counts, stale items, time-sensitive records, and gaps from catalogs.
 export function getStatusReport(today = new Date()) {
   const recordGroups = {
-    services,
-    barangays: barangays.filter((item) => !item.isSample),
-    requirements,
-    officials,
-    cityFacts,
-    updates,
+    services: withoutSamples(services),
+    barangays: withoutSamples(barangays),
+    requirements: withoutSamples(requirements),
+    officials: withoutSamples(officials),
+    cityFacts: withoutSamples(cityFacts),
+    updates: withoutSamples(updates),
+    history: withoutSamples(history),
+    briefs: withoutSamples(briefs),
+    budget: withoutSamples(budget),
+    procurement: withoutSamples(procurement),
+    elections: withoutSamples(elections),
+    accountability: withoutSamples(accountability),
     documents: documents.map((item) => ({
       ...item,
       title: item.type,
@@ -151,6 +196,29 @@ export function getStatusReport(today = new Date()) {
   }
 }
 
+export function getCityMonitor() {
+  const report = getStatusReport()
+  return {
+    verificationCounts: report.verificationCounts,
+    stale: report.stale,
+    timeSensitive: report.timeSensitive,
+    gapCounts: Object.fromEntries(Object.entries(report.verificationCounts).map(([type, counts]) => [
+      type,
+      counts.unverified + counts.conflicting,
+    ])),
+    sourceWatch: getSourceWatchStatus(),
+  }
+}
+
+export function getSourceWatchStatus() {
+  return {
+    lastChecked: sourceWatchState.lastChecked,
+    changed: Object.values(sourceWatchState.entries ?? {}).filter((entry) => entry.status === 'changed').length,
+    unreachable: Object.values(sourceWatchState.entries ?? {}).filter((entry) => entry.status === 'unreachable').length,
+    unchanged: Object.values(sourceWatchState.entries ?? {}).filter((entry) => entry.status === 'unchanged').length,
+  }
+}
+
 // Copy questions and options so callers cannot change the sample choices.
 export function getPlanningQuestions() {
   return planningQuestions.map((question) => ({
@@ -165,6 +233,10 @@ function copyService(service) {
     contact: { ...service.contact, phone: [...service.contact.phone] },
     ...(service.steps ? { steps: [...service.steps] } : {}),
   }
+}
+
+function withoutSamples(records) {
+  return records.filter((record) => !record.isSample)
 }
 
 function searchableText(record) {

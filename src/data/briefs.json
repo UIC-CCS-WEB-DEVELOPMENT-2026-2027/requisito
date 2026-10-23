@@ -1,0 +1,70 @@
+[
+  {
+    "id": "brief-health-card",
+    "slug": "how-to-get-a-health-card",
+    "type": "brief",
+    "title": "How to get a health card",
+    "description": "A source-based outline of the listed health-card requirements. Details are unverified and may have changed.",
+    "category": "Health",
+    "sourceUrl": "https://davaocity.gov.ph/health/health-card-issuance-starts-january-7/",
+    "relatedSources": ["https://www.davaocity.gov.ph/?p=17203"],
+    "lastVerified": null,
+    "verification": "unverified",
+    "timeSensitive": true,
+    "notes": "The venue and schedule must be confirmed with the City Health Office before use.",
+    "steps": [
+      "Confirm the current venue and schedule with the City Health Office.",
+      "Review the listed requirements and their freshness windows in the checklist.",
+      "Confirm current fees and instructions with the issuing office."
+    ],
+    "whatYouNeed": [
+      "Chest x-ray",
+      "Urinalysis",
+      "Fecalysis",
+      "Official receipt for the health card",
+      "Cedula",
+      "Valid ID with a photo",
+      "Hepatitis B antibody test"
+    ]
+  },
+  {
+    "id": "brief-business-permit",
+    "slug": "how-to-apply-for-a-business-permit",
+    "type": "brief",
+    "title": "How to apply for a business permit",
+    "description": "A short outline based on the current Business Bureau and City Treasurer catalog notes.",
+    "category": "Business and Permits",
+    "sourceUrl": "https://davaocity.gov.ph/business-bureau/",
+    "lastVerified": null,
+    "verification": "unverified",
+    "timeSensitive": true,
+    "notes": "Deadlines, systems, payment methods, and required documents can change. Confirm each step with the city offices.",
+    "steps": [
+      "Check the Business Bureau's current application instructions and required documents.",
+      "Complete the application using the currently listed process.",
+      "Confirm the tax and fee payment options with the City Treasurer's Office.",
+      "Follow the current instructions for receiving or printing the permit."
+    ],
+    "whatYouNeed": []
+  },
+  {
+    "id": "brief-emergency-contacts",
+    "slug": "who-to-call-in-an-emergency",
+    "type": "brief",
+    "title": "Who to call in an emergency",
+    "description": "Contact information drawn from the Central 911 and Davao City Contact Center records.",
+    "category": "Emergency",
+    "sourceUrl": "https://davaocity.gov.ph/departments/social-services/central-911/",
+    "relatedSources": ["https://hrmo.davaocity.gov.ph/launching-of-the-davao-city-contact-center-dccc/"],
+    "lastVerified": null,
+    "verification": "unverified",
+    "timeSensitive": true,
+    "notes": "Contact details and availability are unverified. Confirm current numbers with the city.",
+    "steps": [
+      "For an emergency, the catalog lists Central 911.",
+      "For public inquiries, the catalog lists the Davao City Contact Center.",
+      "Check the linked city sources because phone routing and availability may change."
+    ],
+    "whatYouNeed": []
+  }
+]

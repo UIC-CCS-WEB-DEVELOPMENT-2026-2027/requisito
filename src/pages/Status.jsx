@@ -1,17 +1,19 @@
 import EmptyState from '../components/EmptyState.jsx'
 import RecordMeta from '../components/RecordMeta.jsx'
-import { getStatusReport, STALE_DAYS } from '../data/helpers.js'
+import { getStatusReport, getSourceWatchStatus, STALE_DAYS } from '../data/helpers.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
 
 function Status() {
   const { t } = useLanguage()
   const report = getStatusReport()
   const types = Object.entries(report.verificationCounts)
+  const sourceWatch = getSourceWatchStatus()
   return (
     <section className="page-content flow-content" aria-labelledby="status-title">
       <p className="eyebrow">Catalog transparency</p>
       <h1 id="status-title">{t('page.status')}</h1>
       <p className="page-description">Counts are calculated from the current data files. Sample barangay fixtures are excluded.</p>
+      <p>{t('label.lastSourceWatch')}: {sourceWatch.lastChecked ?? t('status.notRun')}</p>
       <section aria-labelledby="verification-counts-title">
         <h2 id="verification-counts-title">Verification counts</h2>
         <div className="portal-grid">

@@ -10,11 +10,16 @@ The current catalog contracts and helper list are maintained in
 - `getRequirementsByGoal(7)` returns seven unverified health-card entries.
 - `getDocuments()` returns four fictional document tracker entries.
 - Directory helper functions provide services, sample barangay fixtures,
-  officials, city facts, updates, global search, and derived status reporting.
+  officials, city facts, updates, history, briefs, budget, procurement,
+  elections, accountability, global search, derived status, and City Monitor.
+- History, budget, procurement, and accountability catalogs are empty until
+  sourced data is supplied. The current election catalog contains one
+  unverified COMELEC link; briefs are based only on the supplied Part 1 records.
 
 The six sample barangay records are not real city data and are not included in
 search or status. The audit checks schema and source-policy rules but never
-edits or verifies records.
+edits or verifies records. Sample rows in any future budget/procurement catalog
+must also be excluded from public search, status, and City Monitor.
 
 ## Suggested issue comment
 

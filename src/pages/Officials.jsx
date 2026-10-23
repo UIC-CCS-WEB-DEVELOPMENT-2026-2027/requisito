@@ -2,6 +2,7 @@ import EmptyState from '../components/EmptyState.jsx'
 import RecordMeta from '../components/RecordMeta.jsx'
 import { getOfficials } from '../data/helpers.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
+import { Link } from 'react-router-dom'
 
 function Officials() {
   const { t } = useLanguage()
@@ -16,12 +17,13 @@ function Officials() {
           {officials.map((office) => (
             <li className="portal-card" key={office.id}>
               <h2>{office.title}</h2>
-              <p>{office.holderName ?? 'Office holder not listed.'}</p>
+              {office.verification === 'verified' && office.holderName && <p>{office.holderName}</p>}
               {office.verification !== 'verified'
                 ? <p>Not verified yet. Check the official city website.</p>
                 : <p>As of <time dateTime={office.lastVerified}>{office.lastVerified}</time>.</p>}
-              <p className="sample-notice">{office.notes}</p>
+              {office.verification === 'verified' && office.notes && <p className="sample-notice">{office.notes}</p>}
               <RecordMeta record={office} />
+              <Link to={`/officials/${office.slug}`}>View office profile</Link>
             </li>
           ))}
         </ul>

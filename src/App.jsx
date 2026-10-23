@@ -19,6 +19,16 @@ import Search from './pages/Search.jsx'
 import Status from './pages/Status.jsx'
 import Contribute from './pages/Contribute.jsx'
 import Credits from './pages/Credits.jsx'
+import History from './pages/History.jsx'
+import Budget from './pages/Budget.jsx'
+import Procurement from './pages/Procurement.jsx'
+import Briefs from './pages/Briefs.jsx'
+import Monitor from './pages/Monitor.jsx'
+import OfficialProfile from './pages/OfficialProfile.jsx'
+import Elections from './pages/Elections.jsx'
+import Accountability from './pages/Accountability.jsx'
+import Participate from './pages/Participate.jsx'
+import Integrity from './pages/Integrity.jsx'
 
 // Props: none.
 function App() {
@@ -38,10 +48,20 @@ function App() {
         <Route path="/about-davao" element={<AboutDavao />} />
         <Route path="/updates" element={<Updates />} />
         <Route path="/officials" element={<Officials />} />
+        <Route path="/officials/:slug" element={<OfficialProfile />} />
         <Route path="/search" element={<Search />} />
         <Route path="/status" element={<Status />} />
         <Route path="/contribute" element={<Contribute />} />
         <Route path="/credits" element={<Credits />} />
+        <Route path="/history" element={<History />} />
+        <Route path="/budget" element={<Budget />} />
+        <Route path="/procurement" element={<Procurement />} />
+        <Route path="/briefs" element={<Briefs />} />
+        <Route path="/monitor" element={<Monitor />} />
+        <Route path="/elections" element={<Elections />} />
+        <Route path="/accountability" element={<Accountability />} />
+        <Route path="/participate" element={<Participate />} />
+        <Route path="/integrity" element={<Integrity />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>

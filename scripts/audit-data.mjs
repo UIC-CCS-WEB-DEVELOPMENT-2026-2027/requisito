@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs'
 import process from 'node:process'
-import { validBarangayDistrict, verificationIssues } from './audit-rules.mjs'
+import { validBarangayDistrict, validDate, verificationIssues } from './audit-rules.mjs'
 
 const readData = (name) =>
   JSON.parse(readFileSync(new URL(`../src/data/${name}.json`, import.meta.url), 'utf8'))
@@ -16,8 +16,14 @@ const officialHosts = (process.env.OFFICIAL_DOMAIN_ALLOWLIST ?? '')
   .split(',')
   .map((host) => host.trim().toLowerCase())
   .filter(Boolean)
-const allowedTypes = new Set(['service', 'hotline', 'barangay', 'official', 'fact', 'update', 'requirement'])
-const requiredCatalogs = ['services', 'barangays', 'officials', 'cityFacts', 'updates']
+const allowedTypes = new Set([
+  'service', 'hotline', 'barangay', 'official', 'fact', 'update', 'requirement',
+  'history', 'budget', 'procurement', 'brief', 'election', 'accountability',
+])
+const requiredCatalogs = [
+  'services', 'barangays', 'officials', 'cityFacts', 'updates', 'history',
+  'budget', 'procurement', 'briefs', 'elections', 'accountability',
+]
 const errors = []
 const auditedRecords = []
 const today = new Intl.DateTimeFormat('en-CA', {
@@ -59,6 +65,32 @@ function auditRecord(record, type, index, seenIds, seenSlugs) {
     if (record.validityMonths !== null && (!Number.isFinite(record.validityMonths) || record.validityMonths < 0)) {
       recordErrors.push('invalid validityMonths')
     }
+    if (record.type === 'history' && record.year !== null && (!Number.isInteger(record.year) || record.year < 1 || record.year > Number(today.slice(0, 4)) + 1)) {
+      recordErrors.push('invalid history year')
+    }
+    if (record.type === 'brief' && (!Array.isArray(record.steps) || !Array.isArray(record.whatYouNeed))) {
+      recordErrors.push('invalid brief steps or whatYouNeed')
+    }
+    if (record.type === 'budget') {
+      if (!Number.isInteger(record.fiscalYear) || record.fiscalYear < 1900 || record.fiscalYear > Number(today.slice(0, 4)) + 5) {
+        recordErrors.push('invalid fiscalYear')
+      }
+      if (typeof record.amountPHP !== 'number' || !Number.isFinite(record.amountPHP) || record.amountPHP < 0) {
+        recordErrors.push('invalid amountPHP')
+      }
+      if (record.verification === 'verified' && record.isSample) recordErrors.push('verified budget row is marked sample')
+    }
+    if (record.type === 'procurement') {
+      if (typeof record.amountPHP !== 'number' || !Number.isFinite(record.amountPHP) || record.amountPHP < 0) {
+        recordErrors.push('invalid amountPHP')
+      }
+      if (record.awardDate !== null && !validDate(record.awardDate)) recordErrors.push('invalid awardDate')
+      if (record.verification === 'verified' && record.isSample) recordErrors.push('verified procurement row is marked sample')
+    }
+    if (record.type === 'accountability' &&
+        !['audit-report', 'ordinance', 'resolution', 'public-statement'].includes(record.kind)) {
+      recordErrors.push('invalid accountability kind')
+    }
   }
   auditedRecords.push({
     type,
@@ -83,9 +115,7 @@ for (const name of requiredCatalogs) {
 
 const requirementIds = new Set()
 const requirementSlugs = new Set()
-requirements.forEach((record, index) => {
-  auditRecord(record, 'requirements', index, requirementIds, requirementSlugs)
-})
+requirements.forEach((record, index) => auditRecord(record, 'requirements', index, requirementIds, requirementSlugs))
 
 console.table(auditedRecords.map(({ type, title, verification, sample, result }) => ({
   type, title, verification, sample: sample ? 'sample' : '', result,

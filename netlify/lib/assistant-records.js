@@ -1,6 +1,9 @@
 import process from 'node:process'
 import requirements from '../../src/data/requirements.json' with { type: 'json' }
 import services from '../../src/data/services.json' with { type: 'json' }
+import history from '../../src/data/history.json' with { type: 'json' }
+import briefs from '../../src/data/briefs.json' with { type: 'json' }
+import budget from '../../src/data/budget.json' with { type: 'json' }
 
 export const STALE_DAYS = 90
 export const REFUSAL = "I don't have verified information on that. Please confirm with the issuing office."
@@ -13,7 +16,8 @@ export function refusal(warnings = []) {
 // Progress status never determines whether government information was verified.
 export function verificationOf(record) {
   const label = record.label ?? record.title
-  if (!Number.isInteger(record.id) || !['requirement', 'service', 'hotline'].includes(record.type) ||
+  if (!Number.isInteger(record.id) ||
+      !['requirement', 'service', 'hotline', 'history', 'brief', 'budget'].includes(record.type) ||
       typeof label !== 'string' || typeof record.notes !== 'string' ||
       typeof record.sourceUrl !== 'string' ||
       (record.lastVerified !== null && typeof record.lastVerified !== 'string')) return 'unverified'
@@ -34,7 +38,7 @@ export function verificationOf(record) {
   return 'verified'
 }
 
-export function getAssistantRecords() {
+export function getAssistantRecords(additionalCatalogs = {}) {
   const serviceRecords = services.map(service => ({
     ...service,
     label: service.title,
@@ -50,7 +54,22 @@ export function getAssistantRecords() {
       service.notes,
     ].filter(Boolean).join('. '),
   }))
-  return [...requirements.map(record => ({ ...record })), ...serviceRecords]
+  const baseRecords = [...requirements.map(record => ({ ...record })), ...serviceRecords]
+  let nextId = Math.max(...baseRecords.map(record => record.id)) + 1
+  const additionalRecords = [
+    ...(additionalCatalogs.history ?? history),
+    ...(additionalCatalogs.briefs ?? briefs),
+    ...(additionalCatalogs.budget ?? budget),
+  ].filter(record => !record.isSample)
+    .map(record => ({
+      ...record,
+      id: nextId++,
+      label: record.title,
+      goalId: 0,
+      copies: 1,
+      status: record.verification,
+    }))
+  return [...baseRecords, ...additionalRecords]
 }
 
 function today() {

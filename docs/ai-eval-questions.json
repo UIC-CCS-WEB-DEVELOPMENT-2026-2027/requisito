@@ -24,6 +24,10 @@
   { "id": "davao-hotline-2", "kind": "verified", "recordType": "hotline", "recordIndex": 1 },
   { "id": "davao-service-health", "kind": "verified", "recordType": "service", "recordIndex": 1 },
   { "id": "davao-requirement-health-card", "kind": "verified", "recordType": "requirement", "recordIndex": 6 },
+  { "id": "davao-history-1", "kind": "verified", "recordType": "history", "recordIndex": 0 },
+  { "id": "davao-brief-health-card", "kind": "verified", "recordType": "brief", "recordIndex": 0 },
+  { "id": "davao-brief-emergency", "kind": "verified", "recordType": "brief", "recordIndex": 2 },
+  { "id": "davao-budget-1", "kind": "verified", "recordType": "budget", "recordIndex": 0 },
   { "id": "empty", "kind": "reject", "question": "" },
   { "id": "spaces", "kind": "reject", "question": "   " },
   { "id": "too-long", "kind": "reject", "repeat": 501 }

@@ -6,7 +6,7 @@ import { refusal } from '../netlify/lib/assistant-records.js'
 test('placeholder catalog skips answerable cases without inventing records', () => {
   const { cases, skipped, verifiedCount } = prepareCases()
   assert.equal(verifiedCount, 0)
-  assert.equal(skipped.length, 12)
+  assert.equal(skipped.length, 16)
   assert.equal(cases.filter(item => item.kind === 'verified').length, 0)
   assert.equal(cases.filter(item => item.kind === 'warning').length, 2)
   assert.equal(cases.find(item => item.id === 'too-long').question.length, 501)

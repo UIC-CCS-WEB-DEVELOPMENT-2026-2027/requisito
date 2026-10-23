@@ -1,0 +1,15 @@
+[
+  {
+    "id": "comelec-official-site",
+    "slug": "comelec",
+    "type": "election",
+    "title": "Commission on Elections official website",
+    "description": "Use COMELEC's official website to look for current voter registration, election dates, and polling-place information.",
+    "category": "Elections",
+    "sourceUrl": "https://comelec.gov.ph",
+    "lastVerified": null,
+    "verification": "unverified",
+    "timeSensitive": true,
+    "notes": "This link has not been verified in this project. Check current information directly with COMELEC."
+  }
+]

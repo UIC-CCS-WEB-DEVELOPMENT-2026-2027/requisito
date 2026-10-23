@@ -20,6 +20,12 @@ Directory content comes from JSON catalogs in `src/data`.
   and status counts.
 - City facts, a source-linked notices feed, and an offices-only officials page.
 - Global search across services, real barangay records, requirements, and updates.
+- Source-linked civic briefs, a sourced history timeline, election links, and
+  office profiles that show holders only after verification.
+- Budget and procurement dashboards with CSV importers; catalogs remain empty
+  until official source data is supplied.
+- A local-data City Monitor, source-watch report, empty accountability ledger,
+  source-aware participation guidance, and integrity disclosures.
 - Sources and Status page with derived verification counts, review-age reporting,
   time-sensitive records, and known gaps.
 - A correction form that prepares a public GitHub issue; it does not submit or
@@ -28,16 +34,16 @@ Directory content comes from JSON catalogs in `src/data`.
   need native-speaker review.
 - The existing goals, checklist, documents, demo sign-in, and AI assistant remain.
 
-## Tier 2 and Tier 3
+## Additional civic routes
 
-Tier 2 stretch ideas are not implemented: source-watch automation, a history
-timeline, and a budget dashboard. See the BetterMakati comparison in
-[docs/build-log.md](docs/build-log.md).
-
-Tier 3 is a Phase 2 pitch only: accountability ledger, participation hub,
-elections pages, City Monitor, and integrity information. No Tier 3 code is
-included. [docs/database-design.md](docs/database-design.md) is an earlier
-database proposal; review and adapt it before implementation.
+Part 2 adds `/history`, `/budget`, `/procurement`, `/briefs`, `/monitor`,
+`/officials/:slug`, `/elections`, `/accountability`, `/participate`, and
+`/integrity`. The remaining reference features and any data-dependent omissions
+are documented in [docs/parity-matrix.md](docs/parity-matrix.md). The broader
+accountability, participation, election, monitor, and integrity features are
+still a Phase 2 prototype: there is no backend, database, user-submitted
+reporting system, or live source feed. See the existing
+[database design draft](docs/database-design.md) before any future backend work.
 
 ## Run locally
 
@@ -99,17 +105,35 @@ npm run check
 The import writes unverified records. It does not mark data as verified.
 Additional update steps are in [docs/data-refresh.md](docs/data-refresh.md).
 
+### Budget and procurement data
+
+Place official source CSVs at `data-source/davao-budget.csv` and
+`data-source/davao-procurement.csv`. Run `node scripts/import-budget.mjs` and
+`node scripts/import-procurement.mjs`, then `npm run check`. See
+[docs/data-refresh.md](docs/data-refresh.md) for exact column names. The current
+catalogs are empty; no sample money or contracts are included.
+
+### Source watch
+
+Preview the approved source list without a network request using
+`node scripts/source-watch.mjs --dry-run`. Run `node scripts/source-watch.mjs`
+only when ready to fetch the official pages. Review the report and verify
+changes manually; source-watch never changes record verification metadata.
+
 ## Limitations
 
 - Most factual content is unverified. Empty source links and null dates are
   intentionally visible rather than filled with guesses.
 - Barangays are not yet populated from official source data.
+- History, budget, procurement, and accountability records need data from the
+  maintainer; imported civic and financial data remains unverified.
+- Participation instructions without an approved source explicitly say so.
 - The contribution form only prepares a GitHub issue link. Submitting is a
   separate action on GitHub and requires a repository account.
 - Demo sign-in is front-end-only and is not a security boundary.
 - The assistant answers only from eligible verified records in normal mode.
-  The new Davao records start unverified, so it will not use them until they
-  are reviewed. Provider configuration and keys stay on the server.
+  New history, brief, and budget records are included only after they meet the
+  verified-source checks. Provider configuration and keys stay on the server.
 - The development server and browser route checks were not started by this
   automation run; use the manual route list supplied with the completion
   report to check refresh behavior and the 360px layout.
@@ -138,13 +162,13 @@ contribution patterns were independently reimplemented in Requisito's stack.
 No BetterMakati source code, branding, images, or Makati-specific content was
 copied. See [docs/credits.md](docs/credits.md).
 
-## Phase 2 pitch
+## Future work
 
-Potential next work includes the Tier 3 accountability, participation,
-elections, City Monitor, and integrity features, backed by a reviewed database
-and authenticated server API. The current database design is only a draft;
-Caleb must decide data ownership, authentication, retention, privacy, and
-moderation policies before implementation.
+The current accountability ledger, participation guidance, elections links,
+monitor, and integrity pages are static prototypes. Any future database or
+authenticated API requires reviewed data ownership, authentication, retention,
+privacy, moderation, and operational policies. The existing database design is
+only a draft and must be reviewed before implementation.
 
 ## AI Usage Disclosure
 

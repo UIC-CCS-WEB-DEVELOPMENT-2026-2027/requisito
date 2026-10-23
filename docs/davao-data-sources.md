@@ -17,6 +17,17 @@ on the source page before changing verification metadata.
 | https://www.davaocity.gov.ph/?p=17203 | Earlier health-card schedule; historical only and requires current confirmation. |
 | https://rsso11.psa.gov.ph/content/population-davao-city-based-results-2015-census-population | PSA 2015 census source for city status/region and the cited barangay count. Confirm every claim on the source page. |
 | https://davaocity.gov.ph/ | Official city website starting point for confirming the listed city offices; no office holder is asserted in the data. |
+| https://comelec.gov.ph | COMELEC official-site link for current voter-registration, election-date, and polling-place information; project link is unverified. |
+
+The three civic briefs reuse source URLs already listed above. The health-card
+brief uses the health-card announcements, the business-permit brief uses the
+Business Bureau page, and the emergency brief uses Central 911 and the Contact
+Center source.
+
+No official Davao budget or PhilGEPS procurement CSV has been supplied. The
+import scripts accept HTTPS source URLs per row but do not locate, fetch, or
+verify source data. The history and accountability catalogs remain empty until
+dated, sourced entries or official documents are provided.
 
 The supplied 2020 population and land-area numbers have no official URL yet and
 remain unverified with an empty `sourceUrl`. They need the relevant PSA page.
@@ -28,3 +39,9 @@ For the complete record-to-source mapping see
 [`src/data/cityFacts.json`](../src/data/cityFacts.json),
 [`src/data/updates.json`](../src/data/updates.json), and
 [`src/data/officials.json`](../src/data/officials.json).
+Part 2 adds [`src/data/briefs.json`](../src/data/briefs.json),
+[`src/data/elections.json`](../src/data/elections.json), and empty
+[`src/data/history.json`](../src/data/history.json),
+[`src/data/budget.json`](../src/data/budget.json),
+[`src/data/procurement.json`](../src/data/procurement.json), and
+[`src/data/accountability.json`](../src/data/accountability.json).

@@ -10,13 +10,25 @@ const groupTitles = {
   barangays: 'Barangays',
   requirements: 'Requirements',
   updates: 'Updates',
+  history: 'History',
+  briefs: 'Civic briefs',
+  budget: 'Budget',
+  procurement: 'Procurement',
+  elections: 'Elections',
+  accountability: 'Accountability records',
 }
 
 function recordLink(type, record) {
   if (type === 'services') return `/services/${record.slug}`
   if (type === 'barangays') return `/barangays/${record.slug}`
   if (type === 'requirements') return `/checklist?goal=${record.goalId}`
-  return record.sourceUrl || '/updates'
+  if (type === 'history') return '/history'
+  if (type === 'briefs') return '/briefs'
+  if (type === 'budget') return '/budget'
+  if (type === 'procurement') return '/procurement'
+  if (type === 'elections') return '/elections'
+  if (type === 'accountability') return '/accountability'
+  return '/updates'
 }
 
 function Search() {
@@ -39,7 +51,7 @@ function Search() {
     <section className="page-content flow-content" aria-labelledby="search-title">
       <p className="eyebrow">Find information</p>
       <h1 id="search-title">{t('page.search')}</h1>
-      <p className="page-description">Search services, barangays, requirements, and city updates.</p>
+      <p className="page-description">Search services, barangays, requirements, city updates, history, civic briefs, budget and procurement records.</p>
       <form className="portal-search-form" onSubmit={handleSubmit}>
         <label htmlFor="portal-search">{t('label.globalSearch')}</label>
         <input id="portal-search" type="search" maxLength={100} value={input} onChange={(event) => setInput(event.target.value)} />

@@ -43,3 +43,25 @@ scope, so they are not implemented or ported.
 - Keep the assistant's verified-only policy and its existing requirement record adapter intact.
 - The reference is read-only. Its TypeScript/Tailwind components and Davao-unrelated content are patterns only, not code or copy to transplant.
 - Route refreshes depend on the existing deployment SPA fallback; local visual route checks are skipped per user instruction, with build and Node tests used instead.
+
+## Part 2 parity implementation
+
+The remaining requested data-driven pages now use the same catalog and
+verification conventions:
+
+- `/history`, `/briefs`, `/budget`, `/procurement`, `/monitor`, `/elections`,
+  `/accountability`, `/participate`, `/integrity`, and `/officials/:slug`.
+- `history.json`, `budget.json`, and `procurement.json` remain empty until the
+  maintainer provides sourced data. The only election entry is the unverified
+  COMELEC official-site link. Accountability is empty by design.
+- `scripts/source-watch.mjs` hashes normalized page content, compares
+  `data/source-watch-state.json`, and writes a human-review report. The workflow
+  proposes a review PR through GitHub CLI. No network scan or workflow run was
+  performed; only `--dry-run` was executed.
+- Budget/procurement CSV importers are built with Node built-ins, retain
+  unverified state, and are covered by fixture-string tests.
+- The monitor derives counts, gaps, stale data, time-sensitive records, and
+  source-watch results from local catalogs. It does not scrape news or score
+  public officials.
+- `docs/parity-matrix.md` records implemented features and explicit omissions
+  where Davao data, privacy policy, or backend capabilities are unavailable.

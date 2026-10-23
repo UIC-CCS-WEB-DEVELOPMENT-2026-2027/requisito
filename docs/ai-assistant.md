@@ -16,10 +16,11 @@ Do not enter IDs, names, addresses, or other personal details.
 
 ## Accuracy rules
 
-1. The server uses local requirement, service, and hotline records, with no open
-   web search. Normal mode includes only records that pass the verified-source
-   checks. Unverified and conflicting records are excluded; local test mode may
-   include unverified records with a visible test warning.
+1. The server uses local requirement, service, hotline, history, brief, and
+   budget records, with no open web search. Normal mode includes only records
+   that pass the verified-source checks. Unverified and conflicting records are
+   excluded; local test mode may include unverified records with a visible test
+   warning.
 2. The provider receives IDs, labels, notes, copy counts, and verification values.
    Source URLs and verification dates are omitted. The model returns JSON with
    `answer`, `used_ids`, and `confidence`. The server builds the source list itself.
@@ -30,8 +31,8 @@ Do not enter IDs, names, addresses, or other personal details.
    produce: "I don't have verified information on that. Please confirm with the issuing office."
    Confidence is `unknown`, and sources are empty. With no eligible records,
    the server adds "No verified civic records are available yet." without calling Gemini.
-5. No requirement or service content is invented. The audit never changes
-   records. Current Davao requirements, services, and hotlines remain unverified
+5. No requirement, service, brief, history, or budget content is invented. The
+   audit never changes records. Current Davao factual records remain unverified
    until Caleb checks their official pages.
 6. Requests use JSON output, temperature 0.2, and at most 700 output tokens.
    A provider 400 stops immediately; parameters are not silently changed.
@@ -175,13 +176,14 @@ Run the live evaluation from a second terminal:
 node scripts/eval-assistant.mjs
 ```
 
-The 28 definitions cover eight original requirement cases, four Davao service,
-hotline, and requirement cases, four out-of-scope cases, three injections, four
-PII cases, two warning cases, and three validation edges. Answerable questions
-are generated at runtime only from verified records and are skipped when a
-matching verified record is unavailable. Warning cases use conflicting or stale
-records, or unverified records when none are eligible. Missing fixtures are
-reported as skipped; skipped coverage is not an accuracy pass.
+The 32 definitions cover eight original requirement cases, four Davao service,
+hotline, and requirement cases, four history/brief/budget cases, four
+out-of-scope cases, three injections, four PII cases, two warning cases, and
+three validation edges. Answerable questions are generated at runtime only from
+verified records and are skipped when a matching verified record is
+unavailable. Warning cases use conflicting or stale records, or unverified
+records when none are eligible. Missing fixtures are reported as skipped;
+skipped coverage is not an accuracy pass.
 
 `EVAL_DELAY_MS = 13000` applies after provider calls, using the server's
 `X-Assistant-Provider: called|skipped` header. Expected local 400 cases skip the

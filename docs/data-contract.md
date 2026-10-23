@@ -6,13 +6,15 @@ progress and from document-status examples.
 ## Requisito records
 
 New civic records in `services.json`, `barangays.json`, `officials.json`,
-`cityFacts.json`, and `updates.json` share these fields:
+`cityFacts.json`, `updates.json`, `history.json`, `budget.json`,
+`procurement.json`, `briefs.json`, `elections.json`, and
+`accountability.json` share these fields when records are present:
 
 | Field | Type |
 | --- | --- |
 | id | string or number; unique within its data file |
 | slug | string; unique within its data file and used in routes |
-| type | `service`, `hotline`, `barangay`, `official`, `fact`, `update`, or `requirement` |
+| type | `service`, `hotline`, `barangay`, `official`, `fact`, `update`, `requirement`, `history`, `budget`, `procurement`, `brief`, `election`, or `accountability` |
 | title | string |
 | description | string |
 | category | string |
@@ -28,6 +30,23 @@ optional. Barangays have `adminDistrict`, `legislativeDistrict`,
 `population2020`, and `isSample`. Officials have `holderName`, which stays
 `null` until independently verified. Updates may have a nullable `date`.
 Requirement and document records may have `validityMonths: number | null`.
+
+History records add `year: number | null`; a null year displays as
+"Date to be confirmed." Budget records add `fiscalYear`, `sector`, and
+non-negative `amountPHP`. Procurement records add `referenceNo`, `agency`,
+non-negative `amountPHP`, nullable `awardDate`, and the source-provided `status`.
+Briefs add ordered `steps` and a `whatYouNeed` list; related source links are
+optional. Officials may add `term`; holder and term are displayed only when the
+record is verified. Election records contain only sourced links and summaries.
+Accountability records use `kind` = `audit-report`, `ordinance`, `resolution`,
+or `public-statement`, plus `officialBody`, `referenceNo`, and `date`; the
+catalog starts empty.
+
+Budget and procurement JSON catalogs start empty and are generated from
+maintainer-provided CSVs. Imported rows are unverified, never sample-filled.
+The source-watch list is separate (`data/watchlist.json`); state hashes and the
+last report date are in `data/source-watch-state.json`. Neither source watch
+nor an importer changes verification dates.
 
 The existing requirement fields remain: `id`, `goalId`, `label`, `notes`,
 `copies`, `sourceUrl`, `lastVerified`, `status`, and `verification`. They now
@@ -46,10 +65,15 @@ confirmed. The fictional tracker examples do not calculate expiry.
   `getServicesByCategory(category)`
 - `getBarangays()`, `getBarangayBySlug(slug)`, `getDistricts()`
 - `getOfficials()`, `getCityFacts()`, and `getUpdates()`
-- `searchAll(query)` returns `{ services, barangays, requirements, updates }`.
-  It trims and lowercases the query and excludes sample barangays.
+- `getHistory()`, `getBudget()`, `getProcurement()`, `getBriefs()`,
+  `getElections()`, and `getAccountability()`
+- `searchAll(query)` returns grouped arrays for services, barangays,
+  requirements, updates, history, briefs, budget, procurement, elections, and
+  accountability. It trims and lowercases the query and excludes sample rows.
 - `getStatusReport()` derives verification counts, stale records,
   time-sensitive records, and known gaps. `STALE_DAYS` is 90.
+- `getCityMonitor()` derives monitor values from those local records, while
+  `getSourceWatchStatus()` exposes the last local report date and result counts.
 
 Existing goal, requirement, document, summary, planning-question, and checklist
 helpers remain available. Goal ID 7 is "First Job in Davao City" and has seven
@@ -70,6 +94,12 @@ Barangay placeholder rows are named Sample Barangay A-F, marked `isSample: true`
 and clearly labeled in the interface. They are excluded from global search and
 all Sources and Status counts. Do not use them as real city information.
 
+Any future sample budget or procurement rows must be clearly named and marked
+`isSample: true`; sample records are excluded from search, status counts, and
+City Monitor. The current budget, procurement, history, and accountability
+catalogs are empty. The elections catalog contains only the unverified COMELEC
+official-site link. History entries must be supplied with dates and sources.
+
 The first six requirements and four document tracker entries remain
 illustrative. Some legacy requirement fixtures have a sample date in
 `lastVerified`, but their `verification: "unverified"` state is authoritative;
@@ -79,7 +109,9 @@ the interface reports them as never verified.
 
 The interface offers English, Filipino, and Bisaya (Cebuano) labels. Record
 content remains English. Filipino and Bisaya translations need native-speaker
-review. Language preference is stored in local storage when the browser permits.
+review. New navigation and Part 2 page labels are included in all three
+catalogs; missing translations fall back to English. Language preference is
+stored in local storage when the browser permits.
 
 Demo sign-in is only in-memory UI state. The correction form captures no name or
 email, does not call a server, and prepares a public GitHub issue link. Do not

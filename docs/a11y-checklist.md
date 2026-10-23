@@ -29,3 +29,13 @@ and a 360px-wide viewport.
   minimized.
 - [ ] Confirm no record's unverified state is hidden and sample barangays are
   clearly labeled.
+- [ ] Check each Part 2 route: `/history`, `/budget`, `/procurement`, `/briefs`,
+  `/monitor`, `/officials/:slug`, `/elections`, `/accountability`,
+  `/participate`, and `/integrity`.
+- [ ] Use the budget year selector, procurement search/status filters, and
+  accountability search with keyboard only; confirm result/status updates are
+  announced.
+- [ ] Confirm every data table has a useful caption and scoped header cells,
+  and can be scrolled at 360px without page-wide horizontal overflow.
+- [ ] Confirm CSS bars have accessible text alternatives and the numeric
+  proportions are also presented as text where applicable.

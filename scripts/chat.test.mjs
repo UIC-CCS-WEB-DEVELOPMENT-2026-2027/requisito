@@ -45,6 +45,29 @@ test('assistant catalog adapts Davao services and keeps unverified records out o
     lastVerified: '2026-10-20',
     notes: 'Current service contact details.',
   }), 'unverified')
+  const brief = records.find(record => record.slug === 'how-to-get-a-health-card')
+  assert.equal(brief.type, 'brief')
+  assert.equal(verificationOf(brief), 'unverified')
+  const verifiedSupplemental = getAssistantRecords({
+    history: [{
+      id: 'history-fixture', type: 'history', title: 'Sourced timeline fixture',
+      notes: 'A supported date from an official source.', sourceUrl: 'https://davaocity.gov.ph/history',
+      lastVerified: '2026-10-20', verification: 'verified',
+    }],
+    briefs: [{
+      id: 'brief-fixture', type: 'brief', title: 'Sourced brief fixture',
+      notes: 'Steps supported by an official source.', sourceUrl: 'https://davaocity.gov.ph/brief',
+      lastVerified: '2026-10-20', verification: 'verified',
+    }],
+    budget: [{
+      id: 'budget-fixture', type: 'budget', title: 'Sourced budget fixture',
+      notes: 'A budget figure supported by an official source.', sourceUrl: 'https://davaocity.gov.ph/budget',
+      lastVerified: '2026-10-20', verification: 'verified',
+    }],
+  })
+  for (const type of ['history', 'brief', 'budget']) {
+    assert.equal(verificationOf(verifiedSupplemental.find(record => record.type === type)), 'verified')
+  }
 })
 
 test('guards reject malformed JSON, types, length and PII before counting requests', async t => {

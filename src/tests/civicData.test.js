@@ -4,12 +4,20 @@ import {
   getBarangayBySlug,
   getBarangays,
   getCityFacts,
+  getCityMonitor,
   getDistricts,
+  getHistory,
+  getBriefs,
+  getBudget,
+  getProcurement,
+  getElections,
+  getAccountability,
   getOfficials,
   getServiceBySlug,
   getServices,
   getServicesByCategory,
   getStatusReport,
+  getSourceWatchStatus,
   getUpdates,
   searchAll,
   STALE_DAYS,
@@ -43,11 +51,28 @@ test('facts, offices, and dated updates remain unverified source records', () =>
 
 test('search trims and lowercases query, groups results, and omits sample barangays', () => {
   const results = searchAll('  CENTRAL 911 ')
-  assert.deepEqual(Object.keys(results), ['services', 'barangays', 'requirements', 'updates'])
+  assert.deepEqual(Object.keys(results), [
+    'services', 'barangays', 'requirements', 'updates', 'history', 'briefs',
+    'budget', 'procurement', 'elections', 'accountability',
+  ])
   assert.equal(results.services.length, 1)
   assert.equal(results.services[0].title, 'Central 911')
   assert.equal(Object.values(searchAll('sample barangay a')).flat().length, 0)
   assert.equal(Object.values(searchAll('   ')).flat().length, 0)
+  assert.equal(searchAll('health card').briefs.length, 1)
+})
+
+test('Part 2 catalogs preserve empty data states and exclude samples from monitor counts', () => {
+  assert.deepEqual(getHistory(), [])
+  assert.equal(getBriefs().length, 3)
+  assert.deepEqual(getBudget(), [])
+  assert.deepEqual(getProcurement(), [])
+  assert.deepEqual(getAccountability(), [])
+  assert.equal(getElections()[0].verification, 'unverified')
+  assert.equal(getSourceWatchStatus().lastChecked, null)
+  const monitor = getCityMonitor()
+  assert.equal(monitor.verificationCounts.barangays.unverified, 0)
+  assert.equal(monitor.sourceWatch.lastChecked, null)
 })
 
 test('status report derives verification, stale, time-sensitive, and gap records', () => {
