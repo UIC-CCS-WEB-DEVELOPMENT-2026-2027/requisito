@@ -1,0 +1,51 @@
+# Accessibility manual checklist
+
+Run these checks after the language strings or layout change. Include desktop
+and a 360px-wide viewport.
+
+- [ ] Tab from the address bar and confirm the skip link appears on focus and
+  moves focus to the main content.
+- [ ] Navigate every primary and footer link with Tab / Shift+Tab and Enter.
+- [ ] At 360px, navigate the single-row primary navigation with keyboard and
+  confirm the language control remains reachable.
+- [ ] Change languages with the keyboard and check labels update; reload to
+  confirm the selected language persists when storage is enabled.
+- [ ] Block local storage and confirm the app falls back to English without a
+  blank page.
+- [ ] Confirm each input has a visible or programmatic label, including search,
+  service filters, sign-in, and contribution fields.
+- [ ] Submit empty and invalid forms; confirm readable inline messages are
+  announced and focus remains usable.
+- [ ] Search for results and for no results; confirm counts are announced.
+- [ ] Confirm verification states, "Never verified", time-sensitive notices,
+  and source links are distinguishable without color alone.
+- [ ] Use browser zoom and check that cards, details, and forms reflow without
+  horizontal page overflow.
+- [ ] Check text/background contrast in light and dark system themes; body text
+  and interactive text must meet WCAG AA 4.5:1 for normal text.
+- [ ] Confirm links and controls have visible focus and at least 44px touch
+  targets; check telephone links on a mobile device.
+- [ ] Enable reduced motion and confirm transitions/scroll behavior are
+  minimized.
+- [ ] Confirm no record's unverified state is hidden and that real barangays
+  have no sample badge.
+- [ ] Check each Part 2 route: `/history`, `/budget`, `/procurement`, `/briefs`,
+  `/monitor`, `/officials/:slug`, `/elections`, `/accountability`,
+  `/participate`, and `/integrity`.
+- [ ] Check `/districts` and `/districts/:name`; follow a district link to a
+  barangay profile and return using the breadcrumb.
+- [ ] Filter `/barangays` using the search, administrative and legislative
+  district controls, sort controls, and CSV export at desktop and 360px.
+- [ ] Open a filtered `/search?q=...` result, change its type filter, and check
+  that the URL and highlighted result remain usable with keyboard navigation.
+- [ ] Use the budget year selector, procurement search/status filters, and
+  accountability search with keyboard only; confirm result/status updates are
+  announced.
+- [ ] Confirm every data table has a useful caption and scoped header cells,
+  and can be scrolled at 360px without page-wide horizontal overflow.
+- [ ] Confirm CSS bars have accessible text alternatives and the numeric
+  proportions are also presented as text where applicable.
+
+Part 4 validation note: no manual browser, desktop, 360px, or assistive
+technology checks were performed. `npm run build` and `node --test` were used
+for automated verification only; complete the checks above manually.

@@ -1,0 +1,32 @@
+const VERIFICATION_ORDER = Object.freeze({
+  unverified: 0,
+  verified: 1,
+  conflicting: 2,
+})
+
+export function filterServices(services, { query = '', category = '' } = {}) {
+  const normalizedQuery = String(query).trim().toLowerCase()
+
+  return services.filter((service) => {
+    const matchesCategory = !category || service.category === category
+    const searchableText = `${service.title} ${service.description}`.toLowerCase()
+    return matchesCategory && (!normalizedQuery || searchableText.includes(normalizedQuery))
+  })
+}
+
+export function sortServices(services, sortMode = 'status') {
+  return [...services].sort((left, right) => {
+    if (sortMode === 'time-sensitive') {
+      const urgencyOrder = Number(right.timeSensitive) - Number(left.timeSensitive)
+      if (urgencyOrder !== 0) return urgencyOrder
+    } else if (sortMode === 'title') {
+      return left.title.localeCompare(right.title, 'en', { sensitivity: 'base' })
+    } else {
+      const leftOrder = VERIFICATION_ORDER[left.verification] ?? VERIFICATION_ORDER.unverified
+      const rightOrder = VERIFICATION_ORDER[right.verification] ?? VERIFICATION_ORDER.unverified
+      if (leftOrder !== rightOrder) return leftOrder - rightOrder
+    }
+
+    return left.title.localeCompare(right.title, 'en', { sensitivity: 'base' })
+  })
+}

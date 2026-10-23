@@ -1,29 +1,35 @@
 import { Link } from 'react-router-dom'
 import SummaryCard from '../components/SummaryCard.jsx'
 import { getSummaryCounts } from '../data/helpers.js'
+import { useLanguage } from '../i18n/LanguageContext.jsx'
 
 // Props: none. Dashboard records come only from helpers.js.
 function Home() {
+  const { t } = useLanguage()
   const counts = getSummaryCounts()
   const overviewCards = [
-    { title: 'Goals', value: counts.goals, description: 'Available goals, including placeholder goals.' },
-    { title: 'Requirements done', value: counts.requirementsDone, description: 'Completed requirements in the sample data.' },
-    { title: 'Documents expiring', value: counts.documentsExpiring, description: 'Fictional documents marked as expiring.' },
+    { title: t('home.totalRecords'), value: counts.total, description: t('home.totalRecordsDescription') },
+    { title: t('home.barangayRecords'), value: counts.collections.barangays, description: t('home.barangayRecordsDescription') },
+    { title: t('home.unverifiedRecords'), value: counts.unverified, description: t('home.unverifiedRecordsDescription') },
   ]
   return (
     <section className="page-content" aria-labelledby="home-title">
-      <p className="eyebrow">Welcome to Requisito</p>
-      <h1 id="home-title">Make room for what matters.</h1>
+      <p className="eyebrow">{t('home.welcome')}</p>
+      <h1 id="home-title">{t('page.home')}</h1>
       <p className="page-description">
-        Find out which documents you need for a goal and the order to get them
-        in.
+        {t('home.description')}
       </p>
+      <div className="home-portal-links">
+        <Link className="return-link" to="/services">{t('nav.services')}</Link>
+        <Link className="return-link" to="/barangays">{t('nav.barangays')}</Link>
+        <Link className="return-link" to="/search">{t('nav.search')}</Link>
+      </div>
       <Link className="return-link" to="/goals">
-        Choose a goal <span aria-hidden="true">→</span>
+        {t('home.chooseGoal')} <span aria-hidden="true">→</span>
       </Link>
 
       <section className="overview-section" aria-labelledby="overview-title">
-        <h2 id="overview-title">Overview</h2>
+        <h2 id="overview-title">{t('home.overview')}</h2>
         <div className="summary-card-grid">
           {overviewCards.map((card) => (
             <SummaryCard

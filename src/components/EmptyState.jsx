@@ -1,7 +1,11 @@
-function EmptyState({ message = 'No records found' }) {
+import { useLanguage } from '../i18n/LanguageContext.jsx'
+
+function EmptyState({ message }) {
+  const { t } = useLanguage()
+
   return (
     <div className="empty-state" role="status">
-      <p>{message}</p>
+      <p>{message ?? t('emptyState.noRecords')}</p>
     </div>
   )
 }

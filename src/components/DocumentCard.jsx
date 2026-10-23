@@ -1,8 +1,9 @@
 import './SprintCards.css'
 import { formatDate } from '../utils/formatDate.js'
+import RecordMeta from './RecordMeta.jsx'
 
 // Props: type, issueDate, status.
-function DocumentCard({ type, issueDate, status }) {
+function DocumentCard({ type, issueDate, status, record }) {
   const normalizedStatus = status.toLowerCase()
   const statusLabels = {
     valid: 'Valid',
@@ -23,6 +24,7 @@ function DocumentCard({ type, issueDate, status }) {
       <span className={`status-badge status-${statusClass}`}>
         {statusLabel}
       </span>
+      {record && <RecordMeta record={record} />}
     </article>
   )
 }

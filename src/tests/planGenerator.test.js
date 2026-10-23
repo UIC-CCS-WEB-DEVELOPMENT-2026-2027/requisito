@@ -73,13 +73,22 @@ test('unknown goal yields a visible warning and questions are isolated copies', 
 
 test('retains upstream placeholder goals without showing the First Job plan for them', () => {
   const goals = getGoals()
-  assert.equal(goals.length, 5)
+  assert.equal(goals.length, 7)
   assert.equal(goals[0].title, 'First Job')
   assert.equal(getSummaryCounts().goals, goals.length)
-  for (const goal of goals.slice(1)) {
+  for (const goal of goals.slice(1, 6)) {
     assert.equal(typeof goal.id, 'number')
     assert.equal(goal.stepsCount, 0)
     assert.deepEqual(getChecklistPlan(goal.id).steps, [])
     assert.deepEqual(getRequirementsByGoal(goal.id), [])
   }
+})
+
+test('Davao first-job goal includes health card requirements and freshness windows', () => {
+  const plan = getChecklistPlan(7)
+  assert.equal(plan.steps.length, 7)
+  assert.equal(plan.steps.find(step => step.label === 'Chest x-ray').requirement.validityMonths, 6)
+  assert.equal(plan.steps.find(step => step.label === 'Urinalysis').requirement.validityMonths, 3)
+  assert.equal(plan.steps.find(step => step.label === 'Fecalysis').requirement.validityMonths, 3)
+  assert.ok(plan.steps.every(step => step.requirement.verification === 'unverified'))
 })

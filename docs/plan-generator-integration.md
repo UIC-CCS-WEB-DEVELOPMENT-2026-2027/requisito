@@ -1,13 +1,13 @@
 # Plan generator React integration
 
-Local integration of Bruce's PR #42, commit 39986db. The planning algorithm
+Local integration of the existing PR #42, commit 39986db. The planning algorithm
 is retained in src/utils/planGenerator.js with an ES module export and attribution.
 No PR merge, branch push, plain-script HTML, or my-folder gitlink is included.
 
 ## Data flow
 
 Checklist -> getPlanningQuestions / getChecklistPlan -> catalog + planningRules
--> Bruce's generatePlan -> ordered view-model steps -> RequirementCard via props.
+-> the existing generatePlan -> ordered view-model steps -> RequirementCard via props.
 
 The Week 2 goal, requirement, and document arrays retain their exact schemas.
 The helper converts numeric record IDs to strings for the algorithm, then maps

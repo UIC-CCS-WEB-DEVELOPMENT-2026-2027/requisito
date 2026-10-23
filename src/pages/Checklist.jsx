@@ -2,10 +2,14 @@ import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import EmptyState from '../components/EmptyState.jsx'
 import RequirementCard from '../components/RequirementCard.jsx'
+import ChatAssistant from '../components/ChatAssistant.jsx'
+import RecordMeta from '../components/RecordMeta.jsx'
 import { getGoals, getRequirementsByGoal } from '../data/helpers.js'
+import { useLanguage } from '../i18n/LanguageContext.jsx'
 
 // Props: none. Requirements come from helpers.js.
 function Checklist() {
+  const { t } = useLanguage()
   const [searchParams] = useSearchParams()
   const goalId = searchParams.get('goal')
   const numericGoalId = goalId === null ? null : Number(goalId)
@@ -17,7 +21,7 @@ function Checklist() {
   return (
     <section className="page-content" aria-labelledby="checklist-title">
       <p className="eyebrow">{goal?.title ?? 'Checklist'}</p>
-      <h1 id="checklist-title">Checklist</h1>
+      <h1 id="checklist-title">{t('page.checklist')}</h1>
       <p className="page-description">
         These are the documents you need, in order.
       </p>
@@ -33,13 +37,15 @@ function Checklist() {
           />
         </>
       ) : (
-        <EmptyState message="No requirements found for this goal." />
+        <EmptyState message={t('checklist.noRequirements')} />
       )}
+      <ChatAssistant key={goalId} />
     </section>
   )
 }
 
 function ChecklistView({ initialRequirements }) {
+  const { t } = useLanguage()
   const [items, setItems] = useState(() =>
     initialRequirements.map((req) => ({ ...req, status: 'pending' })),
   )
@@ -66,12 +72,12 @@ function ChecklistView({ initialRequirements }) {
           {completed} of {total} completed
         </p>
         <progress
-          aria-label="Requirements completed"
+          aria-label={t('a11y.requirementsCompleted')}
           value={completed}
           max={total}
         />
       </div>
-      <ol className="sprint-grid generated-plan" aria-label="Requirements">
+      <ol className="sprint-grid generated-plan" aria-label={t('a11y.requirements')}>
         {items.map((item, index) => (
           <li key={item.id}>
             <p className="plan-step-number">Step {index + 1}</p>
@@ -79,11 +85,13 @@ function ChecklistView({ initialRequirements }) {
               label={item.label}
               notes={item.notes}
               copies={item.copies}
+              validityMonths={item.validityMonths}
               sourceUrl={item.sourceUrl}
               lastVerified={item.lastVerified}
               isDone={item.status === 'done'}
               onToggle={() => handleToggle(item.id)}
             />
+            {item.requirement && <RecordMeta record={item.requirement} />}
           </li>
         ))}
       </ol>

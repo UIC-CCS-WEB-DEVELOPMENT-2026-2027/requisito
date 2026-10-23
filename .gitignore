@@ -11,9 +11,15 @@ node_modules
 dist
 dist-ssr
 .vercel
+.netlify
 .env
 .env.*
+!.env.example
 *.local
+*.sqlite
+*.sqlite-*
+*.db
+*.db-*
 
 # Editor directories and files
 .vscode/*

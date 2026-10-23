@@ -1,17 +1,38 @@
 import { useRef, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext.jsx'
+import { getSignInDestination } from '../utils/authRedirect.js'
+import { useLanguage } from '../i18n/LanguageContext.jsx'
 import './LoginForm.css'
 
-// Props: none. Real sign-in is not available yet.
+// Props: none. The demo sign-in completes the app flow for protected routes.
 function LoginForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [errors, setErrors] = useState({})
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const emailRef = useRef(null)
   const passwordRef = useRef(null)
+  const location = useLocation()
+  const navigate = useNavigate()
+  const { signIn } = useAuth()
+  const { t } = useLanguage()
 
   function handleValidSubmit(cleanEmail) {
-    // Real sign-in is a future issue.
-    void cleanEmail
+    setIsSubmitting(true)
+    try {
+      signIn(cleanEmail)
+      navigate(getSignInDestination(location.state), { replace: true })
+    } catch (error) {
+      setErrors((current) => ({
+        ...current,
+        email: error instanceof Error ? error.message : 'Enter a valid email address.',
+      }))
+      emailRef.current?.focus()
+    } finally {
+      setPassword('')
+      setIsSubmitting(false)
+    }
   }
 
   function handleSubmit(e) {
@@ -20,16 +41,18 @@ function LoginForm() {
     const newErrors = {}
 
     if (cleanEmail === '') {
-      newErrors.email = 'Enter your email address.'
+      newErrors.email = t('form.emailRequired')
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
-      newErrors.email = 'Enter a valid email address, like name@example.com.'
+      newErrors.email = t('form.emailInvalid')
     }
 
     if (password === '') {
-      newErrors.password = 'Enter your password.'
+      newErrors.password = t('form.passwordRequired')
     } else if (password.length < 8) {
-      newErrors.password = 'Password must be at least 8 characters.'
+      newErrors.password = t('form.passwordShort')
     }
+
+    setPassword('')
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors)
@@ -58,10 +81,10 @@ function LoginForm() {
       className="login-form"
       onSubmit={handleSubmit}
       noValidate
-      aria-label="Sign-in form"
+      aria-label={t('a11y.signInForm')}
     >
       <div className="login-field">
-        <label htmlFor="login-email">Email</label>
+        <label htmlFor="login-email">{t('label.email')}</label>
         <input
           ref={emailRef}
           id="login-email"
@@ -80,14 +103,14 @@ function LoginForm() {
         <div className="login-error-live" aria-live="polite">
           {errors.email && (
             <p id="login-email-error" className="login-error">
-              <span className="visually-hidden">Error: </span>
+              <span className="visually-hidden">{t('a11y.error')} </span>
               {errors.email}
             </p>
           )}
         </div>
       </div>
       <div className="login-field">
-        <label htmlFor="login-password">Password</label>
+        <label htmlFor="login-password">{t('label.password')}</label>
         <input
           ref={passwordRef}
           id="login-password"
@@ -102,18 +125,18 @@ function LoginForm() {
           aria-invalid={Boolean(errors.password)}
           aria-describedby={errors.password ? 'login-password-error' : undefined}
         />
-        <p className="login-hint">Use at least 8 characters.</p>
+        <p className="login-hint">{t('login.passwordHint')}</p>
         <div className="login-error-live" aria-live="polite">
           {errors.password && (
             <p id="login-password-error" className="login-error">
-              <span className="visually-hidden">Error: </span>
+              <span className="visually-hidden">{t('a11y.error')} </span>
               {errors.password}
             </p>
           )}
         </div>
       </div>
-      <button className="primary-button login-submit" type="submit">
-        Validate details
+      <button className="primary-button login-submit" type="submit" disabled={isSubmitting} aria-busy={isSubmitting}>
+        {isSubmitting ? t('button.signingIn') : t('button.signIn')}
       </button>
     </form>
   )

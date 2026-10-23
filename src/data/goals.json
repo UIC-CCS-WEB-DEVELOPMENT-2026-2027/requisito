@@ -1,5 +1,4 @@
-// Sample goals. Only First Job has checklist data; other goals remain placeholders.
-export const goals = [
+[
   {
     "id": 1,
     "title": "First Job",
@@ -29,5 +28,17 @@ export const goals = [
     "title": "SSS and PhilHealth",
     "description": "Get the documents needed to register with SSS and PhilHealth.",
     "stepsCount": 0
+  },
+  {
+    "id": 6,
+    "title": "Sample goal (no requirements)",
+    "description": "Fictional goal for testing the checklist empty state.",
+    "stepsCount": 0
+  },
+  {
+    "id": 7,
+    "title": "First Job in Davao City",
+    "description": "Review the illustrative health card documents mentioned in a City Health Office announcement.",
+    "stepsCount": 7
   }
 ]

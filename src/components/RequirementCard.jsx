@@ -1,5 +1,6 @@
 import { useId } from 'react'
 import StatusBadge from './StatusBadge.jsx'
+import { useLanguage } from '../i18n/LanguageContext.jsx'
 import './SprintCards.css'
 
 // Props: label, notes, copies, sourceUrl, lastVerified, isDone, onToggle.
@@ -7,12 +8,14 @@ function RequirementCard({
   label,
   notes,
   copies,
+  validityMonths,
   sourceUrl,
   lastVerified,
   isDone = false,
   onToggle,
 }) {
   const checkboxId = useId()
+  const { t } = useLanguage()
 
   return (
     <article
@@ -21,8 +24,9 @@ function RequirementCard({
       <h2 className="requirement-card-title">{label}</h2>
       <p>{notes}</p>
       <p className="card-detail">
-        {copies === 1 ? 'Copy' : 'Copies'} needed: {copies}
+        {copies === 1 ? t('requirement.copy') : t('requirement.copies')} {t('requirement.needed')}: {copies}
       </p>
+      {validityMonths != null && <p className="card-detail">{t('requirement.validity')}: {validityMonths} {t('requirement.months')}</p>}
       {onToggle && (
         <div className="requirement-toggle">
           <input
@@ -31,9 +35,9 @@ function RequirementCard({
             checked={isDone}
             onChange={onToggle}
           />
-          <label htmlFor={checkboxId}>Mark “{label}” as done</label>
+          <label htmlFor={checkboxId}>{t('requirement.markDone').replace('{label}', label)}</label>
           <span className="requirement-status">
-            {isDone ? 'Done' : 'Not done'}
+            {isDone ? t('requirement.done') : t('requirement.notDone')}
           </span>
         </div>
       )}
@@ -45,7 +49,7 @@ function RequirementCard({
           rel="noopener noreferrer"
           target="_blank"
         >
-          Where to get it
+          {t('requirement.whereToGet')}
         </a>
       )}
     </article>

@@ -1,0 +1,30 @@
+[
+  {
+    "id": "health-card-january-2026",
+    "slug": "health-card-issuance-january-2026",
+    "type": "update",
+    "title": "Health card issuance announcement",
+    "description": "A City Health Office announcement says health card issuance began January 7, 2026, at the 5th floor of Gaisano Ilustre.",
+    "category": "Health",
+    "sourceUrl": "https://davaocity.gov.ph/health/health-card-issuance-starts-january-7/",
+    "lastVerified": null,
+    "verification": "unverified",
+    "timeSensitive": true,
+    "notes": "Past announcement. Confirm the current schedule and venue with the City Health Office.",
+    "date": null
+  },
+  {
+    "id": "health-card-earlier-schedule",
+    "slug": "health-card-earlier-schedule",
+    "type": "update",
+    "title": "Earlier health card schedule announcement",
+    "description": "An earlier City Health Office announcement listed health card issuance at NCCC Mall Victoria Plaza from January 2 to June 30.",
+    "category": "Health",
+    "sourceUrl": "https://www.davaocity.gov.ph/?p=17203",
+    "lastVerified": null,
+    "verification": "unverified",
+    "timeSensitive": true,
+    "notes": "Past announcement. Confirm the current schedule and venue with the City Health Office.",
+    "date": null
+  }
+]
