@@ -1,6 +1,5 @@
 import process from 'node:process'
-import requirements from '../../src/data/requirements.json' with { type: 'json' }
-import { buildAnswer, containsPersonalData, refusal, retrieve, verificationOf } from '../lib/assistant-records.js'
+import { buildAnswer, containsPersonalData, getAssistantRecords, refusal, retrieve, verificationOf } from '../lib/assistant-records.js'
 import { generateAnswer } from '../lib/gemini.js'
 
 export const RATE_LIMIT_PER_MIN = 10
@@ -49,8 +48,9 @@ export default async function chat(req, context = {}) {
     console.info('TEST MODE on (credentials withheld)')
     testModeLogged = true
   }
-  const eligible = requirements.filter(record => testMode || verificationOf(record) !== 'unverified')
-  if (!eligible.length) return json(refusal(['No verified requirements are available yet.']))
+  const eligible = getAssistantRecords().filter(record =>
+    testMode || verificationOf(record) === 'verified')
+  if (!eligible.length) return json(refusal(['No verified civic records are available yet.']))
   const records = retrieve(eligible, question)
   // Dates and links are omitted from the provider payload; the server supplies them.
   const guidance = records.map(record => ({ id: record.id, label: record.label, notes: record.notes,

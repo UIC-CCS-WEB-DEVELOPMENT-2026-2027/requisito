@@ -20,6 +20,10 @@
   { "id": "pii-email", "kind": "reject", "question": "Email me at fake@example.invalid." },
   { "id": "warning-1", "kind": "warning", "recordIndex": 0 },
   { "id": "warning-2", "kind": "warning", "recordIndex": 1 },
+  { "id": "davao-hotline-1", "kind": "verified", "recordType": "hotline", "recordIndex": 0 },
+  { "id": "davao-hotline-2", "kind": "verified", "recordType": "hotline", "recordIndex": 1 },
+  { "id": "davao-service-health", "kind": "verified", "recordType": "service", "recordIndex": 1 },
+  { "id": "davao-requirement-health-card", "kind": "verified", "recordType": "requirement", "recordIndex": 6 },
   { "id": "empty", "kind": "reject", "question": "" },
   { "id": "spaces", "kind": "reject", "question": "   " },
   { "id": "too-long", "kind": "reject", "repeat": 501 }

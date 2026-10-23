@@ -1,11 +1,11 @@
 import { readFileSync } from 'node:fs'
 import { pathToFileURL } from 'node:url'
 import { setTimeout as delay } from 'node:timers/promises'
-import { REFUSAL, STALE_DAYS, verificationOf } from '../netlify/lib/assistant-records.js'
+import { getAssistantRecords, REFUSAL, STALE_DAYS, verificationOf } from '../netlify/lib/assistant-records.js'
 
 export const EVAL_DELAY_MS = 13000
 const ENDPOINT = 'http://localhost:8888/.netlify/functions/chat'
-const records = JSON.parse(readFileSync(new URL('../src/data/requirements.json', import.meta.url), 'utf8'))
+const records = getAssistantRecords()
 const definitions = JSON.parse(readFileSync(new URL('../docs/ai-eval-questions.json', import.meta.url), 'utf8'))
 
 // Generate questions from reviewed records, never from invented requirement facts.
@@ -21,9 +21,15 @@ export function prepareCases(catalog = records) {
     let question = definition.repeat ? 'x'.repeat(definition.repeat) : definition.question
     let expectedId
     if (definition.kind === 'verified' || definition.kind === 'warning') {
-      const record = (definition.kind === 'verified' ? verified : warningRecords)[definition.recordIndex]
+      const sourceCatalog = definition.recordType
+        ? catalog.filter(item => item.type === definition.recordType)
+        : catalog
+      const candidates = definition.kind === 'verified'
+        ? sourceCatalog.filter(record => verificationOf(record) === 'verified')
+        : sourceCatalog.filter(record => warningRecords.some(warning => warning.id === record.id))
+      const record = candidates[definition.recordIndex]
       if (!record) { skipped.push(definition.id); continue }
-      question = `What do the records say about ${record.label}?`
+      question = `What information is listed for ${record.label ?? record.title}?`
       expectedId = record.id
     }
     cases.push({ ...definition, question, expectedId })

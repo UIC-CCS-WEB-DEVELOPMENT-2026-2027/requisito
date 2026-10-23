@@ -1,0 +1,147 @@
+[
+  {
+    "id": 101,
+    "slug": "central-911",
+    "type": "hotline",
+    "title": "Central 911",
+    "description": "Emergency call service for Davao City.",
+    "category": "Emergency",
+    "sourceUrl": "https://davaocity.gov.ph/departments/social-services/central-911/",
+    "relatedSources": ["https://www.davaocity.gov.ph/?p=20222"],
+    "lastVerified": null,
+    "verification": "unverified",
+    "timeSensitive": true,
+    "notes": "News reports in 2026 mention misrouted calls from some networks; check the city's current advisory.",
+    "contact": {
+      "phone": ["911", "(082) 296-1433"],
+      "email": "",
+      "address": "911 Building, Daang Patnubay St., SIR Matina, Davao City",
+      "hours": "Reported as available 24/7; confirm current service."
+    },
+    "steps": ["Dial 911 for emergencies."]
+  },
+  {
+    "id": 102,
+    "slug": "davao-city-contact-center",
+    "type": "hotline",
+    "title": "Davao City Contact Center",
+    "description": "City contact center for public inquiries.",
+    "category": "Information",
+    "sourceUrl": "https://hrmo.davaocity.gov.ph/launching-of-the-davao-city-contact-center-dccc/",
+    "lastVerified": null,
+    "verification": "unverified",
+    "timeSensitive": false,
+    "notes": "Confirm the number is still current.",
+    "contact": {
+      "phone": ["235-9999"],
+      "email": "",
+      "address": "",
+      "hours": "Reported as available 24/7 since April 2023; confirm current service."
+    }
+  },
+  {
+    "id": 103,
+    "slug": "city-information-office",
+    "type": "service",
+    "title": "City Information Office",
+    "description": "City office for information and public inquiries.",
+    "category": "Information",
+    "sourceUrl": "https://davaocity.gov.ph/departments/public-administration/cmo-public-information-production/",
+    "lastVerified": null,
+    "verification": "unverified",
+    "timeSensitive": false,
+    "notes": "",
+    "contact": {
+      "phone": ["(082) 227-2500"],
+      "email": "cio@davaocity.gov.ph",
+      "address": "Room 18, 2nd Floor, City Hall Bldg., San Pedro St.",
+      "hours": "8:00 AM to 5:00 PM"
+    }
+  },
+  {
+    "id": 104,
+    "slug": "business-bureau",
+    "type": "service",
+    "title": "Business Bureau",
+    "description": "Business permit information and processing.",
+    "category": "Business and Permits",
+    "sourceUrl": "https://davaocity.gov.ph/business-bureau/",
+    "lastVerified": null,
+    "verification": "unverified",
+    "timeSensitive": true,
+    "notes": "Deadlines and systems change yearly. Confirm current deadlines and application systems.",
+    "contact": {
+      "phone": ["(082) 241-1000 local 381"],
+      "email": "busbureau@davaocity.gov.ph",
+      "address": "",
+      "hours": "8:00 AM to 5:00 PM"
+    },
+    "steps": [
+      "Complete the online application and attach the requested documents.",
+      "Pay the business tax at the City Treasurer's Office or through an available online option.",
+      "Print the Mayor's Permit after completing the process."
+    ]
+  },
+  {
+    "id": 105,
+    "slug": "city-treasurers-office",
+    "type": "service",
+    "title": "City Treasurer's Office",
+    "description": "Office for business tax and fee payments.",
+    "category": "Business and Permits",
+    "sourceUrl": "https://davaocity.gov.ph/uncategorized/davao-city-to-continue-hybrid-processing-for-one-stop-shop-renewal-of-mayors-permit-for-2023/",
+    "lastVerified": null,
+    "verification": "unverified",
+    "timeSensitive": true,
+    "notes": "The cited announcement is from 2023; confirm current payment arrangements.",
+    "contact": {
+      "phone": ["(082) 241-1000 local 386"],
+      "email": "",
+      "address": "",
+      "hours": ""
+    }
+  },
+  {
+    "id": 106,
+    "slug": "city-health-office",
+    "type": "service",
+    "title": "City Health Office",
+    "description": "City office providing health services, including health certificates and sanitary permits.",
+    "category": "Health",
+    "sourceUrl": "https://www.davaocity.gov.ph/?p=2412",
+    "lastVerified": null,
+    "verification": "unverified",
+    "timeSensitive": false,
+    "notes": "",
+    "contact": {
+      "phone": ["09266861531", "09999380540"],
+      "email": "cho@davaocity.gov.ph",
+      "address": "Magallanes Street, Davao City",
+      "hours": "8:00 AM to 5:00 PM"
+    }
+  },
+  {
+    "id": 107,
+    "slug": "health-card",
+    "type": "service",
+    "title": "Health card",
+    "description": "Health card issuance information for employees in Davao City.",
+    "category": "Health",
+    "sourceUrl": "https://davaocity.gov.ph/health/health-card-issuance-starts-january-7/",
+    "relatedSources": ["https://www.davaocity.gov.ph/?p=17203"],
+    "lastVerified": null,
+    "verification": "unverified",
+    "timeSensitive": true,
+    "notes": "The venue and schedule must be confirmed with the City Health Office before use.",
+    "contact": {
+      "phone": [],
+      "email": "",
+      "address": "A January 2026 announcement listed the 5th floor of Gaisano Ilustre.",
+      "hours": "Confirm the current schedule with the City Health Office."
+    },
+    "steps": [
+      "Confirm the current venue and schedule with the City Health Office.",
+      "Prepare the listed requirements; the checklist is illustrative and unverified."
+    ]
+  }
+]

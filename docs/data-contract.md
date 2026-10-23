@@ -1,104 +1,99 @@
-# Week 2 shared data contract
+# Data contract
 
-Last updated: 2026-10-23 — separate requirement verification from checklist progress.
+Last updated: 2026-10-23. Keep source verification distinct from checklist
+progress and from document-status examples.
 
-Issue #32 was read before implementation. It names the four helpers but does not
-specify conflicting field names or statuses. This contract follows the Week 2
-sprint instructions and supersedes the earlier draft usage note.
+## Requisito records
 
-| Record | Exact fields and types |
+New civic records in `services.json`, `barangays.json`, `officials.json`,
+`cityFacts.json`, and `updates.json` share these fields:
+
+| Field | Type |
 | --- | --- |
-| Goal | id: number, title: string, description: string, stepsCount: number |
-| Requirement | id: number, goalId: number, label: string, notes: string, copies: number, sourceUrl: string, lastVerified: YYYY-MM-DD string, status: unverified or done, verification: verified or unverified or conflicting |
-| Document | id: number, type: string, issueDate: YYYY-MM-DD string, status: valid or expiring |
+| id | string or number; unique within its data file |
+| slug | string; unique within its data file and used in routes |
+| type | `service`, `hotline`, `barangay`, `official`, `fact`, `update`, or `requirement` |
+| title | string |
+| description | string |
+| category | string |
+| sourceUrl | HTTPS source URL or empty string when none is supplied |
+| lastVerified | `YYYY-MM-DD` or `null` |
+| verification | `verified`, `unverified`, or `conflicting` |
+| timeSensitive | boolean |
+| notes | string |
 
-`sourceUrl` is an empty string until verified. Do not add or rename fields.
-Record IDs are internal numeric keys, never real identification numbers.
+Service and hotline records also have `contact: { phone: string[], email:
+string, address: string, hours: string }`; `steps` and `relatedSources` are
+optional. Barangays have `adminDistrict`, `legislativeDistrict`,
+`population2020`, and `isSample`. Officials have `holderName`, which stays
+`null` until independently verified. Updates may have a nullable `date`.
+Requirement and document records may have `validityMonths: number | null`.
 
-## Helpers (src/data/helpers.js)
+The existing requirement fields remain: `id`, `goalId`, `label`, `notes`,
+`copies`, `sourceUrl`, `lastVerified`, `status`, and `verification`. They now
+also carry the shared civic metadata and `validityMonths`. Checklist `status`
+tracks progress; `verification` tracks source review.
 
-- getGoals() -> Goal[]
-- getRequirementsByGoal(goalId: number) -> Requirement[]; no match returns [].
-- getDocuments() -> Document[]
-- getSummaryCounts() -> { goals: number, requirementsDone: number, documentsExpiring: number }
+Existing document tracker records retain their display fields `id`, `type`,
+`issueDate`, and `status`; `validityMonths` is null until a freshness window is
+confirmed. The fictional tracker examples do not calculate expiry.
 
-Pages obtain data only through these helpers. Components receive data only as
-props. Counts use the exact statuses `done` and `expiring`.
+## Helpers
 
-## Sample content
+`src/data/helpers.js` returns copies for the directory functions:
 
-Catalog records live in `src/data/goals.json`, `src/data/requirements.json`,
-and `src/data/documents.json`. Helpers import these JSON arrays; their exported
-function names, parameters, and return shapes are unchanged. JSON contains only
-data, so explanations of the fictional records are kept here.
+- `getServices()`, `getServiceBySlug(slug)`,
+  `getServicesByCategory(category)`
+- `getBarangays()`, `getBarangayBySlug(slug)`, `getDistricts()`
+- `getOfficials()`, `getCityFacts()`, and `getUpdates()`
+- `searchAll(query)` returns `{ services, barangays, requirements, updates }`.
+  It trims and lowercases the query and excludes sample barangays.
+- `getStatusReport()` derives verification counts, stale records,
+  time-sensitive records, and known gaps. `STALE_DAYS` is 90.
 
-Goal ID 6, "Sample goal (no requirements)", is a visible test fixture on the
-Goals page. Its stepsCount is 0 and no requirement references it.
-`getRequirementsByGoal(6)` returns `[]` to exercise the Checklist empty state.
-The catalog now contains six goals, including the four existing placeholders.
+Existing goal, requirement, document, summary, planning-question, and checklist
+helpers remain available. Goal ID 7 is "First Job in Davao City" and has seven
+illustrative health-card requirements; only chest x-ray (6 months), urinalysis
+(3 months), and fecalysis (3 months) have supplied validity periods.
 
-First Job has six sample requirements, each with copies 1, notes "Sample note",
-sourceUrl "", lastVerified "2026-10-19", and status "unverified".
-Dates are fixture values, not proof of completed verification. Document dates
-and valid/expiring statuses are fictional tracker examples, not personal records
-or computed expiry results. A human must verify requirements, quantities, dates,
-and official sources before these samples are used as real guidance.
+## Verification rules and fixtures
 
-## Integration with main
+All civic seed records start unverified with `lastVerified: null`. A source URL
+does not mean that its claims have been verified. Only Caleb can set
+`verification` to `verified` and enter a real, nonfuture `lastVerified` date
+after checking the official page. Verified sources must use HTTPS on a `.gov.ph`
+hostname or a hostname explicitly configured by Caleb in
+`OFFICIAL_DOMAIN_ALLOWLIST`. Verified text must not contain sample, placeholder,
+or fictional markers. The audit is read-only.
 
-The four additional placeholder goals are retained with numeric IDs 2-5
-and stepsCount 0. First Job remains ID 1 with all six sample requirements.
-Placeholder goals show an empty-state message rather than another goal's plan.
+Barangay placeholder rows are named Sample Barangay A-F, marked `isSample: true`,
+and clearly labeled in the interface. They are excluded from global search and
+all Sources and Status counts. Do not use them as real city information.
 
-## Auth (mock, front-end only)
+The first six requirements and four document tracker entries remain
+illustrative. Some legacy requirement fixtures have a sample date in
+`lastVerified`, but their `verification: "unverified"` state is authoritative;
+the interface reports them as never verified.
 
-This is a UI demo of the Phase 2 login flow, not real authentication or an
-authorization boundary. The Login page displays:
+## Language and privacy
+
+The interface offers English, Filipino, and Bisaya (Cebuano) labels. Record
+content remains English. Filipino and Bisaya translations need native-speaker
+review. Language preference is stored in local storage when the browser permits.
+
+Demo sign-in is only in-memory UI state. The correction form captures no name or
+email, does not call a server, and prepares a public GitHub issue link. Do not
+put personal or sensitive information in a correction.
+
+## Existing mock-auth contract
+
+The auth provider exposes `isSignedIn`, `signIn(email)`, and `signOut()`.
+Passwords are validated by the form, cleared after every submit attempt, and
+never passed to auth context. The state resets on refresh. Goals, Checklist,
+and Documents remain protected; civic information routes are public.
+
+Signed-out visitors to a protected route are sent to `/login` with the original
+location in router state. Successful demo sign-in returns them to that route;
+a direct `/login` visit falls back to `/`. Signed-in visitors who open `/login`
+are redirected to Home with replace. The UI notice says:
 "Demo sign-in: no real authentication yet. Full login arrives in Phase 2."
-
-`AuthProvider` wraps the app in `main.jsx`. `useAuth()` must be called inside
-that provider and exposes:
-
-- `isSignedIn`: boolean, initially false.
-- `signIn(email)`: accepts a well-formed email and sets the demo boolean to true.
-  The email is not retained in context. The form checks a minimum of eight
-  password characters before calling this function; it never passes the
-  password into context.
-- `signOut()`: sets the demo boolean to false.
-
-State exists only in React memory. Refreshing signs the user out. No password,
-token, or auth state is stored in localStorage or sessionStorage, sent to a
-server, or logged. Use made-up input rather than actual account details.
-The form clears the password after every submit attempt, including invalid
-attempts, and disables submission while its callback is pending.
-
-Home and Login are public. Goals, Checklist, and Documents redirect signed-out
-visitors to `/login` through `ProtectedRoute`, preserving the requested location
-in router state. After successful demo sign-in, users return to that requested
-page; if they visited `/login` directly with no saved location, they go to Home
-(`/`). Signed-in users visiting `/login` are redirected to Home with replace.
-Footer and DisclaimerBanner remain on every route. The existing catalog record
-fields and four data helpers are unchanged.
-
-Build, lint, and existing planner tests pass. Browser checks covered validation,
-password visibility, sign-in/sign-out, gated navigation, refresh sign-out, and
-360px/768px/1280px layouts in light and dark mode. The interface is illustrative:
-any syntactically valid email plus eight or more password characters is accepted.
-
-Real authentication in Phase 2 must add server-side identity verification,
-password hashing through a suitable authentication service or server, sessions
-or tokens with expiry and logout invalidation, HTTPS, rate limiting, and
-server-enforced authorization for every private resource. The demo gate alone
-does not provide these capabilities.
-
-## Requirement verification
-
-`status` keeps its existing checklist-progress values (`unverified` or `done`).
-`verification` separately records source review: `verified`, `unverified`, or
-`conflicting`. All six current fictional requirements have verification
-`unverified`. Their content, source URLs, and dates are unchanged.
-
-Only Caleb may confirm a record from its official page. A verified record needs
-an HTTPS source whose hostname ends with `.gov.ph`, a real, nonfuture
-verification date, and notes without sample, placeholder, or fictional markers.
-The audit reports problems; it never edits data or verifies records itself.

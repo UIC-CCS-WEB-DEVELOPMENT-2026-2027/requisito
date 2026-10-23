@@ -1,3 +1,7 @@
+import process from 'node:process'
+import requirements from '../../src/data/requirements.json' with { type: 'json' }
+import services from '../../src/data/services.json' with { type: 'json' }
+
 export const STALE_DAYS = 90
 export const REFUSAL = "I don't have verified information on that. Please confirm with the issuing office."
 export const TEST_WARNING = 'TEST MODE: unverified placeholder data'
@@ -8,17 +12,45 @@ export function refusal(warnings = []) {
 
 // Progress status never determines whether government information was verified.
 export function verificationOf(record) {
-  const textFields = ['label', 'notes', 'sourceUrl', 'lastVerified', 'status']
-  if (!Number.isInteger(record.id) || !Number.isInteger(record.goalId) ||
-      typeof record.copies !== 'number' || textFields.some(field => typeof record[field] !== 'string')) return 'unverified'
+  const label = record.label ?? record.title
+  if (!Number.isInteger(record.id) || !['requirement', 'service', 'hotline'].includes(record.type) ||
+      typeof label !== 'string' || typeof record.notes !== 'string' ||
+      typeof record.sourceUrl !== 'string' ||
+      (record.lastVerified !== null && typeof record.lastVerified !== 'string')) return 'unverified'
+  if (record.type === 'requirement' && (!Number.isInteger(record.goalId) || typeof record.copies !== 'number')) {
+    return 'unverified'
+  }
   if (!['verified', 'unverified', 'conflicting'].includes(record.verification)) return 'unverified'
   if (record.verification !== 'verified') return record.verification
   let source
   try { source = new URL(record.sourceUrl) } catch { return 'unverified' }
-  if (source.protocol !== 'https:' || !source.hostname.endsWith('.gov.ph') || source.username || source.password ||
+  const allowedHosts = (process.env.OFFICIAL_DOMAIN_ALLOWLIST ?? '')
+    .split(',').map(host => host.trim().toLowerCase()).filter(Boolean)
+  if (source.protocol !== 'https:' ||
+      (!source.hostname.toLowerCase().endsWith('.gov.ph') && !allowedHosts.includes(source.hostname.toLowerCase())) ||
+      source.username || source.password ||
       /\b(sample|placeholder|fictional)\b/i.test(record.notes) || !validDate(record.lastVerified) ||
       record.lastVerified > today()) return 'unverified'
   return 'verified'
+}
+
+export function getAssistantRecords() {
+  const serviceRecords = services.map(service => ({
+    ...service,
+    label: service.title,
+    goalId: 0,
+    copies: 1,
+    status: service.verification,
+    notes: [
+      service.description,
+      ...service.contact.phone,
+      service.contact.email,
+      service.contact.address,
+      service.contact.hours,
+      service.notes,
+    ].filter(Boolean).join('. '),
+  }))
+  return [...requirements.map(record => ({ ...record })), ...serviceRecords]
 }
 
 function today() {

@@ -1,13 +1,15 @@
 import DocumentCard from '../components/DocumentCard.jsx'
 import { getDocuments } from '../data/helpers.js'
+import { useLanguage } from '../i18n/LanguageContext.jsx'
 
 // Props: none. The shared helper supplies fictional document examples.
 function Documents() {
+  const { t } = useLanguage()
   const documents = getDocuments()
   return (
     <section className="page-content" aria-labelledby="documents-title">
       <p className="eyebrow">Documents</p>
-      <h1 id="documents-title">Documents</h1>
+      <h1 id="documents-title">{t('page.documents')}</h1>
       <p className="page-description">
         Fictional document tracker examples. Issue dates and statuses are sample values, not real personal records or calculated expiry dates.
       </p>
@@ -18,6 +20,7 @@ function Documents() {
               type={document.type}
               issueDate={document.issueDate}
               status={document.status}
+              record={document}
             />
           </li>
         ))}

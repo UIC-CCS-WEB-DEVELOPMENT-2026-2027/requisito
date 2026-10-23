@@ -1,0 +1,67 @@
+[
+  {
+    "id": "city-region-status",
+    "slug": "city-region-status",
+    "type": "fact",
+    "title": "City status and region",
+    "description": "Davao City is a highly urbanized city in the Davao Region (Region XI).",
+    "category": "Geography",
+    "sourceUrl": "https://rsso11.psa.gov.ph/content/population-davao-city-based-results-2015-census-population",
+    "lastVerified": null,
+    "verification": "unverified",
+    "timeSensitive": false,
+    "notes": ""
+  },
+  {
+    "id": "barangay-and-district-counts",
+    "slug": "barangay-and-district-counts",
+    "type": "fact",
+    "title": "Barangays and districts",
+    "description": "Davao City has 182 barangays, 3 legislative districts, and 11 administrative districts.",
+    "category": "Geography",
+    "sourceUrl": "https://rsso11.psa.gov.ph/content/population-davao-city-based-results-2015-census-population",
+    "lastVerified": null,
+    "verification": "unverified",
+    "timeSensitive": false,
+    "notes": "The cited PSA source supports the barangay count; confirm district counts on a PSA or city page."
+  },
+  {
+    "id": "population-2020",
+    "slug": "population-2020",
+    "type": "fact",
+    "title": "Population in the 2020 census",
+    "description": "The 2020 Census of Population and Housing figure supplied for Davao City is 1,776,949.",
+    "category": "Population",
+    "sourceUrl": "",
+    "lastVerified": null,
+    "verification": "unverified",
+    "timeSensitive": false,
+    "notes": "Secondary sources only; replace with the PSA page."
+  },
+  {
+    "id": "land-area",
+    "slug": "land-area",
+    "type": "fact",
+    "title": "Land area",
+    "description": "The land-area figure supplied for Davao City is 2,443.61 square kilometers.",
+    "category": "Geography",
+    "sourceUrl": "",
+    "lastVerified": null,
+    "verification": "unverified",
+    "timeSensitive": false,
+    "notes": "Secondary sources only; replace with the PSA page."
+  },
+  {
+    "id": "administrative-district-names",
+    "slug": "administrative-district-names",
+    "type": "fact",
+    "title": "Administrative district names",
+    "description": "The listed administrative districts are Poblacion, Talomo, Agdao, Buhangin, Bunawan, Paquibato, Baguio, Calinan, Marilog, Toril, and Tugbok.",
+    "category": "Geography",
+    "sourceUrl": "https://davaocity.gov.ph/business-bureau/",
+    "lastVerified": null,
+    "verification": "unverified",
+    "timeSensitive": false,
+    "notes": "Names supplied from a city business bureau announcement; confirm against an official district list."
+  }
+]

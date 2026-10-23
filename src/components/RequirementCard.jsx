@@ -7,6 +7,7 @@ function RequirementCard({
   label,
   notes,
   copies,
+  validityMonths,
   sourceUrl,
   lastVerified,
   isDone = false,
@@ -23,6 +24,7 @@ function RequirementCard({
       <p className="card-detail">
         {copies === 1 ? 'Copy' : 'Copies'} needed: {copies}
       </p>
+      {validityMonths != null && <p className="card-detail">Validity window: {validityMonths} months</p>}
       {onToggle && (
         <div className="requirement-toggle">
           <input

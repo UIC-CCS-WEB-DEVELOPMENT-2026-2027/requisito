@@ -1,0 +1,44 @@
+[
+  {
+    "id": "mayor",
+    "slug": "mayor",
+    "type": "official",
+    "title": "Mayor",
+    "description": "Office of the Mayor of Davao City.",
+    "category": "City leadership",
+    "sourceUrl": "https://davaocity.gov.ph/",
+    "lastVerified": null,
+    "verification": "unverified",
+    "timeSensitive": true,
+    "notes": "Office holders changed after the May 2025 election and may have changed since. Verify on the official city website and COMELEC or DILG sources. Term for 2025 officials: June 30, 2025 to June 30, 2028 (secondary source; confirm).",
+    "holderName": null
+  },
+  {
+    "id": "vice-mayor",
+    "slug": "vice-mayor",
+    "type": "official",
+    "title": "Vice Mayor",
+    "description": "Office of the Vice Mayor of Davao City.",
+    "category": "City leadership",
+    "sourceUrl": "https://davaocity.gov.ph/",
+    "lastVerified": null,
+    "verification": "unverified",
+    "timeSensitive": true,
+    "notes": "Office holders changed after the May 2025 election and may have changed since. Verify on the official city website and COMELEC or DILG sources. Term for 2025 officials: June 30, 2025 to June 30, 2028 (secondary source; confirm).",
+    "holderName": null
+  },
+  {
+    "id": "presiding-officer-sangguniang-panlungsod",
+    "slug": "presiding-officer-sangguniang-panlungsod",
+    "type": "official",
+    "title": "Presiding Officer of the Sangguniang Panlungsod",
+    "description": "Presiding office of the Davao City Sangguniang Panlungsod.",
+    "category": "City leadership",
+    "sourceUrl": "https://davaocity.gov.ph/",
+    "lastVerified": null,
+    "verification": "unverified",
+    "timeSensitive": true,
+    "notes": "Office holders changed after the May 2025 election and may have changed since. Verify on the official city website and COMELEC or DILG sources. Term for 2025 officials: June 30, 2025 to June 30, 2028 (secondary source; confirm).",
+    "holderName": null
+  }
+]

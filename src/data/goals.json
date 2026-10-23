@@ -34,5 +34,11 @@
     "title": "Sample goal (no requirements)",
     "description": "Fictional goal for testing the checklist empty state.",
     "stepsCount": 0
+  },
+  {
+    "id": 7,
+    "title": "First Job in Davao City",
+    "description": "Review the illustrative health card documents mentioned in a City Health Office announcement.",
+    "stepsCount": 7
   }
 ]

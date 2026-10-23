@@ -1,152 +1,160 @@
 # Requisito
 
-Requisito is an independent student paperwork-pathfinder prototype. It demonstrates goal-based document checklists, dependency ordering, and a sample document tracker.
+Requisito is an independent student project presenting Davao City civic
+information in a paperwork-pathfinder interface. It is **not an official
+website of the City Government of Davao** and is not affiliated with BetterGov
+or BetterLGU.
 
-**Live app:** [requisito.vercel.app](https://requisito.vercel.app)
+**Existing live app:** [requisito.vercel.app](https://requisito.vercel.app).
+The Davao civic portal changes in this branch have not been deployed.
 
-## Problem
+The project uses the existing React + Vite + React Router + plain CSS stack.
+There is no database, account backend, or server-side contribution endpoint.
+Directory content comes from JSON catalogs in `src/data`.
 
-People preparing for a first job or another document-based goal may struggle to identify the required paperwork and the order to obtain it. Missing a prerequisite can mean repeating a visit or delaying an application.
+## Tier 1 features in this prototype
 
-## Solution
+- Searchable city services and hotlines, with contact links and service details.
+- Barangay directory and profiles. Until an official CSV is supplied, the six
+  visible records are explicitly fictional sample rows, excluded from search
+  and status counts.
+- City facts, a source-linked notices feed, and an offices-only officials page.
+- Global search across services, real barangay records, requirements, and updates.
+- Sources and Status page with derived verification counts, review-age reporting,
+  time-sensitive records, and known gaps.
+- A correction form that prepares a public GitHub issue; it does not submit or
+  save content on a Requisito server.
+- English, Filipino, and Bisaya interface labels. Filipino and Bisaya strings
+  need native-speaker review.
+- The existing goals, checklist, documents, demo sign-in, and AI assistant remain.
 
-Users choose a predefined goal and review a sample checklist. React, Vite, and React Router provide the frontend, with demo sign-in rather than real accounts. The AI assistant feature adds a Netlify Function that answers from eligible catalog records; no database is implemented.
+## Tier 2 and Tier 3
 
-All requirements, dependencies, quantities, dates, and document statuses are illustrative and must be checked against official sources. Checklist progress exists only in memory, and tracker values are fictional. The AI feature has not been deployed to the existing live URL.
+Tier 2 stretch ideas are not implemented: source-watch automation, a history
+timeline, and a budget dashboard. See the BetterMakati comparison in
+[docs/build-log.md](docs/build-log.md).
 
-## MVP Features
+Tier 3 is a Phase 2 pitch only: accountability ledger, participation hub,
+elections pages, City Monitor, and integrity information. No Tier 3 code is
+included. [docs/database-design.md](docs/database-design.md) is an earlier
+database proposal; review and adapt it before implementation.
 
-- Home dashboard with summary cards powered by shared data helpers.
-- Goal cards with First Job first; other goals are placeholders until researched.
-- First Job requirements ordered by the existing plan generator through a numeric-ID adapter.
-- An employer-clearance question that filters the generated plan.
-- Requirement cards with sample verification dates; empty source links stay hidden.
-- Four fictional document tracker entries showing valid or expiring status.
-- Demo sign-in with in-memory access to Goals, Checklist, and Documents; refresh signs out. This is not real authentication.
-- Shared footer, government-affiliation disclaimer, and responsive navigation.
-- Home, Goals, Checklist, Documents, and not-found routes; the legacy Questions route redirects to Checklist.
-- React Router refresh support through Vercel rewrites.
-
-## Feature owner
-
-The AI assistant feature was built by Caleb with AI assistance. Caleb owns
-implementation, source verification, testing, and release decisions for this feature.
-Existing application code remains the baseline; this statement does not reassign
-historical authorship of that code.
-
-## 4-Week Sprint Timeline
-
-Proposed timeline; calendar dates will be confirmed by Caleb.
-
-| Week | Focus | Deliverables and acceptance checks |
-| --- | --- | --- |
-| 1 | Discovery and planning | Agree on the problem, target users, MVP scope, roles, wireframes, and backlog. |
-| 2 | Frontend foundation | Build the shared layout, navigation, goal selection, and question flow; verify selection validation and responsive screens. |
-| 3 | Complete the MVP | Connect the questionnaire to the checklist, completion tracking, review, and reset actions; test the complete user flow. |
-| 4 | QA, release, and presentation | Resolve defects, pass the production build, deploy, verify direct route refreshes, finalize documentation, and prepare the pitch and AI usage disclosure. |
-
-## How to Run
-
-Install Node.js and npm, then open a terminal in the repository folder:
+## Run locally
 
 ```sh
 npm install
 npm run dev
 ```
 
-Open the local URL printed by Vite, usually `http://localhost:5173`.
-
-If PowerShell blocks `npm.ps1`, use `npm.cmd install` and `npm.cmd run dev` instead.
-
-To check the production build:
+Use the local URL printed by Vite. No new runtime dependencies were added.
+Run the validation suite with:
 
 ```sh
-npm run build
+npm run check
 ```
+
+`npm run check` runs the read-only data audit, all Node tests, then the
+production build. `npm run lint` is also available.
 
 ## Demo sign-in
 
-Open `/login` and use made-up input: a well-formed email and at least eight
-password characters. No real account exists and no credentials are saved or sent
-to a server. Successful sign-in opens Home; then use the navigation to explore.
-If you were redirected to sign in from a protected page, successful sign-in
-returns you to that page instead.
-See [the mock-auth contract](docs/data-contract.md#auth-mock-front-end-only).
+Open `/login` and enter a well-formed email and a password of at least eight
+characters. No real account exists; credentials are not saved or sent to a
+server. Successful sign-in opens Home unless a protected page redirected you
+to sign in, in which case it returns you to that page. Goals, Checklist, and
+Documents require the in-memory demo sign-in. See the
+[mock-auth contract](docs/data-contract.md#existing-mock-auth-contract).
+
+## Data and source verification
+
+All civic seed records are `unverified` with `lastVerified: null`. A source
+link is a lead for human review, not proof that the record is accurate or
+current. Only Caleb may change a record to `verified`, after checking the
+official page and entering a real, nonfuture verification date. Verified links
+must use HTTPS on a `.gov.ph` host or a host Caleb explicitly adds to
+`OFFICIAL_DOMAIN_ALLOWLIST`. The audit reports problems and never edits data.
+
+Contact numbers, office hours, fees, health-card requirements, and schedules
+can change. Confirm them with the issuing city office before acting. The
+provided barangay rows are fictional UI fixtures, not city records. Requirements
+and document examples also remain illustrative and unverified.
+
+### Refresh the barangay directory
+
+Obtain the barangay names, administrative and legislative districts, 2020
+population, and source URLs from PSA PSGC and the 2020 Census tables. Put the
+CSV at `data-source/davao-barangays.csv` with exactly these headers:
+
+```text
+name,adminDistrict,legislativeDistrict,population2020,sourceUrl
+```
+
+Then run:
+
+```sh
+node scripts/import-barangays.mjs
+npm run check
+```
+
+The import writes unverified records. It does not mark data as verified.
+Additional update steps are in [docs/data-refresh.md](docs/data-refresh.md).
+
+## Limitations
+
+- Most factual content is unverified. Empty source links and null dates are
+  intentionally visible rather than filled with guesses.
+- Barangays are not yet populated from official source data.
+- The contribution form only prepares a GitHub issue link. Submitting is a
+  separate action on GitHub and requires a repository account.
+- Demo sign-in is front-end-only and is not a security boundary.
+- The assistant answers only from eligible verified records in normal mode.
+  The new Davao records start unverified, so it will not use them until they
+  are reviewed. Provider configuration and keys stay on the server.
+- The development server and browser route checks were not started by this
+  automation run; use the manual route list supplied with the completion
+  report to check refresh behavior and the 360px layout.
 
 ## Deployment
 
-The current app is deployed directly through Vercel CLI. Automatic deployments from GitHub are not connected. `vercel.json` rewrites client-side routes to `index.html` so direct links and page refreshes load the app.
+The existing app is deployed through Vercel CLI; automatic deployments from
+GitHub are not connected. `vercel.json` rewrites client-side routes to
+`index.html` for direct links and refreshes. No deployment was made for these
+changes.
 
-<!--
-Redeploy to Vercel from this repository in PowerShell:
-1. Commit or preserve any local work before switching branches or pulling.
-2. git checkout main
-3. git pull --ff-only
-4. npm.cmd ci
-5. npm.cmd run build
-6. npx.cmd vercel login (only when not signed in)
-7. npx.cmd vercel --prod
-Use the existing requisito project in the intended personal Vercel account.
-Build command: npm run build; output directory: dist; framework: Vite.
-After deployment, open https://requisito.vercel.app and refresh /goals,
-/questions, and /checklist. Routes that require a selected goal may redirect
-to /goals after refresh because app state is held in memory.
-Update the live URL in this README if it changes. Commit and push repository
-changes only with Caleb's approval.
--->
+## AI assistant development
 
-## Phase 2 Pitch
+The assistant calls a Netlify Function, so `npm run dev` serves only the
+frontend. For local function testing, use `npx netlify-cli dev` and configure
+`AI_PROVIDER`, `AI_MODEL`, and `AI_API_KEYS` in the ignored `.env` file. The
+unverified-record override is local-test-only and must never be enabled in a
+deployed context. See [docs/ai-assistant.md](docs/ai-assistant.md) for the
+request flow, safeguards, tests, evaluation, and deployment instructions.
 
-Phase 2 proposes login, saved plans, a document tracker, and an admin console backed by a relational database and authenticated server API. Shared requirements stay separate from each user's completion progress.
+## Credits
 
-See the [database design draft](docs/database-design.md) for tables, key fields, relationships, an entity diagram, and open decisions. The proposal includes the six required tables plus supporting saved-plan tables. The database design is a draft for Caleb to review; no database is implemented.
+This project was informed by BetterMakati and the Better Local Gov starter kit.
+Their citizen-first directory, content, source transparency, search, and
+contribution patterns were independently reimplemented in Requisito's stack.
+No BetterMakati source code, branding, images, or Makati-specific content was
+copied. See [docs/credits.md](docs/credits.md).
 
-## AI Assistant
+## Phase 2 pitch
 
-The feature was built by Caleb with AI assistance. The Checklist includes a chat
-that calls a Netlify Function; provider keys stay on the server. Answers use only
-eligible catalog records, and the server supplies source links, dates, and warnings.
-All six current requirements remain unverified. Normal mode refuses guidance
-until Caleb checks records against official sources.
-
-Run `npx netlify-cli dev` (usually `http://localhost:8888`). Plain `npm run dev`
-serves only the frontend. Configure `AI_PROVIDER`, `AI_MODEL`, and `AI_API_KEYS`
-in the ignored `.env`; no default model is selected. Missing configuration returns
-a generic unavailable response.
-
-**Local-only test warning:** `ALLOW_UNVERIFIED_FOR_TESTING=true` can be set in the
-ignored `.env` to exercise fictional records. It works only when Netlify CLI sets
-`NETLIFY_DEV=true`, with no deployed context. Never configure this flag on a
-hosted site or use it to claim accuracy. Responses are capped at `partial` and
-include "TEST MODE: unverified placeholder data". Do not set `NETLIFY_DEV` yourself.
-
-Checks:
-
-```sh
-node scripts/audit-data.mjs
-node --test scripts/chat.test.mjs scripts/eval-assistant.test.mjs
-node scripts/eval-assistant.mjs
-```
-
-The live evaluation requires the local Netlify server and a selected model.
-It generates answerable cases only from verified records, delays 13 seconds after
-provider calls, and reports skipped cases prominently. The current catalog has
-zero verified records, so all eight answerable cases are skipped.
-
-See [AI assistant documentation](docs/ai-assistant.md) for the data flow, local
-tests, source updates, configuration, limitations, and manual deployment steps.
+Potential next work includes the Tier 3 accountability, participation,
+elections, City Monitor, and integrity features, backed by a reviewed database
+and authenticated server API. The current database design is only a draft;
+Caleb must decide data ownership, authentication, retention, privacy, and
+moderation policies before implementation.
 
 ## AI Usage Disclosure
 
-The AI assistant feature was built by Caleb with AI assistance. Codex assisted
-with secret hygiene, the verification field, the read-only audit, model probes,
-server validation and failover, React chat components, evaluation scripts,
-automated tests, and documentation. Existing project code was used as the baseline.
-Caleb makes the model choice and verifies official requirement sources.
+This civic portal was built by Caleb with AI assistance. AI helped implement
+the user-requested code, tests, and documentation. Caleb remains responsible
+for review, official-source verification, manual browser testing, and release
+decisions.
 
 - Caleb's independently written or revised code: [FILL IN].
-- Caleb's completed browser tests and official-source checks: [FILL IN].
+- Caleb's completed official-source checks and manual route testing: [FILL IN].
 
-Automated test results are recorded during development. They do not establish
-that model answers are factually correct. Live model and browser checks must be
-reported separately; AI assistance does not count as source verification.
+Automated tests and builds do not verify that government information is
+factually correct.

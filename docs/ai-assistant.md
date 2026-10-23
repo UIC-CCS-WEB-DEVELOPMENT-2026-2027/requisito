@@ -6,7 +6,7 @@ official source. Last updated: 2026-10-23.
 ## Data flow
 
 `ChatAssistant` -> `askAssistant(question)` -> `POST /.netlify/functions/chat`
--> server-owned requirements JSON -> Gemini -> validated answer and record IDs
+-> server-owned requirements, service, and hotline JSON -> Gemini -> validated answer and record IDs
 -> server-built sources and warnings -> React plain-text messages.
 
 Only the latest question is sent; previous chat messages stay in React memory.
@@ -16,9 +16,10 @@ Do not enter IDs, names, addresses, or other personal details.
 
 ## Accuracy rules
 
-1. The server uses local catalog records, with no open web search. Normal mode
-   excludes `verification: "unverified"`. Conflicting records may be included,
-   but any cited conflicting record produces a warning and at most partial confidence.
+1. The server uses local requirement, service, and hotline records, with no open
+   web search. Normal mode includes only records that pass the verified-source
+   checks. Unverified and conflicting records are excluded; local test mode may
+   include unverified records with a visible test warning.
 2. The provider receives IDs, labels, notes, copy counts, and verification values.
    Source URLs and verification dates are omitted. The model returns JSON with
    `answer`, `used_ids`, and `confidence`. The server builds the source list itself.
@@ -28,9 +29,10 @@ Do not enter IDs, names, addresses, or other personal details.
 4. Missing coverage, invalid JSON, invalid answer fields, or no valid cited IDs
    produce: "I don't have verified information on that. Please confirm with the issuing office."
    Confidence is `unknown`, and sources are empty. With no eligible records,
-   the server adds "No verified requirements are available yet." without calling Gemini.
-5. No requirement content is invented. The audit never changes records. All six
-   current fixtures remain unverified until Caleb checks official pages.
+   the server adds "No verified civic records are available yet." without calling Gemini.
+5. No requirement or service content is invented. The audit never changes
+   records. Current Davao requirements, services, and hotlines remain unverified
+   until Caleb checks their official pages.
 6. Requests use JSON output, temperature 0.2, and at most 700 output tokens.
    A provider 400 stops immediately; parameters are not silently changed.
 
@@ -67,8 +69,8 @@ git ls-files -- .env
 ```
 
 The grep and tracked-file checks must print nothing; grep exits 1 when no matches
-exist. The staged-only scan checks generic key patterns (including the format of
-all five supplied keys) and staged environment filenames without opening `.env`.
+exist. The staged-only scan checks generic key patterns and staged environment
+filenames without opening `.env`.
 Caleb can run the script without `--staged-only` locally to additionally compare
 exact configured key values in memory. No matching value or diff is printed.
 No commit proceeds on a failure.
@@ -134,8 +136,9 @@ A verified record needs an HTTPS URL with a hostname ending in `.gov.ph`, a real
 nonfuture YYYY-MM-DD date, and notes without sample/placeholder/fictional markers.
 The hostname rule checks syntax, not whether the page exists or supports the
 claim. The audit also checks unique IDs, goal references, field types, and enums.
-Current expected report: six failures for empty source URLs. Do not fill them
-from memory. Source snapshots are optional future work and are not implemented.
+Current expected report: valid seed rows are reported as unverified and pass
+schema checks. Empty source URLs remain empty when no supporting link is known.
+Source snapshots are optional future work and are not implemented.
 
 ## Testing
 
@@ -172,13 +175,13 @@ Run the live evaluation from a second terminal:
 node scripts/eval-assistant.mjs
 ```
 
-The 24 definitions cover eight generated in-scope slots, four out-of-scope cases,
-three injections, four PII cases, two warning cases, and three validation edges.
-Answerable questions are generated at runtime only from verified records. With
-fewer than eight, the runner prints `SKIPPED: only n of 8 verified records` and a
-loud incomplete-coverage warning. It never invents facts to fill the missing slots.
-Warning cases use existing conflicting/stale records, or unverified records when
-no eligible records exist. Missing warning fixtures are also reported as skipped.
+The 28 definitions cover eight original requirement cases, four Davao service,
+hotline, and requirement cases, four out-of-scope cases, three injections, four
+PII cases, two warning cases, and three validation edges. Answerable questions
+are generated at runtime only from verified records and are skipped when a
+matching verified record is unavailable. Warning cases use conflicting or stale
+records, or unverified records when none are eligible. Missing fixtures are
+reported as skipped; skipped coverage is not an accuracy pass.
 
 `EVAL_DELAY_MS = 13000` applies after provider calls, using the server's
 `X-Assistant-Provider: called|skipped` header. Expected local 400 cases skip the

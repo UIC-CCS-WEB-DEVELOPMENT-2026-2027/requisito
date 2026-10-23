@@ -1,22 +1,26 @@
-# Static data usage (#32)
+# Static data usage
 
-The exact schema is in [data-contract.md](data-contract.md).
-Arrays are named exports: goals, requirements, documents.
-Pages import the four functions from src/data/helpers.js, never the arrays.
+The current catalog contracts and helper list are maintained in
+[data-contract.md](data-contract.md). Pages should read catalog data through
+`src/data/helpers.js`, not import catalog arrays directly.
 
-- getGoals(): five goals, with First Job first (numeric ID 1, stepsCount 6). Other goals are placeholders with stepsCount 0.
-- getRequirementsByGoal(1): six requirements. Unknown IDs return [].
-- getDocuments(): four fictional document tracker entries.
-- getSummaryCounts(): { goals: 5, requirementsDone: 0, documentsExpiring: 1 }.
+- `getGoals()` returns seven predefined goals. The original First Job remains
+  ID 1; the Davao health-card example is goal ID 7.
+- `getRequirementsByGoal(1)` returns the six existing illustrative requirements.
+- `getRequirementsByGoal(7)` returns seven unverified health-card entries.
+- `getDocuments()` returns four fictional document tracker entries.
+- Directory helper functions provide services, sample barangay fixtures,
+  officials, city facts, updates, global search, and derived status reporting.
 
-All requirement sources are empty and statuses unverified. Dates, quantities,
-and document statuses are samples for human verification. No real ID numbers
-or personal documents are stored. Helpers return fresh records.
+The six sample barangay records are not real city data and are not included in
+search or status. The audit checks schema and source-policy rules but never
+edits or verifies records.
 
 ## Suggested issue comment
 
-Week 2 data uses the contract in docs/data-contract.md. Import getGoals,
-getRequirementsByGoal, getDocuments, and getSummaryCounts from
-src/data/helpers.js. Use numeric goal ID 1 for First Job (6 requirements,
-4 document examples). Samples are unverified; source links are empty and dates
-are fixtures. See docs/static-data-usage.md. Review by Caleb remains pending.
+Use the contracts and helper functions in `src/data/helpers.js`; keep the
+existing numeric IDs and the distinction between checklist status and source
+verification. Civic seed records begin unverified. Only Caleb may confirm an
+official source and set the verification date. See
+[`docs/data-contract.md`](data-contract.md) and
+[`docs/data-refresh.md`](data-refresh.md).

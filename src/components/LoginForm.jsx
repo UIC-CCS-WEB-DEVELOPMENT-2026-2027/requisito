@@ -2,6 +2,7 @@ import { useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
 import { getSignInDestination } from '../utils/authRedirect.js'
+import { useLanguage } from '../i18n/LanguageContext.jsx'
 import './LoginForm.css'
 
 // Props: none. The demo sign-in completes the app flow for protected routes.
@@ -15,6 +16,7 @@ function LoginForm() {
   const location = useLocation()
   const navigate = useNavigate()
   const { signIn } = useAuth()
+  const { t } = useLanguage()
 
   function handleValidSubmit(cleanEmail) {
     setIsSubmitting(true)
@@ -39,15 +41,15 @@ function LoginForm() {
     const newErrors = {}
 
     if (cleanEmail === '') {
-      newErrors.email = 'Enter your email address.'
+      newErrors.email = t('form.emailRequired')
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
-      newErrors.email = 'Enter a valid email address, like name@example.com.'
+      newErrors.email = t('form.emailInvalid')
     }
 
     if (password === '') {
-      newErrors.password = 'Enter your password.'
+      newErrors.password = t('form.passwordRequired')
     } else if (password.length < 8) {
-      newErrors.password = 'Password must be at least 8 characters.'
+      newErrors.password = t('form.passwordShort')
     }
 
     setPassword('')
@@ -82,7 +84,7 @@ function LoginForm() {
       aria-label="Sign-in form"
     >
       <div className="login-field">
-        <label htmlFor="login-email">Email</label>
+        <label htmlFor="login-email">{t('label.email')}</label>
         <input
           ref={emailRef}
           id="login-email"
@@ -108,7 +110,7 @@ function LoginForm() {
         </div>
       </div>
       <div className="login-field">
-        <label htmlFor="login-password">Password</label>
+        <label htmlFor="login-password">{t('label.password')}</label>
         <input
           ref={passwordRef}
           id="login-password"
@@ -134,7 +136,7 @@ function LoginForm() {
         </div>
       </div>
       <button className="primary-button login-submit" type="submit" disabled={isSubmitting} aria-busy={isSubmitting}>
-        {isSubmitting ? 'Signing in…' : 'Sign in'}
+        {isSubmitting ? t('button.signingIn') : t('button.signIn')}
       </button>
     </form>
   )

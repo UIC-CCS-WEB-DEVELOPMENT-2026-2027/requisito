@@ -2,7 +2,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import process from 'node:process'
 import requirements from '../src/data/requirements.json' with { type: 'json' }
-import { buildAnswer, refusal, retrieve, verificationOf, REFUSAL } from '../netlify/lib/assistant-records.js'
+import { buildAnswer, getAssistantRecords, refusal, retrieve, verificationOf, REFUSAL } from '../netlify/lib/assistant-records.js'
 
 // All credentials and record edits below are synthetic, in-memory test fixtures.
 const envNames = ['AI_PROVIDER', 'AI_MODEL', 'AI_API_KEYS', 'NETLIFY_DEV', 'ALLOW_UNVERIFIED_FOR_TESTING', 'DEPLOY_ID', 'CONTEXT']
@@ -24,6 +24,27 @@ async function setup(t, testMode = false) {
 const request = question => new Request('http://localhost/chat', { method: 'POST', body: JSON.stringify({ question }) })
 const providerResponse = (answer = 'Check with the issuing office.', ids = [1]) => Response.json({
   candidates: [{ content: { parts: [{ text: JSON.stringify({ answer, used_ids: ids, confidence: 'verified' }) }] } }],
+})
+
+test('assistant catalog adapts Davao services and keeps unverified records out of normal mode', () => {
+  const records = getAssistantRecords()
+  const central911 = records.find(record => record.slug === 'central-911')
+  assert.equal(central911.type, 'hotline')
+  assert.ok(central911.notes.includes('911'))
+  assert.equal(verificationOf(central911), 'unverified')
+  assert.equal(verificationOf({
+    ...central911,
+    verification: 'verified',
+    lastVerified: '2026-10-20',
+    notes: 'Current service contact details.',
+  }), 'verified')
+  assert.equal(verificationOf({
+    ...central911,
+    verification: 'verified',
+    sourceUrl: 'https://davaocity.gov.ph.attacker.invalid/',
+    lastVerified: '2026-10-20',
+    notes: 'Current service contact details.',
+  }), 'unverified')
 })
 
 test('guards reject malformed JSON, types, length and PII before counting requests', async t => {
@@ -56,7 +77,7 @@ test('normal mode refuses unverified catalog and ignores request-supplied record
   const response = await chat(new Request('http://localhost/chat', { method: 'POST', body: JSON.stringify({
     question: 'What do I need?', records: [{ id: 999, verification: 'verified' }],
   }) }))
-  assert.deepEqual(await response.json(), refusal(['No verified requirements are available yet.']))
+  assert.deepEqual(await response.json(), refusal(['No verified civic records are available yet.']))
   assert.equal(fetch.mock.callCount(), 0)
   assert.equal(response.headers.get('X-Assistant-Provider'), 'skipped')
 })
@@ -112,11 +133,11 @@ test('warnings are derived from verification, not progress, and dates are checke
   assert.ok(result.warnings.some(warning => warning.includes('conflicting')))
   assert.ok(result.warnings.some(warning => warning.includes('90 days')))
   assert.equal(verificationOf({ ...record, verification: 'verified' }), 'unverified')
-  assert.equal(verificationOf({ ...record, label: undefined }), 'unverified')
+  assert.equal(verificationOf({ ...record, title: undefined, label: undefined }), 'unverified')
 })
 
 test('retrieval keeps small catalogs and ranks large catalogs to eight records', () => {
-  assert.equal(retrieve(requirements, 'Birth certificate').length, 6)
+  assert.equal(retrieve(requirements, 'Birth certificate').length, requirements.length)
   const records = Array.from({ length: 41 }, (_, id) => ({ id, label: id === 40 ? 'matching' : 'other', notes: '' }))
   const selected = retrieve(records, 'matching')
   assert.equal(selected.length, 8)
