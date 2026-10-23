@@ -7,7 +7,8 @@
     "copies": 1,
     "sourceUrl": "",
     "lastVerified": "2026-10-19",
-    "status": "unverified"
+    "status": "unverified",
+    "verification": "unverified"
   },
   {
     "id": 2,
@@ -17,7 +18,8 @@
     "copies": 1,
     "sourceUrl": "",
     "lastVerified": "2026-10-19",
-    "status": "unverified"
+    "status": "unverified",
+    "verification": "unverified"
   },
   {
     "id": 3,
@@ -27,7 +29,8 @@
     "copies": 1,
     "sourceUrl": "",
     "lastVerified": "2026-10-19",
-    "status": "unverified"
+    "status": "unverified",
+    "verification": "unverified"
   },
   {
     "id": 4,
@@ -37,7 +40,8 @@
     "copies": 1,
     "sourceUrl": "",
     "lastVerified": "2026-10-19",
-    "status": "unverified"
+    "status": "unverified",
+    "verification": "unverified"
   },
   {
     "id": 5,
@@ -47,7 +51,8 @@
     "copies": 1,
     "sourceUrl": "",
     "lastVerified": "2026-10-19",
-    "status": "unverified"
+    "status": "unverified",
+    "verification": "unverified"
   },
   {
     "id": 6,
@@ -57,6 +62,7 @@
     "copies": 1,
     "sourceUrl": "",
     "lastVerified": "2026-10-19",
-    "status": "unverified"
+    "status": "unverified",
+    "verification": "unverified"
   }
 ]

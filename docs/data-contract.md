@@ -1,6 +1,6 @@
 # Week 2 shared data contract
 
-Last updated: 2026-10-22 — issue #45 mock JSON catalogs and empty-goal fixture.
+Last updated: 2026-10-22 — separate requirement verification from checklist progress.
 
 Issue #32 was read before implementation. It names the four helpers but does not
 specify conflicting field names or statuses. This contract follows the Week 2
@@ -9,7 +9,7 @@ sprint instructions and supersedes the earlier draft usage note.
 | Record | Exact fields and types |
 | --- | --- |
 | Goal | id: number, title: string, description: string, stepsCount: number |
-| Requirement | id: number, goalId: number, label: string, notes: string, copies: number, sourceUrl: string, lastVerified: YYYY-MM-DD string, status: unverified or done |
+| Requirement | id: number, goalId: number, label: string, notes: string, copies: number, sourceUrl: string, lastVerified: YYYY-MM-DD string, status: unverified or done, verification: verified or unverified or conflicting |
 | Document | id: number, type: string, issueDate: YYYY-MM-DD string, status: valid or expiring |
 
 `sourceUrl` is an empty string until verified. Do not add or rename fields.
@@ -87,3 +87,15 @@ password hashing through a suitable authentication service or server, sessions
 or tokens with expiry and logout invalidation, HTTPS, rate limiting, and
 server-enforced authorization for every private resource. The demo gate alone
 does not provide these capabilities.
+
+## Requirement verification
+
+`status` keeps its existing checklist-progress values (`unverified` or `done`).
+`verification` separately records source review: `verified`, `unverified`, or
+`conflicting`. All six current fictional requirements have verification
+`unverified`. Their content, source URLs, and dates are unchanged.
+
+Only QA may confirm a record from its official page. A verified record needs
+an HTTPS source whose hostname ends with `.gov.ph`, a real, nonfuture
+verification date, and notes without sample, placeholder, or fictional markers.
+The audit reports problems; it never edits data or verifies records itself.
