@@ -2,7 +2,7 @@
 
 **Issue:** [#33](https://github.com/UIC-CCS-WEB-DEVELOPMENT-2026-2027/requisito/issues/33)
 
-**Status:** Draft complete; teammate review waived at the project owner's request. No backend, migrations, authentication,
+**Status:** Draft complete; review by Caleb remains pending. No backend, migrations, authentication,
 database connection, or document upload is implemented by this draft.
 
 The frontend now includes an in-memory demo sign-in flow described in
@@ -14,7 +14,7 @@ database access proposed here.
 Week 2 uses static arrays to demonstrate a First Job checklist. Phase 2 proposes
 a relational database, such as PostgreSQL, accessed through an authenticated
 server API. React would keep reusable cards and replace the static helpers with
-an API-backed data layer. The database and provider remain team decisions.
+an API-backed data layer. The database and provider remain Caleb's decisions.
 
 Phase 2 adds:
 
@@ -117,7 +117,7 @@ feature demonstrates a need to store it outside the authentication provider.
 One user has many entries. Allow renewals and multiple records of a type; do not
 make `(user_id, type)` unique. When both dates exist, expiry cannot precede issue.
 Do not store a status that becomes stale: derive expired, expiring within a
-proposed 30-day window, valid, or unknown from dates. The team must agree on the
+proposed 30-day window, valid, or unknown from dates. Caleb must decide the
 window and treatment of non-expiring documents before implementation. These
 additional states need a Phase 2 UI contract update; never label unknown or
 expired records as valid to fit the Week 2 sample enum.
@@ -266,10 +266,10 @@ static fixtures. Existing sample data must stay unverified until human review.
 
 ## Review checklist and decisions
 
-- Teammate review of relationships, dependency direction, and the ER diagram was waived at the project owner's request; no teammate review is recorded.
-- [ ] Team agrees on authentication/database providers and ownership policies.
-- [ ] Team agrees on expiry rules, plan update behavior, and Phase 2 UI types.
-- [ ] QA confirms source verification and tests private-record access boundaries.
-- [ ] Team agrees on account deletion, report retention, and admin audit storage.
+- [ ] Caleb reviews relationships, dependency direction, and the ER diagram.
+- [ ] Caleb decides authentication/database providers and ownership policies.
+- [ ] Caleb decides expiry rules, plan update behavior, and Phase 2 UI types.
+- [ ] Caleb confirms source verification and tests private-record access boundaries.
+- [ ] Caleb decides account deletion, report retention, and admin audit storage.
 
-The documentation draft is complete with teammate review waived. This document is a pitch, not a reviewed production schema. The implementation decisions above remain open for Phase 2.
+The documentation draft is complete; review by Caleb remains pending. This document is a pitch, not a reviewed production schema. The implementation decisions above remain open for Phase 2.

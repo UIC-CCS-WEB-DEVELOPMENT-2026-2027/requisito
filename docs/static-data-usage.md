@@ -19,4 +19,4 @@ Week 2 data uses the contract in docs/data-contract.md. Import getGoals,
 getRequirementsByGoal, getDocuments, and getSummaryCounts from
 src/data/helpers.js. Use numeric goal ID 1 for First Job (6 requirements,
 4 document examples). Samples are unverified; source links are empty and dates
-are fixtures. See docs/static-data-usage.md. Teammate review remains pending.
+are fixtures. See docs/static-data-usage.md. Review by Caleb remains pending.

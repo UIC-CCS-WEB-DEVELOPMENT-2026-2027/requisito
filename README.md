@@ -10,15 +10,15 @@ People preparing for a first job or another document-based goal may struggle to 
 
 ## Solution
 
-Users choose a predefined goal and review an ordered sample checklist. First Job includes an employer-clearance question that updates the sample plan. React, Vite, and React Router provide a responsive static frontend with no backend, accounts, or AI service.
+Users choose a predefined goal and review a sample checklist. React, Vite, and React Router provide the frontend, with demo sign-in rather than real accounts. The AI assistant feature adds a Netlify Function that answers from eligible catalog records; no database is implemented.
 
-All requirements, dependencies, quantities, dates, and document statuses are illustrative and must be checked against official sources. Progress and tracker values are static examples, not real personal records. The live deployment may lag behind local development until redeployed.
+All requirements, dependencies, quantities, dates, and document statuses are illustrative and must be checked against official sources. Checklist progress exists only in memory, and tracker values are fictional. The AI feature has not been deployed to the existing live URL.
 
 ## MVP Features
 
 - Home dashboard with summary cards powered by shared data helpers.
 - Goal cards with First Job first; other goals are placeholders until researched.
-- First Job requirements ordered by Bruce's plan generator through a numeric-ID adapter.
+- First Job requirements ordered by the existing plan generator through a numeric-ID adapter.
 - An employer-clearance question that filters the generated plan.
 - Requirement cards with sample verification dates; empty source links stay hidden.
 - Four fictional document tracker entries showing valid or expiring status.
@@ -27,18 +27,16 @@ All requirements, dependencies, quantities, dates, and document statuses are ill
 - Home, Goals, Checklist, Documents, and not-found routes; the legacy Questions route redirects to Checklist.
 - React Router refresh support through Vercel rewrites.
 
-## Team Members and Roles
+## Feature owner
 
-| Member | Role | Responsibilities |
-| --- | --- | --- |
-| Szianzey Asesor | Frontend | Build the React screens, shared components, routing, and responsive layouts. |
-| Bruce Arevalo | Systems Analyst | Define the problem, user requirements, goal flows, and acceptance criteria. |
-| Jefferson Laspinas | QA | Check the user flow, validation, navigation, mobile layout, and production behavior; report and retest defects. |
-| Caleb | PM & Backend | Coordinate sprint work, track scope and deadlines, prepare team deliverables, and plan backend work for future phases. |
+The AI assistant feature was built by Caleb with AI assistance. Caleb owns
+implementation, source verification, testing, and release decisions for this feature.
+Existing application code remains the baseline; this statement does not reassign
+historical authorship of that code.
 
 ## 4-Week Sprint Timeline
 
-Proposed timeline; calendar dates will be confirmed by the team.
+Proposed timeline; calendar dates will be confirmed by Caleb.
 
 | Week | Focus | Deliverables and acceptance checks |
 | --- | --- | --- |
@@ -92,15 +90,61 @@ After deployment, open https://requisito.vercel.app and refresh /goals,
 /questions, and /checklist. Routes that require a selected goal may redirect
 to /goals after refresh because app state is held in memory.
 Update the live URL in this README if it changes. Commit and push repository
-changes only with the team's approval.
+changes only with Caleb's approval.
 -->
 
 ## Phase 2 Pitch
 
 Phase 2 proposes login, saved plans, a document tracker, and an admin console backed by a relational database and authenticated server API. Shared requirements stay separate from each user's completion progress.
 
-See the [database design draft](docs/database-design.md) for tables, key fields, relationships, an entity diagram, and open decisions. The proposal includes the six required tables plus supporting saved-plan tables. The documentation draft is complete; teammate review was waived at the project owner's request. No backend is implemented.
+See the [database design draft](docs/database-design.md) for tables, key fields, relationships, an entity diagram, and open decisions. The proposal includes the six required tables plus supporting saved-plan tables. The database design is a draft for Caleb to review; no database is implemented.
+
+## AI Assistant
+
+The feature was built by Caleb with AI assistance. The Checklist includes a chat
+that calls a Netlify Function; provider keys stay on the server. Answers use only
+eligible catalog records, and the server supplies source links, dates, and warnings.
+All six current requirements remain unverified. Normal mode refuses guidance
+until Caleb checks records against official sources.
+
+Run `npx netlify-cli dev` (usually `http://localhost:8888`). Plain `npm run dev`
+serves only the frontend. Configure `AI_PROVIDER`, `AI_MODEL`, and `AI_API_KEYS`
+in the ignored `.env`; no default model is selected. Missing configuration returns
+a generic unavailable response.
+
+**Local-only test warning:** `ALLOW_UNVERIFIED_FOR_TESTING=true` can be set in the
+ignored `.env` to exercise fictional records. It works only when Netlify CLI sets
+`NETLIFY_DEV=true`, with no deployed context. Never configure this flag on a
+hosted site or use it to claim accuracy. Responses are capped at `partial` and
+include "TEST MODE: unverified placeholder data". Do not set `NETLIFY_DEV` yourself.
+
+Checks:
+
+```sh
+node scripts/audit-data.mjs
+node --test scripts/chat.test.mjs scripts/eval-assistant.test.mjs
+node scripts/eval-assistant.mjs
+```
+
+The live evaluation requires the local Netlify server and a selected model.
+It generates answerable cases only from verified records, delays 13 seconds after
+provider calls, and reports skipped cases prominently. The current catalog has
+zero verified records, so all eight answerable cases are skipped.
+
+See [AI assistant documentation](docs/ai-assistant.md) for the data flow, local
+tests, source updates, configuration, limitations, and manual deployment steps.
 
 ## AI Usage Disclosure
 
-Reserved for the team's reviewed disclosure of AI tools used during development, the work they supported, and how the team checked their output. Codex assisted with this README, deployment configuration, Week 2 static UI/data, tests, database design draft, and adaptation of Bruce's generator. Automated checks and browser checks were run; the team should confirm the complete record before submission.
+The AI assistant feature was built by Caleb with AI assistance. Codex assisted
+with secret hygiene, the verification field, the read-only audit, model probes,
+server validation and failover, React chat components, evaluation scripts,
+automated tests, and documentation. Existing project code was used as the baseline.
+Caleb makes the model choice and verifies official requirement sources.
+
+- Caleb's independently written or revised code: [FILL IN].
+- Caleb's completed browser tests and official-source checks: [FILL IN].
+
+Automated test results are recorded during development. They do not establish
+that model answers are factually correct. Live model and browser checks must be
+reported separately; AI assistance does not count as source verification.

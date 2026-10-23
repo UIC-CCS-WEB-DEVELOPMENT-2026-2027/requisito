@@ -1,6 +1,6 @@
 # Week 2 shared data contract
 
-Last updated: 2026-10-22 — separate requirement verification from checklist progress.
+Last updated: 2026-10-23 — separate requirement verification from checklist progress.
 
 Issue #32 was read before implementation. It names the four helpers but does not
 specify conflicting field names or statuses. This contract follows the Week 2
@@ -46,7 +46,7 @@ and official sources before these samples are used as real guidance.
 
 ## Integration with main
 
-Szianzey's four additional placeholder goals are retained with numeric IDs 2-5
+The four additional placeholder goals are retained with numeric IDs 2-5
 and stepsCount 0. First Job remains ID 1 with all six sample requirements.
 Placeholder goals show an empty-state message rather than another goal's plan.
 
@@ -95,7 +95,7 @@ does not provide these capabilities.
 `conflicting`. All six current fictional requirements have verification
 `unverified`. Their content, source URLs, and dates are unchanged.
 
-Only QA may confirm a record from its official page. A verified record needs
+Only Caleb may confirm a record from its official page. A verified record needs
 an HTTPS source whose hostname ends with `.gov.ph`, a real, nonfuture
 verification date, and notes without sample, placeholder, or fictional markers.
 The audit reports problems; it never edits data or verifies records itself.
