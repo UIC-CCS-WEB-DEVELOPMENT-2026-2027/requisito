@@ -1,23 +1,35 @@
-import { useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useState } from 'react'
 import EmptyState from '../components/EmptyState.jsx'
-import RecordMeta from '../components/RecordMeta.jsx'
+import ServiceCard from '../components/ServiceCard.jsx'
 import { getServices } from '../data/helpers.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
+import { filterServices, sortServices } from '../utils/serviceFilters.js'
 
-const categories = ['Emergency', 'Health', 'Business and Permits', 'Information']
+const services = getServices()
+const categories = [...new Set(services.map((service) => service.category))]
+  .sort((left, right) => left.localeCompare(right, 'en', { sensitivity: 'base' }))
 
 function Services() {
   const { t } = useLanguage()
+  // Stores the controlled search text so typing immediately updates the visible list.
   const [query, setQuery] = useState('')
+  // Stores the selected category; an empty value means every category.
   const [category, setCategory] = useState('')
-  const services = getServices()
-  const visibleServices = useMemo(() => services.filter((service) => {
-    const matchesCategory = !category || service.category === category
-    const matchesQuery = `${service.title} ${service.description} ${service.notes}`
-      .toLowerCase().includes(query.trim().toLowerCase())
-    return matchesCategory && matchesQuery
-  }), [category, query, services])
+  // Stores the selected ordering without changing the imported service records.
+  const [sortMode, setSortMode] = useState('status')
+  const visibleServices = sortServices(
+    filterServices(services, { query, category }),
+    sortMode,
+  )
+  const resultCount = t('services.showingCount')
+    .replace('{shown}', String(visibleServices.length))
+    .replace('{total}', String(services.length))
+
+  function clearFilters() {
+    setQuery('')
+    setCategory('')
+    setSortMode('status')
+  }
 
   return (
     <section className="page-content flow-content" aria-labelledby="services-title">
@@ -33,23 +45,36 @@ function Services() {
           <label htmlFor="services-category">{t('label.category')}</label>
           <select id="services-category" value={category} onChange={(event) => setCategory(event.target.value)}>
             <option value="">{t('services.allCategories')}</option>
+            {/* Category names are unique values derived from the local service catalog. */}
             {categories.map((item) => <option key={item} value={item}>{item}</option>)}
           </select>
         </div>
+        <div>
+          <label htmlFor="services-sort">{t('services.sortLabel')}</label>
+          <select id="services-sort" value={sortMode} onChange={(event) => setSortMode(event.target.value)}>
+            <option value="status">{t('services.sortStatus')}</option>
+            <option value="time-sensitive">{t('services.sortTimeSensitive')}</option>
+            <option value="title">{t('services.sortAlphabetical')}</option>
+          </select>
+        </div>
       </div>
+      <p aria-live="polite">{resultCount}</p>
       {visibleServices.length ? (
         <ul className="portal-grid" aria-label={t('a11y.services')}>
+          {/* The stable service id keeps each card associated with the same record as filters change. */}
           {visibleServices.map((service) => (
-            <li className="portal-card" key={service.id}>
-              <p className="eyebrow">{service.category}</p>
-              <h2><Link to={`/services/${service.slug}`}>{service.title}</Link></h2>
-              <p>{service.description}</p>
-              {service.timeSensitive && <p className="time-sensitive">{t('services.timeSensitive')}</p>}
-              <RecordMeta record={service} />
-            </li>
+            <ServiceCard key={service.id} service={service} />
           ))}
         </ul>
-      ) : <EmptyState message={t('form.noRecords')} />}
+      ) : (
+        <>
+          <EmptyState message={t('form.noRecords')} />
+          <p>{t('services.emptyHint')}</p>
+          <button className="secondary-button" type="button" onClick={clearFilters}>
+            {t('services.clearFilters')}
+          </button>
+        </>
+      )}
     </section>
   )
 }

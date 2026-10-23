@@ -1,3 +1,5 @@
+// Data flow: JSON file, then helper, then page, then card through props.
+// Helpers return copies so pages and cards can use local data without mutating the source catalogs.
 import goals from './goals.json' with { type: 'json' }
 import requirements from './requirements.json' with { type: 'json' }
 import documents from './documents.json' with { type: 'json' }
