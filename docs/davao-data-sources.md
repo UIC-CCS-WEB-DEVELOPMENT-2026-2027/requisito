@@ -29,9 +29,24 @@ import scripts accept HTTPS source URLs per row but do not locate, fetch, or
 verify source data. The history and accountability catalogs remain empty until
 dated, sourced entries or official documents are provided.
 
-The supplied 2020 population and land-area numbers have no official URL yet and
-remain unverified with an empty `sourceUrl`. They need the relevant PSA page.
-Administrative and legislative district counts need official confirmation.
+## PSA files to check
+
+The following PSA sources are leads for human review. None of the supported
+records or claims is verified yet:
+
+| PSA source | Supports / review note |
+| --- | --- |
+| [Total Population by Province, City, Municipality, and Barangay: as of May 1, 2020](https://psa.gov.ph/system/files/phcd/2022-12/Region%252011.xlsx) | Check the city and barangay names and population rows. |
+| [Table 2 Total Population, Household Population, and Number of Households by Barangay as of 01 May 2020: City of Davao](https://psa.gov.ph/system/files/phcd/Region%20XI.xlsx) | Check the Davao barangay names and 2020 population values. |
+| [PSA Region XI 2020 Census page](https://rsso11.psa.gov.ph/2020-census-population) | Regional 2020 census context; confirm the relevant Davao claims. |
+| [2020 Census of Population and Housing highlights for Region XI](https://psa.gov.ph/content/highlights-region-xi-davao-region-population-2020-census-population-and-housing-2020-cph) | Supports the cited Davao City 2020 population and Bucana regional barangay population statements; read the page to confirm. |
+
+The barangay names and districts were compiled from a secondary list, not an
+official file. Check them against the PSA workbook and the city's official
+district list. The land-area claim remains unverified with an empty
+`sourceUrl`; the missing source is the PSA population density table (Table A).
+A separate 2024 POPCEN fact links to the PSA declaration page and contains no
+Davao City 2024 population figure.
 
 For the complete record-to-source mapping see
 [`src/data/services.json`](../src/data/services.json),

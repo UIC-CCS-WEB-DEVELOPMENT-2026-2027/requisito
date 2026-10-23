@@ -32,11 +32,11 @@
     "title": "Population in the 2020 census",
     "description": "The 2020 Census of Population and Housing figure supplied for Davao City is 1,776,949.",
     "category": "Population",
-    "sourceUrl": "",
+    "sourceUrl": "https://psa.gov.ph/content/highlights-region-xi-davao-region-population-2020-census-population-and-housing-2020-cph",
     "lastVerified": null,
     "verification": "unverified",
     "timeSensitive": false,
-    "notes": "Secondary sources only; replace with the PSA page."
+    "notes": "PSA highlights page states this figure; read the page and confirm before verifying."
   },
   {
     "id": "land-area",
@@ -49,7 +49,33 @@
     "lastVerified": null,
     "verification": "unverified",
     "timeSensitive": false,
-    "notes": "Secondary sources only; replace with the PSA page."
+    "notes": "source needed: PSA population density table (Table A)"
+  },
+  {
+    "id": "most-populous-barangay-region-xi-2020",
+    "slug": "most-populous-barangay-region-xi-2020",
+    "type": "fact",
+    "title": "Most populous barangay in Region XI in 2020",
+    "description": "Bucana is the most populous barangay in Region XI in 2020, with 80,538 residents.",
+    "category": "Population",
+    "sourceUrl": "https://psa.gov.ph/content/highlights-region-xi-davao-region-population-2020-census-population-and-housing-2020-cph",
+    "lastVerified": null,
+    "verification": "unverified",
+    "timeSensitive": false,
+    "notes": "PSA highlights page states this; read and confirm before verifying."
+  },
+  {
+    "id": "2024-popcen-official-counts",
+    "slug": "2024-popcen-official-counts",
+    "type": "fact",
+    "title": "2024 POPCEN population counts declared official",
+    "description": "A 2024 Census of Population (POPCEN) exists, and its population counts were declared official.",
+    "category": "Population",
+    "sourceUrl": "https://psa.gov.ph/content/2024-census-population-popcen-population-counts-declared-official-president",
+    "lastVerified": null,
+    "verification": "unverified",
+    "timeSensitive": false,
+    "notes": "A secondary list gives a different 2024 figure for Davao City; read the PSA page for the official number before adding it."
   },
   {
     "id": "administrative-district-names",

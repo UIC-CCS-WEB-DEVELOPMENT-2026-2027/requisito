@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import EmptyState from '../components/EmptyState.jsx'
+import CatalogEmptyState from '../components/CatalogEmptyState.jsx'
 import RecordMeta from '../components/RecordMeta.jsx'
 import { getBudget } from '../data/helpers.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
@@ -15,9 +15,9 @@ function Budget() {
   const total = visible.reduce((sum, row) => sum + row.amountPHP, 0)
   return (
     <section className="page-content flow-content" aria-labelledby="budget-title">
-      <p className="eyebrow">Public data dashboard</p>
+      <p className="eyebrow">{t('budget.eyebrow')}</p>
       <h1 id="budget-title">{t('page.budget')}</h1>
-      <p className="page-description">Budget figures appear only when supplied from an official source CSV. Amounts are not estimates.</p>
+      <p className="page-description">{t('budget.description')}</p>
       <label htmlFor="budget-year">{t('label.fiscalYear')}</label>
       <select id="budget-year" value={year} onChange={(event) => setYear(event.target.value)}>
         <option value="">{t('label.chooseFiscalYear')}</option>
@@ -39,7 +39,11 @@ function Budget() {
             })}</tbody>
           </table>
         </div>
-      ) : <EmptyState message={t('status.noBudget')} />}
+      ) : <CatalogEmptyState
+        what={t('emptyState.budgetWhat')}
+        how={t('emptyState.dataHow')}
+        action={t('emptyState.budgetAction')}
+      />}
     </section>
   )
 }

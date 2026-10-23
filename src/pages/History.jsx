@@ -1,4 +1,4 @@
-import EmptyState from '../components/EmptyState.jsx'
+import CatalogEmptyState from '../components/CatalogEmptyState.jsx'
 import RecordMeta from '../components/RecordMeta.jsx'
 import { getHistory } from '../data/helpers.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
@@ -8,9 +8,9 @@ function History() {
   const entries = getHistory()
   return (
     <section className="page-content flow-content" aria-labelledby="history-title">
-      <p className="eyebrow">Davao City timeline</p>
+      <p className="eyebrow">{t('history.eyebrow')}</p>
       <h1 id="history-title">{t('page.history')}</h1>
-      <p className="page-description">Only dated, sourced entries supplied for this project appear here.</p>
+      <p className="page-description">{t('history.description')}</p>
       {entries.length ? (
         <ol className="history-timeline">
           {entries.map((entry) => (
@@ -22,7 +22,11 @@ function History() {
             </li>
           ))}
         </ol>
-      ) : <EmptyState message={t('status.noHistory')} />}
+      ) : <CatalogEmptyState
+        what={t('emptyState.historyWhat')}
+        how={t('emptyState.dataHow')}
+        action={t('emptyState.historyAction')}
+      />}
     </section>
   )
 }

@@ -17,11 +17,10 @@ function Goals() {
 
   return (
     <section className="page-content flow-content" aria-labelledby="goals-title">
-      <p className="eyebrow">Choose a goal</p>
+      <p className="eyebrow">{t('goals.eyebrow')}</p>
       <h1 id="goals-title">{t('page.goals')}</h1>
       <p className="page-description">
-        Choose what you want to accomplish. We'll show the documents you need,
-        in order.
+        {t('goals.description')}
       </p>
       <div className="goal-search" role="search">
         <label htmlFor="goal-search">{t('label.searchGoals')}</label>
@@ -30,12 +29,12 @@ function Goals() {
           type="search"
           value={searchText}
           onChange={(event) => setSearchText(event.target.value)}
-          placeholder="Search goals"
+          placeholder={t('goals.search')}
           autoComplete="off"
         />
       </div>
       {filteredGoals.length > 0 ? (
-        <ul className="goal-grid" aria-label="Available goals">
+        <ul className="goal-grid" aria-label={t('a11y.availableGoals')}>
           {filteredGoals.map((goal) => (
             <li key={goal.id}>
               <Link className="goal-card-link" to={'/checklist?goal=' + goal.id}>
@@ -49,7 +48,7 @@ function Goals() {
           ))}
         </ul>
       ) : (
-        <EmptyState message="No records found" />
+        <EmptyState message={t('form.noRecords')} />
       )}
     </section>
   )

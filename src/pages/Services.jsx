@@ -21,9 +21,9 @@ function Services() {
 
   return (
     <section className="page-content flow-content" aria-labelledby="services-title">
-      <p className="eyebrow">Davao City information</p>
+      <p className="eyebrow">{t('services.eyebrow')}</p>
       <h1 id="services-title">{t('page.services')}</h1>
-      <p className="page-description">Browse city service contacts. Details are unverified; confirm with the official office before relying on them.</p>
+      <p className="page-description">{t('services.description')}</p>
       <div className="portal-filters">
         <div>
           <label htmlFor="services-search">{t('label.searchServices')}</label>
@@ -32,24 +32,24 @@ function Services() {
         <div>
           <label htmlFor="services-category">{t('label.category')}</label>
           <select id="services-category" value={category} onChange={(event) => setCategory(event.target.value)}>
-            <option value="">All categories</option>
+            <option value="">{t('services.allCategories')}</option>
             {categories.map((item) => <option key={item} value={item}>{item}</option>)}
           </select>
         </div>
       </div>
       {visibleServices.length ? (
-        <ul className="portal-grid" aria-label="Services">
+        <ul className="portal-grid" aria-label={t('a11y.services')}>
           {visibleServices.map((service) => (
             <li className="portal-card" key={service.id}>
               <p className="eyebrow">{service.category}</p>
               <h2><Link to={`/services/${service.slug}`}>{service.title}</Link></h2>
               <p>{service.description}</p>
-              {service.timeSensitive && <p className="time-sensitive">Time-sensitive information</p>}
+              {service.timeSensitive && <p className="time-sensitive">{t('services.timeSensitive')}</p>}
               <RecordMeta record={service} />
             </li>
           ))}
         </ul>
-      ) : <EmptyState message="No records found" />}
+      ) : <EmptyState message={t('form.noRecords')} />}
     </section>
   )
 }

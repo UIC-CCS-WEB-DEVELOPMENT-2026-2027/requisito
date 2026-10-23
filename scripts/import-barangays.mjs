@@ -1,107 +1,118 @@
 import { readFile, writeFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { fileURLToPath, pathToFileURL } from 'node:url'
+import { recordsFromCsv, slugify } from './csv-utils.mjs'
 
 const root = resolve(fileURLToPath(new URL('..', import.meta.url)))
 const sourcePath = resolve(root, 'data-source/davao-barangays.csv')
 const destinationPath = resolve(root, 'src/data/barangays.json')
-const districts = new Set([
-  'Poblacion', 'Talomo', 'Agdao', 'Buhangin', 'Bunawan', 'Paquibato',
-  'Baguio', 'Calinan', 'Marilog', 'Toril', 'Tugbok',
-])
 const expectedHeaders = ['name', 'adminDistrict', 'legislativeDistrict', 'population2020', 'sourceUrl']
+const legislativeDistrictByAdmin = {
+  Poblacion: '1st',
+  Talomo: '1st',
+  Agdao: '2nd',
+  Buhangin: '2nd',
+  Bunawan: '2nd',
+  Paquibato: '2nd',
+  Baguio: '3rd',
+  Calinan: '3rd',
+  Marilog: '3rd',
+  Toril: '3rd',
+  Tugbok: '3rd',
+}
+const importNote = "Name and district compiled from a secondary list; check against the PSA workbook and the city's official district list."
 
-function parseCsv(text) {
-  const rows = []
-  let row = []
-  let field = ''
-  let quoted = false
-  for (let index = 0; index < text.length; index += 1) {
-    const character = text[index]
-    if (character === '"' && quoted && text[index + 1] === '"') {
-      field += '"'
-      index += 1
-    } else if (character === '"') {
-      quoted = !quoted
-    } else if (character === ',' && !quoted) {
-      row.push(field)
-      field = ''
-    } else if ((character === '\n' || character === '\r') && !quoted) {
-      if (character === '\r' && text[index + 1] === '\n') index += 1
-      row.push(field)
-      if (row.some((value) => value.trim())) rows.push(row)
-      row = []
-      field = ''
-    } else {
-      field += character
+function optionalPopulation(value, line) {
+  if (!value) return null
+  const population = Number(value)
+  if (!Number.isSafeInteger(population) || population < 0) {
+    throw new Error(`Line ${line}: population2020 must be a non-negative whole number or blank.`)
+  }
+  return population
+}
+
+export function parseBarangayCsv(csv) {
+  const slugs = new Set()
+  const names = new Set()
+  const warnings = []
+  const records = recordsFromCsv(csv, expectedHeaders, (row, line) => {
+    const name = row.name.trim()
+    const adminDistrict = row.adminDistrict.trim()
+    const legislativeDistrict = row.legislativeDistrict.trim()
+    if (!name) throw new Error(`Line ${line}: barangay name is required.`)
+    if (!Object.hasOwn(legislativeDistrictByAdmin, adminDistrict)) {
+      throw new Error(`Line ${line}: unknown administrative district "${adminDistrict}".`)
     }
-  }
-  if (quoted) throw new Error('CSV contains an unclosed quoted field.')
-  row.push(field)
-  if (row.some((value) => value.trim())) rows.push(row)
-  return rows
-}
+    if (!['1st', '2nd', '3rd'].includes(legislativeDistrict)) {
+      throw new Error(`Line ${line}: legislativeDistrict must be 1st, 2nd, or 3rd.`)
+    }
+    if (legislativeDistrict !== legislativeDistrictByAdmin[adminDistrict]) {
+      throw new Error(`Line ${line}: ${adminDistrict} belongs to the ${legislativeDistrictByAdmin[adminDistrict]} legislative district, not ${legislativeDistrict}.`)
+    }
+    if (names.has(name)) throw new Error(`Line ${line}: duplicate barangay name "${name}".`)
+    names.add(name)
 
-function slugify(value) {
-  return value.normalize('NFKD').toLowerCase().replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
-}
+    const baseSlug = slugify(name)
+    if (!baseSlug) throw new Error(`Line ${line}: barangay name does not produce a usable slug.`)
+    let slug = baseSlug
+    let suffix = 2
+    while (slugs.has(slug)) {
+      if (suffix === 2) warnings.push(`Line ${line}: "${name}" shares slug "${baseSlug}"; using a numeric suffix.`)
+      slug = `${baseSlug}-${suffix}`
+      suffix += 1
+    }
+    slugs.add(slug)
 
-function parseOptionalNumber(value, field, lineNumber) {
-  if (!value.trim()) return null
-  const number = Number(value)
-  if (!Number.isSafeInteger(number) || number < 0) {
-    throw new Error(`Line ${lineNumber}: ${field} must be a non-negative whole number or blank.`)
-  }
-  return number
-}
+    const sourceUrl = row.sourceUrl.trim()
+    if (sourceUrl && !/^https:\/\//i.test(sourceUrl)) {
+      throw new Error(`Line ${line}: sourceUrl must be HTTPS or blank.`)
+    }
 
-const csv = await readFile(sourcePath, 'utf8')
-const rows = parseCsv(csv.replace(/^\uFEFF/, ''))
-if (rows.length < 2) throw new Error('CSV must include the required header and at least one barangay row.')
+    return {
+      id: `barangay-${slug}`,
+      slug,
+      type: 'barangay',
+      title: name,
+      description: 'Barangay name and district compiled from a secondary list; confirm against official sources.',
+      category: 'Barangay',
+      sourceUrl,
+      lastVerified: null,
+      verification: 'unverified',
+      timeSensitive: false,
+      notes: importNote,
+      adminDistrict,
+      legislativeDistrict,
+      population2020: optionalPopulation(row.population2020.trim(), line),
+      isSample: false,
+    }
+  })
 
-const headers = rows[0].map((value) => value.trim())
-if (headers.length !== expectedHeaders.length || expectedHeaders.some((field, index) => headers[index] !== field)) {
-  throw new Error(`CSV headers must be exactly: ${expectedHeaders.join(', ')}.`)
-}
-
-const records = rows.slice(1).map((values, index) => {
-  const lineNumber = index + 2
-  if (values.length !== headers.length) throw new Error(`Line ${lineNumber}: expected ${headers.length} columns.`)
-  const record = Object.fromEntries(headers.map((header, column) => [header, values[column].trim()]))
-  const name = record.name
-  const slug = slugify(name)
-  if (!name || !slug) throw new Error(`Line ${lineNumber}: barangay name is required.`)
-  if (!districts.has(record.adminDistrict)) {
-    throw new Error(`Line ${lineNumber}: adminDistrict must match one of the eleven configured district names.`)
-  }
-  if (record.sourceUrl && !/^https:\/\//i.test(record.sourceUrl)) {
-    throw new Error(`Line ${lineNumber}: sourceUrl must be HTTPS or blank.`)
-  }
+  const districtCounts = Object.fromEntries(
+    Object.keys(legislativeDistrictByAdmin).map((district) => [
+      district,
+      records.filter((record) => record.adminDistrict === district).length,
+    ]),
+  )
   return {
-    id: `barangay-${slug}`,
-    slug,
-    type: 'barangay',
-    title: name,
-    description: 'Barangay listing imported from the supplied source CSV.',
-    category: 'Barangay',
-    sourceUrl: record.sourceUrl,
-    lastVerified: null,
-    verification: 'unverified',
-    timeSensitive: false,
-    notes: 'Imported from supplied CSV; requires review against official source data.',
-    adminDistrict: record.adminDistrict,
-    legislativeDistrict: parseOptionalNumber(record.legislativeDistrict, 'legislativeDistrict', lineNumber),
-    population2020: parseOptionalNumber(record.population2020, 'population2020', lineNumber),
-    isSample: false,
+    records,
+    warnings,
+    districtCounts,
+    blankPopulationCount: records.filter((record) => record.population2020 === null).length,
   }
-})
-
-const seen = new Set()
-for (const record of records) {
-  if (seen.has(record.slug)) throw new Error(`Duplicate barangay name/slug: ${record.title}.`)
-  seen.add(record.slug)
 }
 
-await writeFile(destinationPath, `${JSON.stringify(records, null, 2)}\n`)
-console.log(`Imported ${records.length} unverified barangay records to src/data/barangays.json.`)
+export async function importBarangays() {
+  const csv = await readFile(sourcePath, 'utf8')
+  const result = parseBarangayCsv(csv)
+  await writeFile(destinationPath, `${JSON.stringify(result.records, null, 2)}\n`)
+  for (const warning of result.warnings) console.warn(warning)
+  console.log(`Imported ${result.records.length} barangays; ${result.blankPopulationCount} have blank population2020.`)
+  for (const [district, count] of Object.entries(result.districtCounts)) {
+    console.log(`${district}: ${count}`)
+  }
+  return result
+}
+
+if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
+  await importBarangays()
+}

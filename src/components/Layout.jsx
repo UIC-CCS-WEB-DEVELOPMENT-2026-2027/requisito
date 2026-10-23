@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import DisclaimerBanner from './DisclaimerBanner.jsx'
 import Footer from './Footer.jsx'
@@ -12,6 +13,14 @@ function Layout() {
   const { language, setLanguage, t } = useLanguage()
   const location = useLocation()
   const isLoginPage = location.pathname === '/login'
+  useEffect(() => {
+    const heading = document.querySelector('#main-content h1')
+    if (!heading) return
+    const title = heading.textContent.trim()
+    document.title = title ? `${title} | Requisito` : 'Requisito'
+    heading.tabIndex = -1
+    heading.focus({ preventScroll: true })
+  }, [location.pathname])
   return (
     <div className="app-shell">
       <a className="skip-link" href="#main-content">{t('a11y.skip')}</a>
@@ -20,7 +29,7 @@ function Layout() {
           <Link className="brand" to="/">
             Requisito
           </Link>
-          <nav aria-label="Main navigation" className="site-nav" tabIndex="0">
+          <nav aria-label={t('a11y.mainNavigation')} className="site-nav">
             <NavLink end to="/">
               {t('nav.home')}
             </NavLink>
@@ -29,6 +38,9 @@ function Layout() {
             </NavLink>
             <NavLink to="/barangays">
               {t('nav.barangays')}
+            </NavLink>
+            <NavLink to="/districts">
+              {t('nav.districts')}
             </NavLink>
             <NavLink to="/goals">
               {t('nav.goals')}
@@ -43,17 +55,17 @@ function Layout() {
               {t('nav.search')}
             </NavLink>
             {isSignedIn ? (
-              <button className="nav-sign-out" type="button" onClick={signOut}>Sign out</button>
+              <button className="nav-sign-out" type="button" onClick={signOut}>{t('layout.signOut')}</button>
             ) : (
-              !isLoginPage && <NavLink to="/login">Sign in</NavLink>
+              !isLoginPage && <NavLink to="/login">{t('layout.signIn')}</NavLink>
             )}
           </nav>
           <div className="language-switcher">
             <label className="visually-hidden" htmlFor="language-select">{t('language.label')}</label>
             <select id="language-select" value={language} onChange={(event) => setLanguage(event.target.value)}>
-              <option value="en">English</option>
-              <option value="fil">Filipino</option>
-              <option value="ceb">Bisaya</option>
+              <option value="en">{t('layout.english')}</option>
+              <option value="fil">{t('layout.filipino')}</option>
+              <option value="ceb">{t('layout.bisaya')}</option>
             </select>
           </div>
         </div>

@@ -27,11 +27,17 @@ and a 360px-wide viewport.
   targets; check telephone links on a mobile device.
 - [ ] Enable reduced motion and confirm transitions/scroll behavior are
   minimized.
-- [ ] Confirm no record's unverified state is hidden and sample barangays are
-  clearly labeled.
+- [ ] Confirm no record's unverified state is hidden and that real barangays
+  have no sample badge.
 - [ ] Check each Part 2 route: `/history`, `/budget`, `/procurement`, `/briefs`,
   `/monitor`, `/officials/:slug`, `/elections`, `/accountability`,
   `/participate`, and `/integrity`.
+- [ ] Check `/districts` and `/districts/:name`; follow a district link to a
+  barangay profile and return using the breadcrumb.
+- [ ] Filter `/barangays` using the search, administrative and legislative
+  district controls, sort controls, and CSV export at desktop and 360px.
+- [ ] Open a filtered `/search?q=...` result, change its type filter, and check
+  that the URL and highlighted result remain usable with keyboard navigation.
 - [ ] Use the budget year selector, procurement search/status filters, and
   accountability search with keyboard only; confirm result/status updates are
   announced.
@@ -39,3 +45,7 @@ and a 360px-wide viewport.
   and can be scrolled at 360px without page-wide horizontal overflow.
 - [ ] Confirm CSS bars have accessible text alternatives and the numeric
   proportions are also presented as text where applicable.
+
+Part 4 validation note: no manual browser, desktop, 360px, or assistive
+technology checks were performed. `npm run build` and `node --test` were used
+for automated verification only; complete the checks above manually.

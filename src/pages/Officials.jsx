@@ -9,9 +9,9 @@ function Officials() {
   const officials = getOfficials()
   return (
     <section className="page-content flow-content" aria-labelledby="officials-title">
-      <p className="eyebrow">City leadership</p>
+      <p className="eyebrow">{t('officials.eyebrow')}</p>
       <h1 id="officials-title">{t('page.officials')}</h1>
-      <p className="page-description">Office listings only. No office holder has been confirmed for this directory.</p>
+      <p className="page-description">{t('officials.description')}</p>
       {officials.length ? (
         <ul className="portal-grid">
           {officials.map((office) => (
@@ -19,15 +19,15 @@ function Officials() {
               <h2>{office.title}</h2>
               {office.verification === 'verified' && office.holderName && <p>{office.holderName}</p>}
               {office.verification !== 'verified'
-                ? <p>Not verified yet. Check the official city website.</p>
-                : <p>As of <time dateTime={office.lastVerified}>{office.lastVerified}</time>.</p>}
+                ? <p>{t('officials.notVerified')}</p>
+                : <p>{t('officials.asOf')} <time dateTime={office.lastVerified}>{office.lastVerified}</time>.</p>}
               {office.verification === 'verified' && office.notes && <p className="sample-notice">{office.notes}</p>}
               <RecordMeta record={office} />
-              <Link to={`/officials/${office.slug}`}>View office profile</Link>
+              <Link to={`/officials/${office.slug}`}>{t('officials.viewProfile')}</Link>
             </li>
           ))}
         </ul>
-      ) : <EmptyState message="No official offices are listed." />}
+      ) : <EmptyState message={t('officials.empty')} />}
     </section>
   )
 }

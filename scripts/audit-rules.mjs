@@ -16,8 +16,20 @@ export function allowedSource(value, allowedHosts = []) {
   return host.endsWith('.gov.ph') || allowedHosts.includes(host)
 }
 
+export function validHttpsUrl(value) {
+  try {
+    const source = new URL(value)
+    return source.protocol === 'https:' && Boolean(source.hostname) && !source.username && !source.password
+  } catch {
+    return false
+  }
+}
+
 export function verificationIssues(record, today, allowedHosts = []) {
   const problems = []
+  if (record.type === 'fact' && record.sourceUrl && !validHttpsUrl(record.sourceUrl)) {
+    problems.push('fact sourceUrl must be an HTTPS URL')
+  }
   if (record.sourceUrl && !allowedSource(record.sourceUrl, allowedHosts)) {
     problems.push('sourceUrl must use HTTPS and an allowed government host')
   }
@@ -40,4 +52,67 @@ export function verificationIssues(record, today, allowedHosts = []) {
 
 export function validBarangayDistrict(value, districts) {
   return districts.includes(value)
+}
+
+export const BARANGAY_DISTRICT_COUNTS = {
+  Poblacion: 40,
+  Talomo: 14,
+  Agdao: 11,
+  Buhangin: 13,
+  Bunawan: 9,
+  Paquibato: 13,
+  Baguio: 8,
+  Calinan: 19,
+  Marilog: 12,
+  Toril: 25,
+  Tugbok: 18,
+}
+
+export const BARANGAY_LEGISLATIVE_DISTRICTS = {
+  Poblacion: '1st',
+  Talomo: '1st',
+  Agdao: '2nd',
+  Buhangin: '2nd',
+  Bunawan: '2nd',
+  Paquibato: '2nd',
+  Baguio: '3rd',
+  Calinan: '3rd',
+  Marilog: '3rd',
+  Toril: '3rd',
+  Tugbok: '3rd',
+}
+
+export function barangayCatalogIssues(records) {
+  if (!records.some((record) => record.type === 'barangay' && !record.isSample)) return []
+
+  const issues = []
+  if (records.length !== 182) issues.push(`barangays: expected 182 real records, found ${records.length}`)
+
+  const names = new Set()
+  const slugs = new Set()
+  const counts = Object.fromEntries(Object.keys(BARANGAY_DISTRICT_COUNTS).map((name) => [name, 0]))
+  for (const record of records) {
+    if (names.has(record.title)) issues.push(`barangays: duplicate name "${record.title}"`)
+    names.add(record.title)
+    if (slugs.has(record.slug)) issues.push(`barangays: duplicate slug "${record.slug}"`)
+    slugs.add(record.slug)
+    if (Object.hasOwn(counts, record.adminDistrict)) counts[record.adminDistrict] += 1
+    if (record.legislativeDistrict !== BARANGAY_LEGISLATIVE_DISTRICTS[record.adminDistrict]) {
+      issues.push(`barangays: ${record.title} has a legislative district that does not match ${record.adminDistrict}`)
+    }
+    if (!Number.isInteger(record.population2020) && record.population2020 !== null) {
+      issues.push(`barangays: ${record.title} population2020 must be a non-negative integer or null`)
+    } else if (record.population2020 !== null && record.population2020 < 0) {
+      issues.push(`barangays: ${record.title} population2020 must be non-negative`)
+    }
+    if (record.isSample || record.verification !== 'unverified' || record.lastVerified !== null) {
+      issues.push(`barangays: ${record.title} must remain non-sample and unverified`)
+    }
+  }
+  for (const [district, expected] of Object.entries(BARANGAY_DISTRICT_COUNTS)) {
+    if (counts[district] !== expected) {
+      issues.push(`barangays: ${district} expected ${expected} records, found ${counts[district]}`)
+    }
+  }
+  return issues
 }

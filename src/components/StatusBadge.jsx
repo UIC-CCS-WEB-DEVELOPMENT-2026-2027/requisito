@@ -1,17 +1,20 @@
 import './SprintCards.css'
 import { formatDate } from '../utils/formatDate.js'
+import { useLanguage } from '../i18n/LanguageContext.jsx'
 
 // Props: lastVerified.
 function StatusBadge({ lastVerified }) {
+  const { t } = useLanguage()
+
   return (
     <span className="status-badge">
       {lastVerified ? (
         <>
-          Last verified:{' '}
+          {t('recordMeta.lastVerified')}{' '}
           <time dateTime={lastVerified}>{formatDate(lastVerified)}</time>
         </>
       ) : (
-        'Not yet verified'
+        t('recordMeta.neverVerified')
       )}
     </span>
   )

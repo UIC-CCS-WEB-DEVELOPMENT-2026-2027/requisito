@@ -20,3 +20,8 @@ capabilities are documented with reasons in
 No source file was borrowed from the reference repository. No Makati-specific
 content, logos, images, or branding were copied. The reference checkout was
 read-only and remains untouched.
+
+The Davao barangay names and administrative district assignments were compiled
+from a public encyclopedia list as a pointer only. They are not an official
+source and must be checked against the PSA workbook and the city's official
+district list before verification.

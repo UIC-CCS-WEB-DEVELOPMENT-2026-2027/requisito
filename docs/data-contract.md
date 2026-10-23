@@ -27,7 +27,10 @@ New civic records in `services.json`, `barangays.json`, `officials.json`,
 Service and hotline records also have `contact: { phone: string[], email:
 string, address: string, hours: string }`; `steps` and `relatedSources` are
 optional. Barangays have `adminDistrict`, `legislativeDistrict`,
-`population2020`, and `isSample`. Officials have `holderName`, which stays
+`population2020` (a non-negative integer or `null` when unavailable), and
+`isSample` (`false` for the imported real list). Barangay slugs are unique
+lowercase URL-safe names derived by folding accents and replacing punctuation
+or whitespace with hyphens; collisions receive a numeric suffix. Officials have `holderName`, which stays
 `null` until independently verified. Updates may have a nullable `date`.
 Requirement and document records may have `validityMonths: number | null`.
 
@@ -67,9 +70,19 @@ confirmed. The fictional tracker examples do not calculate expiry.
 - `getOfficials()`, `getCityFacts()`, and `getUpdates()`
 - `getHistory()`, `getBudget()`, `getProcurement()`, `getBriefs()`,
   `getElections()`, and `getAccountability()`
+- `getDistricts()`, `getDistrictSummary()`, and
+  `getBarangaysByDistrict(name)` expose administrative-district pages and
+  profiles without changing the source barangay records.
+- `getRecordCounts()` returns per-catalog counts and their shared total. The
+  Home total and data audit use the civic catalogs plus requirements; the four
+  illustrative document-tracker examples are intentionally outside that count.
 - `searchAll(query)` returns grouped arrays for services, barangays,
-  requirements, updates, history, briefs, budget, procurement, elections, and
-  accountability. It trims and lowercases the query and excludes sample rows.
+  requirements, updates, history, briefs, budget, procurement, elections,
+  accountability, and districts. It folds accents, ranks title matches, and
+  excludes sample or placeholder rows. `/search` stores its query and selected
+  type in the URL.
+- `/barangays` stores its search, district filters, and sort settings in URL
+  parameters; filtered CSV export includes only visible real barangays.
 - `getStatusReport()` derives verification counts, stale records,
   time-sensitive records, and known gaps. `STALE_DAYS` is 90.
 - `getCityMonitor()` derives monitor values from those local records, while
@@ -83,16 +96,30 @@ illustrative health-card requirements; only chest x-ray (6 months), urinalysis
 ## Verification rules and fixtures
 
 All civic seed records start unverified with `lastVerified: null`. A source URL
-does not mean that its claims have been verified. Only Caleb can set
-`verification` to `verified` and enter a real, nonfuture `lastVerified` date
-after checking the official page. Verified sources must use HTTPS on a `.gov.ph`
-hostname or a hostname explicitly configured by Caleb in
-`OFFICIAL_DOMAIN_ALLOWLIST`. Verified text must not contain sample, placeholder,
-or fictional markers. The audit is read-only.
+does not mean that its claims have been verified. The local admin workflow
+requires one reviewer or admin to submit a verification request after checking
+the official page; a different reviewer or admin must approve it. Requests
+include the source URL, date accessed, and a note describing the exact fields
+compared. Approval records the request's source URL and a real, nonfuture
+`lastVerified` date in the local database. Verified sources must use HTTPS on
+the server's exact official-host allowlist; verified catalog records must also
+pass the data audit's `.gov.ph` or `OFFICIAL_DOMAIN_ALLOWLIST` rule. Verified
+text must not contain sample, placeholder, or fictional markers. Any non-empty
+fact `sourceUrl` must be an HTTPS URL. The audit is read-only.
 
-Barangay placeholder rows are named Sample Barangay A-F, marked `isSample: true`,
-and clearly labeled in the interface. They are excluded from global search and
-all Sources and Status counts. Do not use them as real city information.
+Editing record data resets a verified record to unverified and clears its
+verification date. It also cancels pending requests for that record, because
+their comparison notes no longer describe the current data. Both operations
+are written to the append-only audit log. The local database is separate from
+the checked-in JSON catalogs; only the explicit `npm run db:export` command
+copies validated records into those catalogs. Do not manually change a record
+to `verified` in JSON.
+
+The 182 imported barangay names and district assignments were compiled from a
+secondary list and remain unverified until checked against the PSA workbook and
+the city's official district list. Their populations remain `null` until
+matched to the PSA 2020 table. Barangay audit checks record count, unique names
+and slugs, expected district totals, and legislative-district assignments.
 
 Any future sample budget or procurement rows must be clearly named and marked
 `isSample: true`; sample records are excluded from search, status counts, and
@@ -125,7 +152,25 @@ never passed to auth context. The state resets on refresh. Goals, Checklist,
 and Documents remain protected; civic information routes are public.
 
 Signed-out visitors to a protected route are sent to `/login` with the original
-location in router state. Successful demo sign-in returns them to that route;
-a direct `/login` visit falls back to `/`. Signed-in visitors who open `/login`
-are redirected to Home with replace. The UI notice says:
+location in router state, replacing the protected-route history entry.
+Successful demo sign-in returns them to the originally requested location with
+replace; if there was no requested location (such as a direct `/login` visit),
+it sends them to Home (`/`) with replace. Signed-in visitors who open `/login`
+are redirected to Home (`/`) with replace. The UI notice says:
 "Demo sign-in: no real authentication yet. Full login arrives in Phase 2."
+
+## Local admin authentication contract
+
+The separate `/admin` application uses the local Express API and SQLite
+database. It has no public sign-up, seeded account, or default credentials.
+The first admin account is created interactively with `npm run admin:create`;
+later account creation requires an active admin. Passwords use salted scrypt
+hashes and are never stored or returned in plaintext. Sessions use random
+HttpOnly, SameSite cookies; only keyed session-token hashes are stored.
+
+Every state-changing API request requires the configured same-origin `Origin`
+and `X-Requested-With: portal-admin` header. Roles are viewer (read-only),
+reviewer (edit and submit/decide reviews), and admin (review plus user
+management and full audit-log access). The API listens only on loopback for
+local development. The admin database is not automatically exported or
+deployed with the public site.

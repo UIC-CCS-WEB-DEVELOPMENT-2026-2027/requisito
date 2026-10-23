@@ -8,12 +8,12 @@ function Documents() {
   const documents = getDocuments()
   return (
     <section className="page-content" aria-labelledby="documents-title">
-      <p className="eyebrow">Documents</p>
+      <p className="eyebrow">{t('documents.eyebrow')}</p>
       <h1 id="documents-title">{t('page.documents')}</h1>
       <p className="page-description">
-        Fictional document tracker examples. Issue dates and statuses are sample values, not real personal records or calculated expiry dates.
+        {t('documents.description')}
       </p>
-      <ul className="sprint-grid document-grid" aria-label="Your documents">
+      <ul className="sprint-grid document-grid" aria-label={t('a11y.documents')}>
         {documents.map((document) => (
           <li key={document.id}>
             <DocumentCard

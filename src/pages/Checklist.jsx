@@ -37,7 +37,7 @@ function Checklist() {
           />
         </>
       ) : (
-        <EmptyState message="No requirements found for this goal." />
+        <EmptyState message={t('checklist.noRequirements')} />
       )}
       <ChatAssistant key={goalId} />
     </section>
@@ -45,6 +45,7 @@ function Checklist() {
 }
 
 function ChecklistView({ initialRequirements }) {
+  const { t } = useLanguage()
   const [items, setItems] = useState(() =>
     initialRequirements.map((req) => ({ ...req, status: 'pending' })),
   )
@@ -71,12 +72,12 @@ function ChecklistView({ initialRequirements }) {
           {completed} of {total} completed
         </p>
         <progress
-          aria-label="Requirements completed"
+          aria-label={t('a11y.requirementsCompleted')}
           value={completed}
           max={total}
         />
       </div>
-      <ol className="sprint-grid generated-plan" aria-label="Requirements">
+      <ol className="sprint-grid generated-plan" aria-label={t('a11y.requirements')}>
         {items.map((item, index) => (
           <li key={item.id}>
             <p className="plan-step-number">Step {index + 1}</p>

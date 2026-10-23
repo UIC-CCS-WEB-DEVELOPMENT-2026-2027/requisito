@@ -6,12 +6,13 @@ function Footer() {
   return (
     <footer className="site-footer">
       <p>Requisito</p>
-      <p className="footer-description">Independent student project. Not an official website of the City Government of Davao and not affiliated with BetterGov or BetterLGU.</p>
-      <nav className="footer-nav footer-nav-groups" aria-label="Secondary navigation">
+      <p className="footer-description">{t('footer.disclaimer')}</p>
+      <nav className="footer-nav footer-nav-groups" aria-label={t('a11y.secondaryNavigation')}>
         <section aria-label={t('group.explore')}>
           <h2>{t('group.explore')}</h2>
           <Link to="/services">{t('nav.services')}</Link>
           <Link to="/barangays">{t('nav.barangays')}</Link>
+          <Link to="/districts">{t('nav.districts')}</Link>
           <Link to="/about-davao">{t('nav.about')}</Link>
           <Link to="/history">{t('nav.history')}</Link>
           <Link to="/briefs">{t('nav.briefs')}</Link>

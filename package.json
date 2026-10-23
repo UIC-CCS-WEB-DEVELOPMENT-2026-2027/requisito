@@ -5,13 +5,20 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "api:dev": "node --env-file-if-exists=.env server/index.js",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "node --test",
-    "check": "node scripts/audit-data.mjs && npm test && npm run build"
+    "check": "node scripts/audit-data.mjs && npm test && npm run build",
+    "db:import": "node --env-file-if-exists=.env scripts/db-import.mjs",
+    "db:export": "node --env-file-if-exists=.env scripts/db-export.mjs",
+    "admin:create": "node --env-file-if-exists=.env scripts/admin-create.mjs"
   },
   "dependencies": {
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.1.0",
+    "helmet": "^8.1.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-router-dom": "^7.18.4"

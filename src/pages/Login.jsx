@@ -20,11 +20,11 @@ function Login() {
           <span className="login-signature" aria-hidden="true"><span /></span>
           <p className="login-wordmark">Requisito</p>
           <h1 id="login-title">{t('page.login')}</h1>
-          <p className="login-intro">A clearer path through your paperwork.</p>
+          <p className="login-intro">{t('login.intro')}</p>
         </div>
         <LoginForm />
-        <p className="login-notice"><span className="login-demo-label">Demo sign-in:</span> no real authentication yet. Full login arrives in Phase 2.</p>
-        <Link className="login-back-link" to="/"><span aria-hidden="true">&larr;</span> Back to Home</Link>
+        <p className="login-notice"><span className="login-demo-label">{t('login.demoLabel')}</span> {t('login.demoNotice')}</p>
+        <Link className="login-back-link" to="/"><span aria-hidden="true">&larr;</span> {t('login.backHome')}</Link>
       </div>
     </section>
   )

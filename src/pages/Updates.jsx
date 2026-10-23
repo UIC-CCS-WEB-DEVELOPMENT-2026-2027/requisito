@@ -13,9 +13,9 @@ function Updates() {
 
   return (
     <section className="page-content flow-content" aria-labelledby="updates-title">
-      <p className="eyebrow">City notices</p>
+      <p className="eyebrow">{t('updates.eyebrow')}</p>
       <h1 id="updates-title">{t('page.updates')}</h1>
-      <p className="page-description">Summaries are brief, source-linked, and not a substitute for a current city advisory.</p>
+      <p className="page-description">{t('updates.description')}</p>
       {updates.length ? (
         <ul className="portal-grid">
           {updates.map((update) => (
@@ -24,14 +24,14 @@ function Updates() {
               <h2>{update.title}</h2>
               <p>{update.description}</p>
               {update.date
-                ? <p>Published: <time dateTime={update.date}>{update.date}</time></p>
-                : <p>Date not confirmed.</p>}
-              {update.timeSensitive && <p className="time-sensitive">Past announcement. Confirm the current schedule.</p>}
+                ? <p>{t('updates.published')} <time dateTime={update.date}>{update.date}</time></p>
+                : <p>{t('updates.dateNotConfirmed')}</p>}
+              {update.timeSensitive && <p className="time-sensitive">{t('updates.pastAnnouncement')}</p>}
               <RecordMeta record={update} />
             </li>
           ))}
         </ul>
-      ) : <EmptyState message="No updates are available." />}
+      ) : <EmptyState message={t('updates.empty')} />}
     </section>
   )
 }

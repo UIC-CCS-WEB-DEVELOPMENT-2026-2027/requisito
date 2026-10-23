@@ -81,7 +81,7 @@ function LoginForm() {
       className="login-form"
       onSubmit={handleSubmit}
       noValidate
-      aria-label="Sign-in form"
+      aria-label={t('a11y.signInForm')}
     >
       <div className="login-field">
         <label htmlFor="login-email">{t('label.email')}</label>
@@ -103,7 +103,7 @@ function LoginForm() {
         <div className="login-error-live" aria-live="polite">
           {errors.email && (
             <p id="login-email-error" className="login-error">
-              <span className="visually-hidden">Error: </span>
+              <span className="visually-hidden">{t('a11y.error')} </span>
               {errors.email}
             </p>
           )}
@@ -125,11 +125,11 @@ function LoginForm() {
           aria-invalid={Boolean(errors.password)}
           aria-describedby={errors.password ? 'login-password-error' : undefined}
         />
-        <p className="login-hint">Use at least 8 characters.</p>
+        <p className="login-hint">{t('login.passwordHint')}</p>
         <div className="login-error-live" aria-live="polite">
           {errors.password && (
             <p id="login-password-error" className="login-error">
-              <span className="visually-hidden">Error: </span>
+              <span className="visually-hidden">{t('a11y.error')} </span>
               {errors.password}
             </p>
           )}

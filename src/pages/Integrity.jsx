@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import CatalogEmptyState from '../components/CatalogEmptyState.jsx'
 import RecordMeta from '../components/RecordMeta.jsx'
 import { getStatusReport, STALE_DAYS } from '../data/helpers.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
@@ -18,19 +19,24 @@ function Integrity() {
   }
   return (
     <section className="page-content flow-content" aria-labelledby="integrity-title">
-      <p className="eyebrow">Project transparency</p>
+      <p className="eyebrow">{t('integrity.eyebrow')}</p>
       <h1 id="integrity-title">{t('page.integrity')}</h1>
       <h2>{t('heading.siteMethods')}</h2>
-      <p>Requisito is an independent student project, not an official Davao City website.</p>
-      <p>Catalog records are marked verified, unverified, or conflicting. Verification requires an HTTPS official .gov.ph source or an explicitly configured allowlist domain, and a human-entered review date.</p>
-      <p>Records older than {STALE_DAYS} days are treated as stale. Current catalog coverage: {verified} verified out of {total} records.</p>
-      <p>The assistant uses only eligible verified catalog records in normal mode. Its answers may still be wrong and should be checked against the source.</p>
-      <p>Corrections are prepared as public GitHub issues and are reviewed before data changes.</p>
-      <p><Link to="/contribute">Suggest a correction</Link> · <Link to="/credits">Credits</Link></p>
+      <p>{t('integrity.independent')}</p>
+      <p>{t('integrity.verificationPolicy')}</p>
+      <p>{t('heading.staleRecords')} {STALE_DAYS} {t('integrity.days')}. {t('integrity.coverage').replace('{verified}', verified).replace('{total}', total)}</p>
+      <p>{t('integrity.assistant')}</p>
+      <p>{t('integrity.corrections')}</p>
+      <p><Link to="/contribute">{t('integrity.suggestCorrection')}</Link> · <Link to="/credits">{t('integrity.credits')}</Link></p>
       <h2>{t('heading.verificationExample')}</h2>
       <RecordMeta record={policyRecord} />
       <h2>{t('heading.aiDisclosure')}</h2>
-      <p>The civic portal was built by Caleb with AI assistance. Automated tests and builds do not verify civic facts.</p>
+      <p>{t('integrity.aiDisclosure')}</p>
+      <CatalogEmptyState
+        what={t('emptyState.integrityWhat')}
+        how={t('emptyState.dataHow')}
+        action={t('emptyState.integrityAction')}
+      />
     </section>
   )
 }

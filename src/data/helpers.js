@@ -15,6 +15,8 @@ import accountability from './accountability.json' with { type: 'json' }
 import sourceWatchState from '../../data/source-watch-state.json' with { type: 'json' }
 import { planningQuestions, planningRules } from './planningRules.js'
 import { generatePlan } from '../utils/planGenerator.js'
+import { getRecordCounts as countRecords } from './recordCounts.js'
+import { rankSearchRecords } from './search.js'
 
 export const STALE_DAYS = 90
 
@@ -58,6 +60,40 @@ export function getBarangayBySlug(slug) {
 // Return the fixed district names supplied by the project seed.
 export function getDistricts() {
   return [...administrativeDistricts]
+}
+
+export function getDistrictSummary() {
+  return administrativeDistricts.map((name) => ({
+    name,
+    count: barangays.filter((record) => !record.isSample && record.adminDistrict === name).length,
+  }))
+}
+
+export function getBarangaysByDistrict(name) {
+  return barangays.filter((record) => !record.isSample && record.adminDistrict === name)
+    .map((record) => ({ ...record }))
+    .sort((left, right) => left.title.localeCompare(right.title, 'en', { sensitivity: 'base' }))
+}
+
+export function getRecordCounts() {
+  return countRecords(getAuditedCollections())
+}
+
+function getAuditedCollections() {
+  return {
+    services,
+    barangays,
+    officials,
+    cityFacts,
+    updates,
+    history,
+    budget,
+    procurement,
+    briefs,
+    elections,
+    accountability,
+    requirements,
+  }
 }
 
 // Return copies of the offices-only officials list.
@@ -114,15 +150,14 @@ export function getDocuments() {
 // Derive dashboard counts from the catalog so totals follow the sample records.
 export function getSummaryCounts() {
   return {
+    ...getRecordCounts(),
     goals: goals.length,
-    requirementsDone: requirements.filter((requirement) => requirement.status === 'done').length,
-    documentsExpiring: documents.filter((document) => document.status === 'expiring').length,
+    unverified: getStatusReport().knownGaps.length,
   }
 }
 
 // Search public directories and return matching records grouped by type.
 export function searchAll(query) {
-  const normalizedQuery = query.trim().toLowerCase()
   const searchable = {
     services: withoutSamples(services),
     barangays: withoutSamples(barangays),
@@ -134,14 +169,25 @@ export function searchAll(query) {
     procurement: withoutSamples(procurement),
     elections: withoutSamples(elections),
     accountability: withoutSamples(accountability),
+    districts: getDistrictSummary().map((district) => ({
+      id: `district-${district.name.toLowerCase()}`,
+      slug: district.name,
+      type: 'district',
+      title: district.name,
+      description: `${district.count} barangays`,
+      category: 'District',
+      sourceUrl: '',
+      verification: 'unverified',
+      lastVerified: null,
+      timeSensitive: false,
+      notes: '',
+    })),
   }
   return Object.fromEntries(Object.entries(searchable).map(([type, records]) => [
     type,
-    normalizedQuery
-      ? records.filter((record) => searchableText(record).includes(normalizedQuery))
-        .map((record) => type === 'services' ? copyService(record) :
-          type === 'briefs' ? { ...record, steps: [...record.steps], whatYouNeed: [...record.whatYouNeed] } : { ...record })
-      : [],
+    rankSearchRecords(records, query)
+      .map((record) => type === 'services' ? copyService(record) :
+        type === 'briefs' ? { ...record, steps: [...record.steps], whatYouNeed: [...record.whatYouNeed] } : { ...record }),
   ]))
 }
 
@@ -160,15 +206,6 @@ export function getStatusReport(today = new Date()) {
     procurement: withoutSamples(procurement),
     elections: withoutSamples(elections),
     accountability: withoutSamples(accountability),
-    documents: documents.map((item) => ({
-      ...item,
-      title: item.type,
-      type: 'document',
-      verification: item.verification ?? 'unverified',
-      lastVerified: item.lastVerified ?? null,
-      sourceUrl: item.sourceUrl ?? '',
-      timeSensitive: item.timeSensitive ?? false,
-    })),
   }
   const records = Object.entries(recordGroups).flatMap(([group, items]) =>
     items.map((item) => ({ ...item, dataType: group })),
@@ -236,16 +273,9 @@ function copyService(service) {
 }
 
 function withoutSamples(records) {
-  return records.filter((record) => !record.isSample)
-}
-
-function searchableText(record) {
-  return Object.values(record).flatMap((value) => {
-    if (typeof value === 'string') return [value]
-    if (Array.isArray(value)) return value.filter((item) => typeof item === 'string')
-    if (value && typeof value === 'object') return Object.values(value).filter((item) => typeof item === 'string')
-    return []
-  }).join(' ').toLowerCase()
+  return records.filter((record) =>
+    !record.isSample && !/\b(sample|placeholder|fictional)\b/i.test(`${record.title ?? ''} ${record.description ?? ''}`),
+  )
 }
 
 function validDate(value) {

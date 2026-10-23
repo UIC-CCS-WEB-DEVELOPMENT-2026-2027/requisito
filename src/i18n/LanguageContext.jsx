@@ -3,8 +3,10 @@ import en from './en.json' with { type: 'json' }
 // These translations are draft strings; fil.json and ceb.json need native-speaker review.
 import fil from './fil.json' with { type: 'json' }
 import ceb from './ceb.json' with { type: 'json' }
+import { resolveTranslation } from './translation.js'
 
 const translations = { en, fil, ceb }
+const warnedKeys = new Set()
 const LanguageContext = createContext(null)
 
 function storedLanguage() {
@@ -36,7 +38,12 @@ export function LanguageProvider({ children }) {
   const value = useMemo(() => ({
     language,
     setLanguage: changeLanguage,
-    t: (key) => translations[language][key] ?? translations.en[key] ?? key,
+    t: (key) => resolveTranslation(translations, language, key, (missingKey, currentLanguage) => {
+      if (import.meta.env.DEV && !warnedKeys.has(`${currentLanguage}:${missingKey}`)) {
+        warnedKeys.add(`${currentLanguage}:${missingKey}`)
+        console.warn(`Missing ${currentLanguage} translation for "${missingKey}". Falling back to English.`)
+      }
+    }),
   }), [language])
 
   return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>

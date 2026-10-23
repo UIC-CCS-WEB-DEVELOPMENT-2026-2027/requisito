@@ -2,11 +2,11 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { getSignInDestination } from '../utils/authRedirect.js'
 
-test('signed-out protected route returns to its requested location after sign-in', () => {
+test('signed-out visit to /goals goes to /login and returns to /goals after sign-in', () => {
   const requestedLocation = {
     pathname: '/goals',
-    search: '',
-    hash: '',
+    search: '?step=1',
+    hash: '#requirements',
     key: 'requested',
   }
   const protectedRouteRedirect = {
@@ -20,10 +20,16 @@ test('signed-out protected route returns to its requested location after sign-in
   assert.deepEqual(getSignInDestination(protectedRouteRedirect.state), requestedLocation)
 })
 
-test('direct visit to login falls back to Home after sign-in', () => {
+test('direct visit to /login then sign-in goes to Home', () => {
   assert.equal(getSignInDestination(undefined), '/')
 })
 
-test('signed-in visit to login redirects to Home', () => {
-  assert.equal(getSignInDestination(), '/')
+test('signed-in visit to /login redirects to Home with replace', () => {
+  const loginRedirect = {
+    to: getSignInDestination(),
+    replace: true,
+  }
+
+  assert.equal(loginRedirect.to, '/')
+  assert.equal(loginRedirect.replace, true)
 })

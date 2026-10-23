@@ -1,9 +1,20 @@
+import path from 'node:path'
 import { readFileSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
 import process from 'node:process'
-import { validBarangayDistrict, validDate, verificationIssues } from './audit-rules.mjs'
+import {
+  barangayCatalogIssues,
+  validBarangayDistrict,
+  validDate,
+  verificationIssues,
+} from './audit-rules.mjs'
+import { getRecordCounts } from '../src/data/recordCounts.js'
 
+const dataDirectory = process.env.AUDIT_DATA_DIR
+  ? path.resolve(process.env.AUDIT_DATA_DIR)
+  : fileURLToPath(new URL('../src/data/', import.meta.url))
 const readData = (name) =>
-  JSON.parse(readFileSync(new URL(`../src/data/${name}.json`, import.meta.url), 'utf8'))
+  JSON.parse(readFileSync(path.join(dataDirectory, `${name}.json`), 'utf8'))
 
 const goals = readData('goals')
 const requirements = readData('requirements')
@@ -111,11 +122,16 @@ for (const name of requiredCatalogs) {
   const ids = new Set()
   const slugs = new Set()
   records.forEach((record, index) => auditRecord(record, name, index, ids, slugs))
+  if (name === 'barangays') errors.push(...barangayCatalogIssues(records))
 }
 
 const requirementIds = new Set()
 const requirementSlugs = new Set()
 requirements.forEach((record, index) => auditRecord(record, 'requirements', index, requirementIds, requirementSlugs))
+const auditCounts = getRecordCounts({
+  ...Object.fromEntries(requiredCatalogs.map((name) => [name, readData(name)])),
+  requirements,
+})
 
 console.table(auditedRecords.map(({ type, title, verification, sample, result }) => ({
   type, title, verification, sample: sample ? 'sample' : '', result,
@@ -123,5 +139,8 @@ console.table(auditedRecords.map(({ type, title, verification, sample, result })
 for (const error of errors) console.error(error)
 const unverifiedCount = auditedRecords.filter((record) => record.verification === 'unverified').length
 const passedCount = auditedRecords.filter((record) => record.result === 'PASS').length
-console.log(`${passedCount}/${auditedRecords.length} records passed; ${unverifiedCount} unverified; ${errors.length} validation errors. No data changed.`)
+console.log(`Collection counts: ${JSON.stringify(auditCounts.collections)}`)
+console.log(`Total records: ${auditCounts.total}`)
+if (auditCounts.total !== auditedRecords.length) errors.push(`audit count mismatch: counted ${auditCounts.total}, audited ${auditedRecords.length}`)
+console.log(`${passedCount}/${auditCounts.total} records passed; ${unverifiedCount} unverified; ${errors.length} validation errors. No data changed.`)
 process.exitCode = errors.length ? 1 : 0

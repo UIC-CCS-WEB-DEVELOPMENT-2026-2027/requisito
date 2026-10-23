@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import EmptyState from '../components/EmptyState.jsx'
+import CatalogEmptyState from '../components/CatalogEmptyState.jsx'
 import RecordMeta from '../components/RecordMeta.jsx'
 import { getProcurement } from '../data/helpers.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
@@ -14,15 +14,15 @@ function Procurement() {
     `${row.referenceNo} ${row.title} ${row.agency} ${row.status}`.toLowerCase().includes(query.trim().toLowerCase()))
   return (
     <section className="page-content flow-content" aria-labelledby="procurement-title">
-      <p className="eyebrow">Public data dashboard</p>
+      <p className="eyebrow">{t('budget.eyebrow')}</p>
       <h1 id="procurement-title">{t('page.procurement')}</h1>
-      <p className="page-description">Records are displayed as supplied by the source file without commentary.</p>
+      <p className="page-description">{t('procurement.description')}</p>
       <div className="portal-search-form">
         <label htmlFor="procurement-query">{t('label.procurementSearch')}</label>
         <input id="procurement-query" value={query} onChange={(event) => setQuery(event.target.value)} />
         <label htmlFor="procurement-status">{t('label.procurementStatus')}</label>
         <select id="procurement-status" value={status} onChange={(event) => setStatus(event.target.value)}>
-          <option value="">All statuses</option>
+          <option value="">{t('procurement.allStatuses')}</option>
           {statuses.map((item) => <option key={item} value={item}>{item}</option>)}
         </select>
       </div>
@@ -40,7 +40,11 @@ function Procurement() {
             </tr>)}</tbody>
           </table>
         </div>
-      ) : <EmptyState message={t('status.noProcurement')} />}
+      ) : <CatalogEmptyState
+        what={t('emptyState.procurementWhat')}
+        how={t('emptyState.dataHow')}
+        action={t('emptyState.procurementAction')}
+      />}
     </section>
   )
 }

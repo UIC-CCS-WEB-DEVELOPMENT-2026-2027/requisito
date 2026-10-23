@@ -5,6 +5,14 @@ import { getBarangays, getCityFacts, getOfficials, getRequirementsByGoal, getSer
 import { useLanguage } from '../i18n/LanguageContext.jsx'
 
 const repoIssueUrl = 'https://github.com/UIC-CCS-WEB-DEVELOPMENT-2026-2027/requisito/issues/new'
+const groupTranslationKeys = {
+  Services: 'group.services',
+  Barangays: 'group.barangays',
+  Requirements: 'group.requirements',
+  Officials: 'group.officials',
+  'City facts': 'group.cityFacts',
+  Updates: 'group.cityUpdates',
+}
 
 function collectRecords() {
   return {
@@ -70,20 +78,20 @@ function Contribute() {
 
   return (
     <section className="page-content flow-content" aria-labelledby="contribute-title">
-      <p className="eyebrow">Corrections and contributions</p>
+      <p className="eyebrow">{t('contribute.eyebrow')}</p>
       <h1 id="contribute-title">{t('page.contribute')}</h1>
-      <p className="page-description">There is no server in this phase. The form prepares a public GitHub issue; it does not save or send your message.</p>
+      <p className="page-description">{t('contribute.description')}</p>
       {relatedRecord && (
         <p className="sample-notice">
-          This link came from {relatedRecord.title ?? relatedRecord.label}. Choose that record in the form if it is the one you want to report.
+          {t('contribute.related').replace('{record}', relatedRecord.title ?? relatedRecord.label)}
         </p>
       )}
       <form className="portal-form" onSubmit={handleSubmit}>
         <label htmlFor="contribute-record">{t('label.chooseRecord')}</label>
         <select id="contribute-record" value={recordId} onChange={(event) => setRecordId(event.target.value)}>
-          <option value="">Choose a record</option>
+          <option value="">{t('contribute.chooseRecord')}</option>
           {Object.entries(groupedRecords).map(([group, items]) => items.length > 0 && (
-            <optgroup label={group} key={group}>
+            <optgroup label={t(groupTranslationKeys[group])} key={group}>
               {items.map((record) => (
                 <option key={`${record.optionType}:${record.id}`} value={`${record.optionType}:${record.id}`}>
                   {record.title ?? record.label}
@@ -96,13 +104,13 @@ function Contribute() {
         <textarea id="contribute-message" value={message} maxLength={1000} onChange={(event) => setMessage(event.target.value)} />
         <label htmlFor="contribute-source">{t('label.suggestedSource')}</label>
         <input id="contribute-source" type="url" value={suggestedUrl} onChange={(event) => setSuggestedUrl(event.target.value)} placeholder="https://" />
-        <p className="form-privacy-note">GitHub issues are public. Do not include personal or sensitive information.</p>
+        <p className="form-privacy-note">{t('contribute.privacy')}</p>
         <button type="submit">{t('button.contribute')}</button>
       </form>
       <p className="form-feedback" role="status" aria-live="polite">{feedback}</p>
-      {issueUrl && <p><a className="return-link" href={issueUrl} target="_blank" rel="noopener noreferrer">Continue to GitHub</a></p>}
-      {records.length === 0 && <EmptyState message="No records are available to select." />}
-      <p><Link to="/status">Review sources and status</Link></p>
+      {issueUrl && <p><a className="return-link" href={issueUrl} target="_blank" rel="noopener noreferrer">{t('contribute.continueGithub')}</a></p>}
+      {records.length === 0 && <EmptyState message={t('contribute.empty')} />}
+      <p><Link to="/status">{t('contribute.reviewStatus')}</Link></p>
     </section>
   )
 }

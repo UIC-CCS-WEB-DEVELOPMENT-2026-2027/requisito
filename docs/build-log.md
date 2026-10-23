@@ -65,3 +65,45 @@ verification conventions:
   public officials.
 - `docs/parity-matrix.md` records implemented features and explicit omissions
   where Davao data, privacy policy, or backend capabilities are unavailable.
+
+## Part 4 frontend completion
+
+- Added `/districts` and `/districts/:name`, URL-driven barangay filters and
+  CSV export, and URL-driven ranked global search with safe match highlighting.
+- Centralized dashboard and audit totals; Home's unverified count is derived
+  from the non-sample gaps in the Status report. The four illustrative document
+  tracker entries remain outside the audit total.
+- Added route lazy loading, translated remaining interface labels, reusable
+  empty states, visible focus and responsive styles. Locale keys match across
+  English, Filipino, and Bisaya; Filipino and Bisaya still need native review.
+- `npm run build`: passed. Production output contains 537,163 bytes of
+  JavaScript across 36 chunks and 26,702 bytes of CSS across 3 chunks.
+- `node --test`: 62 tests passed.
+- No dev server was started or stopped. No manual desktop, 360px, or browser
+  route checks were performed; see `docs/a11y-checklist.md`.
+
+## Part 5 local admin workflow
+
+- Added a loopback-only Express API with SQLite persistence, salted scrypt
+  passwords, hashed eight-hour sessions, role checks, CSRF/origin checks, and
+  login rate limiting. The first admin is created interactively; no account or
+  password is seeded.
+- Added record editing, exact-host source checks, two-person verification,
+  pending-review cancellation after edits, an append-only audit log, and
+  explicit staged import/export scripts. Export runs the project data audit
+  before replacing JSON catalogs.
+- Added a lazy `/admin` workspace for login, dashboard, record search/edit,
+  review queue, admin user management, and audit history. The public site and
+  demo sign-in remain separate.
+- Added temporary-database core, HTTP integration, and catalog import/export
+  tests. HTTP tests require the declared Express dependencies; they are skipped
+  until those packages are installed.
+- Added the setup, security, and defense documentation in
+  `docs/admin-runbook.md`, `docs/security-notes.md`, and
+  `docs/defense-notes-part5.md`.
+- Final checks: `npm run lint` passed; `npm run check` passed with all 218 data
+  records passing audit and the production build succeeding; `node --test`
+  reported 75 passed, 0 failed, and 9 HTTP tests skipped because the declared
+  server dependencies are not installed.
+- The local API is not deployed. No browser/server route walkthrough, secret
+  creation, data export, or catalog verification was performed.

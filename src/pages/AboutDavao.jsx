@@ -8,9 +8,9 @@ function AboutDavao() {
   const facts = getCityFacts()
   return (
     <section className="page-content flow-content" aria-labelledby="about-davao-title">
-      <p className="eyebrow">City profile</p>
+      <p className="eyebrow">{t('about.eyebrow')}</p>
       <h1 id="about-davao-title">{t('page.about')}</h1>
-      <p className="page-description">A short collection of city facts. Each item is unverified and should be checked at its source.</p>
+      <p className="page-description">{t('about.description')}</p>
       {facts.length ? (
         <ul className="portal-grid">
           {facts.map((fact) => (
@@ -23,7 +23,7 @@ function AboutDavao() {
             </li>
           ))}
         </ul>
-      ) : <EmptyState message="No city facts are available." />}
+      ) : <EmptyState message={t('about.empty')} />}
     </section>
   )
 }

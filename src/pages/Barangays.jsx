@@ -1,74 +1,106 @@
-import { useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
 import EmptyState from '../components/EmptyState.jsx'
-import RecordMeta from '../components/RecordMeta.jsx'
+import { exportBarangaysCsv, filterAndSortBarangays } from '../data/barangayDirectory.js'
 import { getBarangays, getDistricts } from '../data/helpers.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
 
 function Barangays() {
   const { t } = useLanguage()
-  const [query, setQuery] = useState('')
-  const barangays = getBarangays()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const query = searchParams.get('q') ?? ''
+  const adminDistrict = searchParams.get('admin') ?? ''
+  const legislativeDistrict = searchParams.get('legislative') ?? ''
+  const sortBy = searchParams.get('sort') ?? 'name'
+  const direction = searchParams.get('direction') ?? 'asc'
   const districts = getDistricts()
-  const realBarangays = useMemo(() => barangays.filter((item) => !item.isSample), [barangays])
-  const sampleBarangays = barangays.filter((item) => item.isSample)
-  const visible = realBarangays.filter((item) =>
-    `${item.title} ${item.adminDistrict}`.toLowerCase().includes(query.trim().toLowerCase()),
-  )
+  const records = getBarangays()
+  const totalBarangays = records.filter((record) => !record.isSample).length
+  const visible = filterAndSortBarangays(records, {
+    query, adminDistrict, legislativeDistrict, sortBy, direction,
+  })
+
+  useEffect(() => {
+    document.title = `${t('page.barangays')} | Requisito`
+  }, [t])
+
+  function updateFilter(key, value) {
+    const next = new URLSearchParams(searchParams)
+    if (value) next.set(key, value)
+    else next.delete(key)
+    setSearchParams(next, { replace: true })
+  }
+
+  function downloadCsv() {
+    const file = new Blob([exportBarangaysCsv(visible)], { type: 'text/csv;charset=utf-8' })
+    const url = URL.createObjectURL(file)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = 'davao-barangays-filtered.csv'
+    link.click()
+    URL.revokeObjectURL(url)
+  }
 
   return (
     <section className="page-content flow-content" aria-labelledby="barangays-title">
-      <p className="eyebrow">Davao City directory</p>
+      <p className="eyebrow">{t('barangays.eyebrow')}</p>
       <h1 id="barangays-title">{t('page.barangays')}</h1>
-      <p className="page-description">Official barangay data has not been imported yet. Sample entries below are fictional layout examples only.</p>
-      <div className="portal-filters">
+      <p className="page-description">{t('barangays.description')}</p>
+      <form className="portal-filters" onSubmit={(event) => event.preventDefault()}>
         <div>
           <label htmlFor="barangay-search">{t('label.searchBarangays')}</label>
-          <input id="barangay-search" type="search" value={query} onChange={(event) => setQuery(event.target.value)} />
+          <input id="barangay-search" type="search" value={query} onChange={(event) => updateFilter('q', event.target.value)} />
         </div>
+        <div>
+          <label htmlFor="admin-district">{t('barangays.adminDistrict')}</label>
+          <select id="admin-district" value={adminDistrict} onChange={(event) => updateFilter('admin', event.target.value)}>
+            <option value="">{t('barangays.allDistricts')}</option>
+            {districts.map((district) => <option key={district} value={district}>{district}</option>)}
+          </select>
+        </div>
+        <div>
+          <label htmlFor="legislative-district">{t('barangays.legislativeDistrict')}</label>
+          <select id="legislative-district" value={legislativeDistrict} onChange={(event) => updateFilter('legislative', event.target.value)}>
+            <option value="">{t('barangays.allLegislativeDistricts')}</option>
+            {['1st', '2nd', '3rd'].map((district) => <option key={district} value={district}>{district}</option>)}
+          </select>
+        </div>
+        <div>
+          <label htmlFor="barangay-sort">{t('barangays.sortBy')}</label>
+          <select id="barangay-sort" value={sortBy} onChange={(event) => updateFilter('sort', event.target.value)}>
+            <option value="name">{t('barangays.name')}</option>
+            <option value="district">{t('barangays.adminDistrict')}</option>
+            <option value="population">{t('barangays.population')}</option>
+          </select>
+        </div>
+        <div>
+          <label htmlFor="sort-direction">{t('barangays.sortDirection')}</label>
+          <select id="sort-direction" value={direction} onChange={(event) => updateFilter('direction', event.target.value)}>
+            <option value="asc">{t('barangays.ascending')}</option>
+            <option value="desc">{t('barangays.descending')}</option>
+          </select>
+        </div>
+      </form>
+      <div className="barangay-results-bar">
+        <p aria-live="polite">{t('barangays.showing').replace('{shown}', visible.length).replace('{total}', totalBarangays)}</p>
+        <button type="button" onClick={downloadCsv}>{t('barangays.exportCsv')}</button>
+        <Link to="/districts">{t('nav.districts')}</Link>
       </div>
-      {realBarangays.length === 0 && <EmptyState message={query ? 'No records found' : 'Official barangay records have not been imported.'} />}
-      {realBarangays.length === 0 && sampleBarangays.length > 0 && (
-        <section className="sample-barangays" aria-labelledby="sample-barangays-title">
-          <h2 id="sample-barangays-title">Sample data preview (not search results)</h2>
-          <p>Place the official CSV at <code>data-source/davao-barangays.csv</code> and run the import script to replace these fictional fixtures.</p>
-          {districts.map((district) => {
-            const districtSamples = sampleBarangays.filter((item) => item.adminDistrict === district)
-            return (
-              <section className="district-section" key={district} aria-labelledby={`sample-district-${district}`}>
-                <h3 id={`sample-district-${district}`}>{district}</h3>
-                {districtSamples.length ? (
-                  <ul className="portal-grid">
-                    {districtSamples.map((item) => (
-                      <li className="portal-card" key={item.id}>
-                        <span className="status-badge">Sample data</span>
-                        <h4><Link to={`/barangays/${item.slug}`}>{item.title}</Link></h4>
-                        <RecordMeta record={item} />
-                      </li>
-                    ))}
-                  </ul>
-                ) : <EmptyState message="No sample fixture for this district." />}
-              </section>
-            )
-          })}
-        </section>
-      )}
-      {realBarangays.length > 0 && visible.length === 0 && <EmptyState message="No records found" />}
-      {realBarangays.length > 0 && visible.length > 0 && districts.map((district) => {
-        const districtRecords = visible.filter((item) => item.adminDistrict === district)
+      {visible.length === 0 ? <EmptyState message={t('form.noRecords')} /> : districts.map((district) => {
+        const districtRecords = visible.filter((record) => record.adminDistrict === district)
+        if (!districtRecords.length) return null
         return (
           <section className="district-section" key={district} aria-labelledby={`district-${district}`}>
-            <h2 id={`district-${district}`}>{district}</h2>
-            {districtRecords.length ? (
-              <ul className="portal-grid">
-                {districtRecords.map((item) => (
-                  <li className="portal-card" key={item.id}>
-                    <h3><Link to={`/barangays/${item.slug}`}>{item.title}</Link></h3>
-                    <RecordMeta record={item} />
-                  </li>
-                ))}
-              </ul>
-            ) : <EmptyState message="No barangays listed for this district." />}
+            <h2 id={`district-${district}`}><Link to={`/districts/${encodeURIComponent(district)}`}>{district}</Link></h2>
+            <ul className="portal-grid">
+              {districtRecords.map((record) => (
+                <li className="portal-card" key={record.id}>
+                  <h3><Link to={`/barangays/${record.slug}`}>{record.title}</Link></h3>
+                  <p>{t('barangays.population')}: {record.population2020 == null ? t('barangays.populationNotImported') : record.population2020.toLocaleString()}</p>
+                  <p className="status-badge verification-unverified">{t('status.unverified')}</p>
+                </li>
+              ))}
+            </ul>
           </section>
         )
       })}

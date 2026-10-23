@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import EmptyState from '../components/EmptyState.jsx'
+import CatalogEmptyState from '../components/CatalogEmptyState.jsx'
 import RecordMeta from '../components/RecordMeta.jsx'
 import { getServices } from '../data/helpers.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
@@ -16,26 +17,31 @@ function Participate() {
   }
   return (
     <section className="page-content flow-content" aria-labelledby="participate-title">
-      <p className="eyebrow">Civic participation</p>
+      <p className="eyebrow">{t('participate.eyebrow')}</p>
       <h1 id="participate-title">{t('page.participate')}</h1>
-      <p className="page-description">Source-based ways to contact the city and take part in civic processes.</p>
+      <p className="page-description">{t('participate.description')}</p>
       <div className="portal-grid">
         <article className="portal-card">
           <h2>{t('heading.cityContact')}</h2>
-          {contact ? <><p>{contact.description}</p><p>{contact.contact.phone.map((phone) => <a key={phone} href={`tel:${phone.replace(/[^\d+]/g, '')}`}>{phone}</a>)}</p><RecordMeta record={contact} /></> : <EmptyState message="No city contact record is available." />}
+          {contact ? <><p>{contact.description}</p><p>{contact.contact.phone.map((phone) => <a key={phone} href={`tel:${phone.replace(/[^\d+]/g, '')}`}>{phone}</a>)}</p><RecordMeta record={contact} /></> : <EmptyState message={t('participate.noContact')} />}
         </article>
         <article className="portal-card">
-          <h2>{t('heading.councilSession')}</h2><p>Confirm the current public schedule and access arrangements with the city council.</p>
-          <p>Source to be added. This guidance is unverified.</p><RecordMeta record={pendingSource} />
+          <h2>{t('heading.councilSession')}</h2><p>{t('participate.confirmCouncil')}</p>
+          <p>{t('participate.sourcePending')}</p><RecordMeta record={pendingSource} />
         </article>
         <article className="portal-card">
-          <h2>{t('heading.foi')}</h2><p>Check the responsible office's current procedure and requirements before submitting a request.</p>
-          <p>Source to be added. This guidance is unverified.</p><RecordMeta record={pendingSource} />
+          <h2>{t('heading.foi')}</h2><p>{t('participate.checkFoi')}</p>
+          <p>{t('participate.sourcePending')}</p><RecordMeta record={pendingSource} />
         </article>
         <article className="portal-card">
-          <h2>{t('heading.corrections')}</h2><p>Share a sourced correction using the project's public contribution form.</p><Link to="/contribute">Open correction form</Link>
+          <h2>{t('heading.corrections')}</h2><p>{t('participate.shareCorrection')}</p><Link to="/contribute">{t('participate.openForm')}</Link>
         </article>
       </div>
+      <CatalogEmptyState
+        what={t('emptyState.participateWhat')}
+        how={t('emptyState.dataHow')}
+        action={t('emptyState.participateAction')}
+      />
     </section>
   )
 }
