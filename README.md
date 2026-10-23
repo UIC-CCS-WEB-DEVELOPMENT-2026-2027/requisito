@@ -69,6 +69,8 @@ npm run build
 Open `/login` and use made-up input: a well-formed email and at least eight
 password characters. No real account exists and no credentials are saved or sent
 to a server. Successful sign-in opens Home; then use the navigation to explore.
+If you were redirected to sign in from a protected page, successful sign-in
+returns you to that page instead.
 See [the mock-auth contract](docs/data-contract.md#auth-mock-front-end-only).
 
 ## Deployment

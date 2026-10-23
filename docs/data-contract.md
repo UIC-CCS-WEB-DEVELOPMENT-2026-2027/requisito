@@ -73,9 +73,12 @@ The form clears the password after every submit attempt, including invalid
 attempts, and disables submission while its callback is pending.
 
 Home and Login are public. Goals, Checklist, and Documents redirect signed-out
-visitors to `/login` through `ProtectedRoute`. Successful demo sign-in navigates
-to Home. Footer and DisclaimerBanner remain on every route. The existing
-catalog record fields and four data helpers are unchanged.
+visitors to `/login` through `ProtectedRoute`, preserving the requested location
+in router state. After successful demo sign-in, users return to that requested
+page; if they visited `/login` directly with no saved location, they go to Home
+(`/`). Signed-in users visiting `/login` are redirected to Home with replace.
+Footer and DisclaimerBanner remain on every route. The existing catalog record
+fields and four data helpers are unchanged.
 
 Build, lint, and existing planner tests pass. Browser checks covered validation,
 password visibility, sign-in/sign-out, gated navigation, refresh sign-out, and

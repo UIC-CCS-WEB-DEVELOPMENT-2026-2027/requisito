@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
+import { getSignInDestination } from '../utils/authRedirect.js'
 import './LoginForm.css'
 
 // Props: none. The demo sign-in completes the app flow for protected routes.
@@ -8,14 +9,28 @@ function LoginForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [errors, setErrors] = useState({})
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const emailRef = useRef(null)
   const passwordRef = useRef(null)
+  const location = useLocation()
   const navigate = useNavigate()
   const { signIn } = useAuth()
 
   function handleValidSubmit(cleanEmail) {
-    signIn(cleanEmail)
-    navigate('/goals', { replace: true })
+    setIsSubmitting(true)
+    try {
+      signIn(cleanEmail)
+      navigate(getSignInDestination(location.state), { replace: true })
+    } catch (error) {
+      setErrors((current) => ({
+        ...current,
+        email: error instanceof Error ? error.message : 'Enter a valid email address.',
+      }))
+      emailRef.current?.focus()
+    } finally {
+      setPassword('')
+      setIsSubmitting(false)
+    }
   }
 
   function handleSubmit(e) {
@@ -34,6 +49,8 @@ function LoginForm() {
     } else if (password.length < 8) {
       newErrors.password = 'Password must be at least 8 characters.'
     }
+
+    setPassword('')
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors)
@@ -116,8 +133,8 @@ function LoginForm() {
           )}
         </div>
       </div>
-      <button className="primary-button login-submit" type="submit">
-        Validate details
+      <button className="primary-button login-submit" type="submit" disabled={isSubmitting} aria-busy={isSubmitting}>
+        {isSubmitting ? 'Signing in…' : 'Sign in'}
       </button>
     </form>
   )

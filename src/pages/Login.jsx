@@ -1,13 +1,14 @@
 import { Link, Navigate } from 'react-router-dom'
 import LoginForm from '../components/LoginForm.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
+import { getSignInDestination } from '../utils/authRedirect.js'
 
-// Props: none. Signed-in users are sent straight to the goals screen.
+// Props: none. Signed-in users are sent to the home dashboard.
 function Login() {
   const { isSignedIn } = useAuth()
 
   if (isSignedIn) {
-    return <Navigate to="/goals" replace />
+    return <Navigate to={getSignInDestination()} replace />
   }
 
   return (
@@ -20,7 +21,7 @@ function Login() {
           <p className="login-intro">A clearer path through your paperwork.</p>
         </div>
         <LoginForm />
-        <p className="login-notice"><span className="login-demo-label">Demo account</span>Use any valid email and a password with at least 8 characters.</p>
+        <p className="login-notice"><span className="login-demo-label">Demo sign-in</span> no real authentication yet. Full login arrives in Phase 2.</p>
         <Link className="login-back-link" to="/"><span aria-hidden="true">&larr;</span> Back to Home</Link>
       </div>
     </section>
