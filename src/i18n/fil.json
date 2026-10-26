@@ -411,5 +411,11 @@
   "recordMeta.lastVerified": "Huling beripikado:",
   "recordMeta.neverVerified": "Hindi pa beripikado",
   "emptyState.noRecords": "Walang nakitang tala",
-  "checklist.noRequirements": "Walang kinakailangan para sa layuning ito."
+  "checklist.noRequirements": "Walang kinakailangan para sa layuning ito.",
+  "checklist.noMatches": "Walang tumutugmang item sa checklist.",
+  "checklist.filterAll": "Lahat",
+  "checklist.filterUnverified": "Hindi pa beripikado",
+  "checklist.filterDone": "Tapos na",
+  "label.searchChecklist": "Maghanap sa checklist",
+  "label.checklistStatus": "Salain ayon sa status"
 }

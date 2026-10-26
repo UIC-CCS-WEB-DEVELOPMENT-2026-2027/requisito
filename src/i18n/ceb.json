@@ -411,5 +411,11 @@
   "recordMeta.lastVerified": "Kataposang na-verify:",
   "recordMeta.neverVerified": "Wala pa ma-verify",
   "emptyState.noRecords": "Walay nakitang rekord",
-  "checklist.noRequirements": "Walay kinahanglanon alang niining tumong."
+  "checklist.noRequirements": "Walay kinahanglanon alang niining tumong.",
+  "checklist.noMatches": "Walay checklist item nga motakdo sa imong mga filter.",
+  "checklist.filterAll": "Tanan",
+  "checklist.filterUnverified": "Wala pa ma-verify",
+  "checklist.filterDone": "Nahuman",
+  "label.searchChecklist": "Pangita sa checklist",
+  "label.checklistStatus": "Salain sumala sa kahimtang"
 }

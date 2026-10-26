@@ -49,8 +49,20 @@ function ChecklistView({ initialRequirements }) {
   const [items, setItems] = useState(() =>
     initialRequirements.map((req) => ({ ...req, status: 'pending' })),
   )
+  const [searchText, setSearchText] = useState('')
+  const [statusFilter, setStatusFilter] = useState('all')
   const total = items.length
   const completed = items.filter((item) => item.status === 'done').length
+  const query = searchText.trim().toLowerCase()
+  const visibleItems = items.filter((item) => {
+    const matchesSearch = item.label.toLowerCase().includes(query)
+    const matchesStatus =
+      statusFilter === 'all' ||
+      (statusFilter === 'done' && item.status === 'done') ||
+      (statusFilter === 'unverified' && item.status === 'pending')
+
+    return matchesSearch && matchesStatus
+  })
 
   const handleToggle = (id) => {
     setItems((prev) =>
@@ -77,24 +89,49 @@ function ChecklistView({ initialRequirements }) {
           max={total}
         />
       </div>
-      <ol className="sprint-grid generated-plan" aria-label={t('a11y.requirements')}>
-        {items.map((item, index) => (
-          <li key={item.id}>
-            <p className="plan-step-number">Step {index + 1}</p>
-            <RequirementCard
-              label={item.label}
-              notes={item.notes}
-              copies={item.copies}
-              validityMonths={item.validityMonths}
-              sourceUrl={item.sourceUrl}
-              lastVerified={item.lastVerified}
-              isDone={item.status === 'done'}
-              onToggle={() => handleToggle(item.id)}
-            />
-            {item.requirement && <RecordMeta record={item.requirement} />}
-          </li>
-        ))}
-      </ol>
+      <div className="goal-search checklist-search" role="search">
+        <label htmlFor="checklist-search">{t('label.searchChecklist')}</label>
+        <input
+          id="checklist-search"
+          type="search"
+          value={searchText}
+          onChange={(event) => setSearchText(event.target.value)}
+          placeholder={t('label.searchChecklist')}
+          autoComplete="off"
+        />
+        <label htmlFor="checklist-status">{t('label.checklistStatus')}</label>
+        <select
+          id="checklist-status"
+          value={statusFilter}
+          onChange={(event) => setStatusFilter(event.target.value)}
+        >
+          <option value="all">{t('checklist.filterAll')}</option>
+          <option value="unverified">{t('checklist.filterUnverified')}</option>
+          <option value="done">{t('checklist.filterDone')}</option>
+        </select>
+      </div>
+      {visibleItems.length > 0 ? (
+        <ol className="sprint-grid generated-plan" aria-label={t('a11y.requirements')}>
+          {visibleItems.map((item) => (
+            <li key={item.id}>
+              <p className="plan-step-number">Step {items.indexOf(item) + 1}</p>
+              <RequirementCard
+                label={item.label}
+                notes={item.notes}
+                copies={item.copies}
+                validityMonths={item.validityMonths}
+                sourceUrl={item.sourceUrl}
+                lastVerified={item.lastVerified}
+                isDone={item.status === 'done'}
+                onToggle={() => handleToggle(item.id)}
+              />
+              {item.requirement && <RecordMeta record={item.requirement} />}
+            </li>
+          ))}
+        </ol>
+      ) : (
+        <EmptyState message={t('checklist.noMatches')} />
+      )}
     </>
   )
 }

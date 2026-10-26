@@ -410,5 +410,11 @@
   "recordMeta.lastVerified": "Last verified:",
   "recordMeta.neverVerified": "Not yet verified",
   "emptyState.noRecords": "No records found",
-  "checklist.noRequirements": "No requirements found for this goal."
+  "checklist.noRequirements": "No requirements found for this goal.",
+  "checklist.noMatches": "No checklist items match your filters.",
+  "checklist.filterAll": "All",
+  "checklist.filterUnverified": "Unverified",
+  "checklist.filterDone": "Done",
+  "label.searchChecklist": "Search checklist",
+  "label.checklistStatus": "Filter by status"
 }
