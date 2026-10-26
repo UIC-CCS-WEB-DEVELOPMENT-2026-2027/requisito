@@ -4,6 +4,7 @@ import CatalogEmptyState from '../components/CatalogEmptyState.jsx'
 import RecordMeta from '../components/RecordMeta.jsx'
 import { getServices } from '../data/helpers.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
+import { href } from '../routeManifest.js'
 
 function Participate() {
   const { t } = useLanguage()
@@ -34,7 +35,7 @@ function Participate() {
           <p>{t('participate.sourcePending')}</p><RecordMeta record={pendingSource} />
         </article>
         <article className="portal-card">
-          <h2>{t('heading.corrections')}</h2><p>{t('participate.shareCorrection')}</p><Link to="/contribute">{t('participate.openForm')}</Link>
+          <h2>{t('heading.corrections')}</h2><p>{t('participate.shareCorrection')}</p><Link to={href('contribute')}>{t('participate.openForm')}</Link>
         </article>
       </div>
       <CatalogEmptyState

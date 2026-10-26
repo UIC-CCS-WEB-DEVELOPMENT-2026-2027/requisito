@@ -11,6 +11,7 @@ export const catalogNames = Object.freeze([
   'elections',
   'accountability',
   'requirements',
+  'requirementSources',
 ])
 
 export const recordTypes = Object.freeze({
@@ -26,6 +27,7 @@ export const recordTypes = Object.freeze({
   elections: 'election',
   accountability: 'accountability',
   requirements: 'requirement',
+  requirementSources: 'requirementSource',
 })
 
 export function recordTypesForCatalog(name) {

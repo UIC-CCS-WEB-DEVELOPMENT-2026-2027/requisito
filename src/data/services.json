@@ -15,7 +15,7 @@
     "contact": {
       "phone": ["911", "(082) 296-1433"],
       "email": "",
-      "address": "911 Building, Daang Patnubay St., SIR Matina, Davao City",
+      "address": "Daang Patnubay, Phase 2 SIR New Matina, Davao City",
       "hours": "Reported as available 24/7; confirm current service."
     },
     "steps": ["Dial 911 for emergencies."]
@@ -52,10 +52,10 @@
     "timeSensitive": false,
     "notes": "",
     "contact": {
-      "phone": ["(082) 227-2500"],
+      "phone": ["(082) 241-1000 local 219"],
       "email": "cio@davaocity.gov.ph",
       "address": "Room 18, 2nd Floor, City Hall Bldg., San Pedro St.",
-      "hours": "8:00 AM to 5:00 PM"
+      "hours": ""
     }
   },
   {
@@ -71,9 +71,9 @@
     "timeSensitive": true,
     "notes": "Deadlines and systems change yearly. Confirm current deadlines and application systems.",
     "contact": {
-      "phone": ["(082) 241-1000 local 381"],
+      "phone": ["(082) 241-1000 local 377", "(082) 241-1000 local 378"],
       "email": "busbureau@davaocity.gov.ph",
-      "address": "",
+      "address": "Ground Floor, Sangguniang Panlungsod Bldg., Davao City, 8000 Philippines",
       "hours": "8:00 AM to 5:00 PM"
     },
     "steps": [
@@ -117,7 +117,7 @@
       "phone": ["09266861531", "09999380540"],
       "email": "cho@davaocity.gov.ph",
       "address": "Magallanes Street, Davao City",
-      "hours": "8:00 AM to 5:00 PM"
+      "hours": ""
     }
   },
   {
@@ -132,12 +132,12 @@
     "lastVerified": null,
     "verification": "unverified",
     "timeSensitive": true,
-    "notes": "The venue and schedule must be confirmed with the City Health Office before use.",
+    "notes": "A January 6, 2026 City Government announcement said issuance would begin January 7 at the 5th floor of Gaisano Ilustre. The current venue and schedule are not confirmed.",
     "contact": {
       "phone": [],
       "email": "",
-      "address": "A January 2026 announcement listed the 5th floor of Gaisano Ilustre.",
-      "hours": "Confirm the current schedule with the City Health Office."
+      "address": "",
+      "hours": ""
     },
     "steps": [
       "Confirm the current venue and schedule with the City Health Office.",

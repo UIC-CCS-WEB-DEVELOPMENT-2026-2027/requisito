@@ -45,20 +45,41 @@ Accountability records use `kind` = `audit-report`, `ordinance`, `resolution`,
 or `public-statement`, plus `officialBody`, `referenceNo`, and `date`; the
 catalog starts empty.
 
+`featureCatalogs.json` is a separate, explicitly empty collection for the
+Part 6 route families: `reports`, `events`, `assets`, `publicRecords`,
+`mapLocations`, `transitRoutes`, `heritageSites`, `tourismPlaces`, `cinemas`,
+`communityTools`, `estateListings`, and `civicAuditEntries`. Each collection
+must remain an array. A future row must have the shared civic fields above and
+its feature-specific fields documented and audited before use. The current
+arrays are all empty because no reviewed source records were supplied; do not
+fill them with plausible examples. `scripts/audit-data.mjs` checks the twelve
+arrays and requires the shared fields on any later rows.
+
 Budget and procurement JSON catalogs start empty and are generated from
 maintainer-provided CSVs. Imported rows are unverified, never sample-filled.
 The source-watch list is separate (`data/watchlist.json`); state hashes and the
 last report date are in `data/source-watch-state.json`. Neither source watch
 nor an importer changes verification dates.
 
-The existing requirement fields remain: `id`, `goalId`, `label`, `notes`,
-`copies`, `sourceUrl`, `lastVerified`, `status`, and `verification`. They now
-also carry the shared civic metadata and `validityMonths`. Checklist `status`
-tracks progress; `verification` tracks source review.
+Goals list stable `requirementIds`; those links are authoritative. A
+requirement is defined once and may be linked by multiple goals. Its existing
+`goalId` remains the primary-goal field used by the local admin and assistant
+adapters. Requirements add `requirementType` (`mandatory`, `conditional`, or
+`recommended`), `sourceIds`, `revision`, optional `when` applicability rules,
+localized condition labels, and `guideInstructions`. `copies` may be `null`
+when an exact quantity is not supported. `verification` is independent of
+checklist progress; checklist statuses are saved separately in the browser.
 
-Existing document tracker records retain their display fields `id`, `type`,
-`issueDate`, and `status`; `validityMonths` is null until a freshness window is
-confirmed. The fictional tracker examples do not calculate expiry.
+`requirementSources.json` stores source IDs, official agency/title/URL,
+publication or statement dates when known, `lastChecked`, supported claims,
+verification state, and limitations. A source URL or fetch date is not
+approval. Source records and linked requirements remain unverified until the
+existing two-person review process approves them.
+
+Document guides are derived from the same requirement definitions and their
+stable slugs. `documents.json` and the former sample document-tracker records
+are removed; `/documents` is a searchable guide catalog, not personal
+document storage. No uploads or account/device synchronization are implemented.
 
 ## Helpers
 
@@ -70,12 +91,24 @@ confirmed. The fictional tracker examples do not calculate expiry.
 - `getOfficials()`, `getCityFacts()`, and `getUpdates()`
 - `getHistory()`, `getBudget()`, `getProcurement()`, `getBriefs()`,
   `getElections()`, and `getAccountability()`
+- `getFeatureRecords(name)` returns a defensive copy of a Part 6 feature
+  catalog; unknown catalog names throw rather than silently returning no data.
+- `getVerifiedGuides(category)` and `filterVerifiedGuides(records, category)`
+  expose only briefs that are marked verified, have non-empty titles and
+  descriptions, an HTTPS source, a steps array, and a needs array. The current
+  guide finder correctly returns an empty result because no supplied brief is
+  verified.
 - `getDistricts()`, `getDistrictSummary()`, and
   `getBarangaysByDistrict(name)` expose administrative-district pages and
   profiles without changing the source barangay records.
 - `getRecordCounts()` returns per-catalog counts and their shared total. The
-  Home total and data audit use the civic catalogs plus requirements; the four
-  illustrative document-tracker examples are intentionally outside that count.
+  Home total and data audit use the civic catalogs plus requirements.
+- `getGoalBySlug()`, `getRequirementsByGoal()`, and `getChecklistPlan()` resolve
+  one goal into the shared requirement definitions and active conditional
+  checklist steps. `getDocumentGuideBySlug()` derives guide-to-goal links from
+  the same IDs; `getRequirementSources()` returns source metadata copies.
+- `getDocuments()` derives searchable document guides from guide-enabled
+  requirements rather than a duplicate document catalog.
 - `searchAll(query)` returns grouped arrays for services, barangays,
   requirements, updates, history, briefs, budget, procurement, elections,
   accountability, and districts. It folds accents, ranks title matches, and
@@ -88,10 +121,26 @@ confirmed. The fictional tracker examples do not calculate expiry.
 - `getCityMonitor()` derives monitor values from those local records, while
   `getSourceWatchStatus()` exposes the last local report date and result counts.
 
-Existing goal, requirement, document, summary, planning-question, and checklist
-helpers remain available. Goal ID 7 is "First Job in Davao City" and has seven
-illustrative health-card requirements; only chest x-ray (6 months), urinalysis
-(3 months), and fecalysis (3 months) have supplied validity periods.
+Goal ID 1 is first-job readiness and references six employer-dependent
+preparation entries plus the same eight Davao health-card requirements used by
+goal ID 7. Davao-specific entries are included only for Davao work; unanswered
+conditions remain visible. Goal ID 7 is the Davao health-card context and
+assumes Davao work while asking about its two occupation-specific conditions.
+Its City source is a January 2026 announcement: six items are listed generally
+in that announcement, and two are conditional (food-safety seminar certificate
+and Hepatitis B antibody test for the described pink-card work). It reports
+chest x-ray (6 months), urinalysis (3 months), and fecalysis (3 months)
+validity periods. These are historical source statements, not current
+confirmation of requirements, fees, venue, schedule, accepted formats, or
+prerequisite order. Source and requirement records remain unverified.
+
+The PhilHealth formal-members page checked 2026-10-25 supports only the
+direct-contributor eligibility category described in its source metadata; it
+does not establish a first-job registration checklist. First-job entries with
+no source are recommendations or employer prompts, not universal rules.
+Passport, NBI, LTO, civil registry, SSS, Pag-IBIG, BIR, scholarship, and
+education requirements remain incomplete until current official sources are
+reviewed.
 
 ## Verification rules and fixtures
 
@@ -127,10 +176,9 @@ City Monitor. The current budget, procurement, history, and accountability
 catalogs are empty. The elections catalog contains only the unverified COMELEC
 official-site link. History entries must be supplied with dates and sources.
 
-The first six requirements and four document tracker entries remain
-illustrative. Some legacy requirement fixtures have a sample date in
-`lastVerified`, but their `verification: "unverified"` state is authoritative;
-the interface reports them as never verified.
+The six general first-job preparation entries have no supporting official
+source in the catalog and remain unverified. Their guidance asks users to
+confirm employer-specific requests rather than presenting them as mandatory.
 
 ## Language and privacy
 

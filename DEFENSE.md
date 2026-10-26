@@ -41,3 +41,42 @@ from React state and their `onChange` handlers update that state. This keeps
 what the user sees in each control aligned with the values used to derive the
 visible list. A query containing only spaces trims to an empty string, so it
 does not exclude any service.
+
+## Part 6 route and civic data defense
+
+The public route list is in `src/routeManifest.js`. The `id` is the route's
+stable name, and `href()` builds its path from that name plus any required
+parameters. `Layout` and `Footer` render their links from the manifest, so a
+path change has one shared source. The link audit parses JSX and checks that
+internal paths still match a route, that buttons and inputs have accessible
+names or labels, and that external new-tab links have safe `rel` attributes.
+
+I added `src/data/featureCatalogs.json` with explicit arrays for the civic
+features that do not yet have supported Davao records. Those arrays are empty
+on purpose: an empty catalog is safer and more honest than made-up records.
+The feature pages still explain the data gap and link to related source leads
+when the existing service catalog provides one. A source link is labeled
+unverified; it does not mean Requisito has checked the page or its facts.
+
+The guide finder has one piece of `useState`: `category` holds the selected
+category, and its change handler updates that value. `getVerifiedGuides()` uses
+`.filter()` to include only complete briefs that are already marked verified
+and have an HTTPS source. The current brief records are unverified, so the
+finder correctly shows an empty state. `GuideCard` receives a single `guide`
+prop from the finder and does not import the data itself. The list key is the
+stable guide `id`, not a changing list position.
+
+The header assistant button uses `assistantOpen` state in `Layout` to open and
+close the native dialog. `ChatAssistant` keeps the transcript, input, loading,
+and error text in local React state; it does not persist the conversation.
+Native `<dialog>` supplies modal keyboard and Escape behavior, and the open
+button exposes its expanded state. A service detail page may provide a stable
+service slug as context, but the server looks that slug up itself and still
+applies its verified-only rule. The selected interface language is validated
+before it reaches the provider.
+
+The route smoke test renders public manifest routes with Vite's server-side
+module loader and checks for one `h1` and the shared main landmark. It does not
+start a web server or make a real AI request. A green test checks UI structure
+and code behavior only; it does not verify any Davao civic fact or replace a
+manual keyboard and 360px browser review.

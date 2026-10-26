@@ -4,9 +4,19 @@ import { setTimeout as delay } from 'node:timers/promises'
 import { getAssistantRecords, REFUSAL, STALE_DAYS, verificationOf } from '../netlify/lib/assistant-records.js'
 
 export const EVAL_DELAY_MS = 13000
-const ENDPOINT = 'http://localhost:8888/.netlify/functions/chat'
+const ENDPOINT = 'http://localhost:3000/api/chat'
 const records = getAssistantRecords()
 const definitions = JSON.parse(readFileSync(new URL('../docs/ai-eval-questions.json', import.meta.url), 'utf8'))
+export const EVAL_CASE_COUNT = definitions.length
+
+function categoryFor(definition) {
+  return definition.category ??
+    (definition.id.startsWith('injection-') ? 'injection' :
+      definition.id.startsWith('pii-') ? 'pii' :
+        definition.kind === 'reject' ? 'input-refusal' :
+          definition.kind === 'warning' ? 'verification-warning' :
+            definition.kind === 'verified' ? 'normal-answer' : 'unknown-answer')
+}
 
 // Generate questions from reviewed records, never from invented requirement facts.
 export function prepareCases(catalog = records) {
@@ -32,7 +42,7 @@ export function prepareCases(catalog = records) {
       question = `What information is listed for ${record.label ?? record.title}?`
       expectedId = record.id
     }
-    cases.push({ ...definition, question, expectedId })
+    cases.push({ ...definition, category: categoryFor(definition), question, expectedId })
   }
   return { cases, skipped, verifiedCount: verified.length }
 }
@@ -49,11 +59,23 @@ export function checkResult(item, status, data, catalog = records) {
   return data.warnings.length > 0 && data.confidence !== 'verified'
 }
 
-export async function runEvaluation() {
+export async function runEvaluation({ live = false } = {}) {
   const { cases, skipped, verifiedCount } = prepareCases()
+  if (!live) {
+    console.table(definitions.map(definition => ({
+      id: definition.id,
+      category: categoryFor(definition),
+      expected: definition.kind,
+      status: skipped.includes(definition.id) ? 'SKIPPED - no verified fixture' : 'READY - not run',
+    })))
+    console.log(`${EVAL_CASE_COUNT} scripted questions; ${cases.length} runnable now; ${skipped.length} answer cases lack verified fixtures.`)
+    console.log('No network request made. Add --live only when you explicitly want to call the local function and configured provider.')
+    return { cases, skipped, networkCalled: false }
+  }
   if (verifiedCount < 8) console.warn(`SKIPPED: only ${verifiedCount} of 8 verified records`)
   if (skipped.length) console.warn(`WARNING: ${skipped.length} CASES SKIPPED. THIS IS NOT A COMPLETE ACCURACY PASS.`)
   let failed = 0
+  const results = []
   for (const item of cases) {
     let calledProvider = false
     try {
@@ -64,18 +86,22 @@ export async function runEvaluation() {
       const data = await response.json()
       const passed = checkResult(item, response.status, data)
       if (!passed) failed++
-      console.log(`${passed ? 'PASS' : 'FAIL'} ${item.id} (HTTP ${response.status})`)
+      results.push({ id: item.id, category: item.category, status: passed ? 'PASS' : 'FAIL', http: response.status })
     } catch {
       failed++
-      console.log(`FAIL ${item.id} (request failed; response details withheld)`)
+      results.push({ id: item.id, category: item.category, status: 'FAIL', http: 'request failed' })
       // The provider may still be processing a timed-out local request.
       calledProvider = item.kind !== 'reject'
     }
     if (calledProvider) await delay(EVAL_DELAY_MS)
   }
+  console.table(results)
   console.log(`${cases.length - failed} PASS; ${failed} FAIL; ${skipped.length} SKIPPED`)
   if (skipped.length) console.warn('WARNING: SKIPPED CASES MEAN ACCURACY IS NOT FULLY EVALUATED.')
   process.exitCode = failed ? 1 : 0
+  return { cases, skipped, failed, networkCalled: true }
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) await runEvaluation()
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  await runEvaluation({ live: process.argv.includes('--live') })
+}

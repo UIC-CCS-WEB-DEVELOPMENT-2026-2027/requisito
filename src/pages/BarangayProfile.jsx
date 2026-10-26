@@ -3,6 +3,7 @@ import EmptyState from '../components/EmptyState.jsx'
 import RecordMeta from '../components/RecordMeta.jsx'
 import { getBarangayBySlug, getBarangaysByDistrict } from '../data/helpers.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
+import { href } from '../routeManifest.js'
 
 function BarangayProfile() {
   const { t } = useLanguage()
@@ -14,7 +15,7 @@ function BarangayProfile() {
       <section className="page-content" aria-labelledby="barangay-missing-title">
         <h1 id="barangay-missing-title">{t('barangays.notFound')}</h1>
         <EmptyState message={t('barangays.noMatch')} />
-        <Link className="return-link" to="/barangays">{t('barangays.browse')}</Link>
+        <Link className="return-link" to={href('barangays')}>{t('barangays.browse')}</Link>
       </section>
     )
   }
@@ -28,8 +29,8 @@ function BarangayProfile() {
     <section className="page-content flow-content" aria-labelledby="barangay-title">
       <nav aria-label={t('a11y.breadcrumb')}>
         <ol className="breadcrumbs">
-          <li><Link to="/barangays">{t('page.barangays')}</Link></li>
-          <li><Link to={`/districts/${encodeURIComponent(barangay.adminDistrict)}`}>{barangay.adminDistrict}</Link></li>
+          <li><Link to={href('barangays')}>{t('page.barangays')}</Link></li>
+          <li><Link to={href('districtProfile', { name: barangay.adminDistrict })}>{barangay.adminDistrict}</Link></li>
           <li aria-current="page">{barangay.title}</li>
         </ol>
       </nav>
@@ -48,10 +49,10 @@ function BarangayProfile() {
       </dl>
       <RecordMeta record={barangay} />
       <div className="barangay-pagination">
-        {previous ? <Link to={`/barangays/${previous.slug}`}>{t('barangays.previous')}: {previous.title}</Link> : <span />}
-        {next ? <Link to={`/barangays/${next.slug}`}>{t('barangays.next')}: {next.title}</Link> : <span />}
+        {previous ? <Link to={href('barangayProfile', { slug: previous.slug })}>{t('barangays.previous')}: {previous.title}</Link> : <span />}
+        {next ? <Link to={href('barangayProfile', { slug: next.slug })}>{t('barangays.next')}: {next.title}</Link> : <span />}
       </div>
-      <Link className="return-link" to={`/contribute?record=${encodeURIComponent(barangay.slug)}`}>{t('barangays.reportCorrection')}</Link>
+      <Link className="return-link" to={href('contribute', {}, { record: barangay.slug })}>{t('barangays.reportCorrection')}</Link>
     </section>
   )
 }

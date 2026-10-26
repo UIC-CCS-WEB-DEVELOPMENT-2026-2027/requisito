@@ -21,7 +21,8 @@ export function verificationOf(record) {
       typeof label !== 'string' || typeof record.notes !== 'string' ||
       typeof record.sourceUrl !== 'string' ||
       (record.lastVerified !== null && typeof record.lastVerified !== 'string')) return 'unverified'
-  if (record.type === 'requirement' && (!Number.isInteger(record.goalId) || typeof record.copies !== 'number')) {
+  if (record.type === 'requirement' && (!Number.isInteger(record.goalId) ||
+      (record.copies !== null && (typeof record.copies !== 'number' || record.copies < 0)))) {
     return 'unverified'
   }
   if (!['verified', 'unverified', 'conflicting'].includes(record.verification)) return 'unverified'
@@ -54,7 +55,10 @@ export function getAssistantRecords(additionalCatalogs = {}) {
       service.notes,
     ].filter(Boolean).join('. '),
   }))
-  const baseRecords = [...requirements.map(record => ({ ...record })), ...serviceRecords]
+  const baseRecords = [
+    ...requirements.filter(record => record.demoOnly !== true).map(record => ({ ...record })),
+    ...serviceRecords,
+  ]
   let nextId = Math.max(...baseRecords.map(record => record.id)) + 1
   const additionalRecords = [
     ...(additionalCatalogs.history ?? history),
@@ -85,13 +89,28 @@ function validDate(value) {
 }
 
 // Keep small catalogs whole; rank larger ones using distinct question words.
-export function retrieve(records, question) {
-  if (records.length <= 40) return records
+export function retrieve(records, question, prioritizedId = null) {
+  if (records.length <= 40) {
+    return prioritizedId === null ? records : [
+      ...records.filter(record => record.id === prioritizedId),
+      ...records.filter(record => record.id !== prioritizedId),
+    ]
+  }
   const words = [...new Set(question.toLowerCase().match(/[\p{L}\p{N}]+/gu) ?? [])]
-  return records.map(record => {
+  const selected = records.map(record => {
     const text = `${record.label} ${record.notes}`.toLowerCase()
     return { record, score: words.filter(word => text.includes(word)).length }
   }).sort((a, b) => b.score - a.score).slice(0, 8).map(item => item.record)
+  if (prioritizedId !== null) {
+    const prioritized = records.find(record => record.id === prioritizedId)
+    if (prioritized) {
+      return [
+        prioritized,
+        ...selected.filter(record => record.id !== prioritizedId),
+      ].slice(0, 8)
+    }
+  }
+  return selected
 }
 
 export function containsPersonalData(text) {
@@ -103,6 +122,16 @@ function unsafeAnswer(text) {
   return containsPersonalData(text) || /(?:https?:|www\.|\b[\w-]+\.(?:[a-z]{2,})(?:\b|\/))/i.test(text) ||
     /\b\d{1,4}[-/.]\d{1,2}(?:[-/.]\d{1,4})?\b|\b(?:19|20)\d{2}\b/.test(text) ||
     /\b(?:january|february|march|april|may|june|july|august|september|october|november|december|enero|pebrero|marso|abril|mayo|hunyo|hulyo|agosto|setyembre|oktubre|nobyembre|disyembre)\s+\d/i.test(text)
+}
+
+function numericClaimsSupported(answer, records) {
+  const normalize = value => value.replaceAll(',', '').replace(/^0+(?=\d)/, '')
+  const supported = new Set(records.flatMap(record => {
+    const text = `${record.label ?? record.title ?? ''} ${record.notes ?? ''} ${record.copies ?? ''}`
+    return text.match(/\b\d[\d,]*(?:\.\d+)?\b/g) ?? []
+  }).map(normalize))
+  return (answer.match(/\b\d[\d,]*(?:\.\d+)?\b/g) ?? [])
+    .every(value => supported.has(normalize(value)))
 }
 
 // Sources and warnings come from server records, never from provider-supplied fields.
@@ -118,6 +147,7 @@ export function buildAnswer(text, records, testMode, keys = []) {
   const used = [...new Set(result.used_ids)].filter(Number.isInteger)
     .map(id => records.find(record => record.id === id)).filter(Boolean)
   if (!used.length) return refusal(warnings)
+  if (!numericClaimsSupported(result.answer, used)) return refusal(warnings)
   let confidence = testMode ? 'partial' : result.confidence
   const sources = used.map(record => {
     const verification = verificationOf(record)

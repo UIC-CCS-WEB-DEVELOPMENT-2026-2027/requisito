@@ -91,6 +91,7 @@ export function editRecord(db, {
     delete nextData.id
     delete nextData.verification
     delete nextData.lastVerified
+    delete nextData.verificationReview
     if (populationChanged) nextData.sourceUrl = sourceUrl
     db.prepare(`
       UPDATE records
@@ -185,8 +186,13 @@ export function decideVerificationRequest(db, {
   requestId,
   reviewer,
   decision,
+  decisionNote,
   now,
 }) {
+  if (typeof decisionNote !== 'string' || decisionNote.trim().length < 10 || decisionNote.length > 2000) {
+    return { error: 'invalid_note' }
+  }
+  const normalizedDecisionNote = decisionNote.trim()
   db.exec('BEGIN IMMEDIATE')
   try {
     const request = db.prepare(
@@ -196,9 +202,9 @@ export function decideVerificationRequest(db, {
       db.exec('ROLLBACK')
       return { error: 'not_found' }
     }
-    if (request.requested_by === reviewer.id && decision === 'approved') {
+    if (request.requested_by === reviewer.id) {
       db.exec('ROLLBACK')
-      return { error: 'self_approval' }
+      return { error: 'self_decision' }
     }
     const before = getRecord(db, request.record_type, request.record_id)
     if (!before) {
@@ -207,9 +213,9 @@ export function decideVerificationRequest(db, {
     }
     const changed = db.prepare(`
       UPDATE verification_requests
-      SET status = ?, decided_by = ?, decided_at = ?
+      SET status = ?, decided_by = ?, decided_at = ?, decision_note = ?
       WHERE id = ? AND status = 'pending'
-    `).run(decision, reviewer.id, now, requestId)
+    `).run(decision, reviewer.id, now, normalizedDecisionNote, requestId)
     if (Number(changed.changes) !== 1) {
       db.exec('ROLLBACK')
       return { error: 'not_found' }
@@ -218,13 +224,26 @@ export function decideVerificationRequest(db, {
     if (decision === 'approved') {
       const data = JSON.parse(db.prepare('SELECT data FROM records WHERE type = ? AND id = ?')
         .get(request.record_type, request.record_id).data)
-      data.sourceUrl = request.source_url
+      if (request.record_type === 'requirementSource') {
+        data.url = request.source_url
+        data.lastChecked = request.source_accessed_on
+      } else {
+        data.sourceUrl = request.source_url
+      }
       const verifiedDate = new Intl.DateTimeFormat('en-CA', {
         timeZone: 'Asia/Manila',
         year: 'numeric',
         month: '2-digit',
         day: '2-digit',
       }).format(new Date(now))
+      data.verificationReview = {
+        reviewedById: reviewer.id,
+        requestId: request.id,
+        independent: true,
+        reviewedAt: verifiedDate,
+        sourceAccessedOn: request.source_accessed_on,
+        note: normalizedDecisionNote,
+      }
       db.prepare(`
         UPDATE records SET data = ?, verification = 'verified', last_verified = ?, updated_at = ?
         WHERE type = ? AND id = ?
@@ -266,12 +285,22 @@ export function decideVerificationRequest(db, {
           sourceAccessedOn: request.source_accessed_on,
           submittedBy: request.requested_by,
           status: decision,
+          decisionNote: normalizedDecisionNote,
         },
       },
-      note: request.note,
+      note: normalizedDecisionNote,
     })
     db.exec('COMMIT')
-    return { request: { ...request, status: decision, decided_by: reviewer.id, decided_at: now }, record: after }
+    return {
+      request: {
+        ...request,
+        status: decision,
+        decided_by: reviewer.id,
+        decided_at: now,
+        decision_note: normalizedDecisionNote,
+      },
+      record: after,
+    }
   } catch (error) {
     db.exec('ROLLBACK')
     throw error

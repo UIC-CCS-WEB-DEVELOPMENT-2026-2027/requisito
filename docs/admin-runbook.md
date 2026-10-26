@@ -59,7 +59,13 @@ origin. Stop both processes with the normal terminal interrupt after use.
 3. The reviewer submits a verification request with the source access date and
    an exact comparison note.
 4. A different reviewer or admin independently checks the request and chooses
-   approve or reject. A submitter cannot approve their own request.
+   approve or reject and records a substantive decision note describing the
+   evidence checked and the reason for the decision. The decision note is
+   stored separately from the submitter's comparison note. The server rejects
+   either decision when the authenticated account submitted the request,
+   including direct API calls. Account separation alone does not prove that
+   two accounts belong to different people; the admin/coordinator must
+   designate and track distinct real reviewers outside the application.
 5. If the record changes while a request is pending, the request is cancelled
    and must be resubmitted against the new record contents.
 

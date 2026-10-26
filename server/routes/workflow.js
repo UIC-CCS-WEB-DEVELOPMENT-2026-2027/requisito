@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { requireEditor, requireSession } from '../auth/middleware.js'
 import { isAllowedSourceUrl } from '../config/sourceAllowlist.js'
-import { decideVerificationRequest, recordVerificationRequest } from '../db/records.js'
+import { decideVerificationRequest, recordVerificationRequest, restoreId } from '../db/records.js'
 import { resolveRecordTypes } from './records.js'
 
 function isPastOrTodayIsoDate(value, today) {
@@ -30,7 +30,8 @@ export function createWorkflowRouter({ db, config }) {
   router.get('/review', (req, res) => {
     const requests = db.prepare(`
       SELECT vr.*, submitter.username AS requested_by_name, decider.username AS decided_by_name,
-        r.data AS record_data, r.verification AS record_verification
+        r.type AS record_type, r.id AS record_id, r.data AS record_data,
+        r.verification AS record_verification, r.last_verified AS record_last_verified
       FROM verification_requests vr
       JOIN users submitter ON submitter.id = vr.requested_by
       LEFT JOIN users decider ON decider.id = vr.decided_by
@@ -38,9 +39,22 @@ export function createWorkflowRouter({ db, config }) {
       WHERE vr.status = 'pending'
       ORDER BY vr.id
     `).all()
-    return res.json({ requests: requests.map(({ record_data, ...request }) => ({
+    return res.json({ requests: requests.map(({
+      record_type,
+      record_id,
+      record_data,
+      record_verification,
+      record_last_verified,
+      ...request
+    }) => ({
       ...request,
-      record: { ...JSON.parse(record_data), verification: request.record_verification },
+      record: {
+        ...JSON.parse(record_data),
+        type: record_type,
+        id: restoreId(record_id),
+        verification: record_verification,
+        lastVerified: record_last_verified,
+      },
     })) })
   })
 
@@ -109,13 +123,21 @@ export function createWorkflowRouter({ db, config }) {
     if (!['approved', 'rejected'].includes(decision)) {
       return res.status(400).json({ error: 'Decision must be approved or rejected.' })
     }
+    const decisionNote = req.body?.note
+    if (typeof decisionNote !== 'string' || decisionNote.trim().length < 10 || decisionNote.length > 2000) {
+      return res.status(400).json({ error: 'Provide a substantive review note of 10 to 2000 characters.' })
+    }
     const result = decideVerificationRequest(db, {
       requestId: Number(req.params.requestId),
       reviewer: req.adminUser,
       decision,
+      decisionNote: decisionNote.trim(),
       now: nowDate(config).toISOString(),
     })
-    if (result.error === 'self_approval') return res.status(403).json({ error: 'You cannot approve your own verification request.' })
+    if (result.error === 'self_decision') return res.status(403).json({ error: 'You cannot decide your own verification request.' })
+    if (result.error === 'invalid_note') {
+      return res.status(400).json({ error: 'Provide a substantive review note of 10 to 2000 characters.' })
+    }
     if (result.error) return res.status(404).json({ error: 'Pending verification request not found.' })
     return res.json({ status: decision, record: result.record })
   })

@@ -11,9 +11,11 @@ planning-question utilities.
 | --- | --- | --- | --- |
 | `/` | `src/pages/Home.jsx` | Shared catalog count and Status report | Summary cards show the audit-scope total, barangays, and unverified non-sample records. |
 | `/login` | `src/pages/Login.jsx` | In-memory auth context | Sign-in form; no server account. |
-| `/goals` | `src/pages/Goals.jsx` | `goals.json` | Predefined goals are listed. |
-| `/checklist` | `src/pages/Checklist.jsx` | `requirements.json`, goals and local document state | Selected-goal checklist is available. |
-| `/documents` | `src/pages/Documents.jsx` | `documents.json` | Illustrative documents are listed. |
+| `/goals` | `src/pages/Goals.jsx` | `goals.json`, shared requirements | Searchable, categorized goals display counts derived from active requirement records. |
+| `/goals/:slug` | `src/pages/GoalDetail.jsx` | Goal, requirement, and source catalogs | Requirement conditions, source claims, unresolved research, and checklist entry are displayed together. |
+| `/checklist` | `src/pages/Checklist.jsx` | Goal and canonical requirement definitions | Conditional checklist with four progress statuses, guide links, and browser-profile-only progress. |
+| `/documents` | `src/pages/Documents.jsx` | Guide-enabled canonical requirements | Searchable document guides derived from requirement definitions; no personal document storage. |
+| `/documents/:slug` | `src/pages/DocumentGuide.jsx` | Requirement, goal, and source catalogs | Guide shows linked goals, conditions, sources, and limits. |
 | `/questions` | `src/pages/QuestionFlow.jsx` | Planning rules/questions and requirements | Conditional question flow is data-backed. |
 | `/services` | `src/pages/Services.jsx` | `services.json` | Service and hotline records are listed. |
 | `/services/:slug` | `src/pages/ServiceDetail.jsx` | `services.json` | Record profile or not-found state. |
@@ -26,7 +28,7 @@ planning-question utilities.
 | `/officials` | `src/pages/Officials.jsx` | `officials.json` | Office list; holders are not asserted. |
 | `/officials/:slug` | `src/pages/OfficialProfile.jsx` | `officials.json` | Office profile or not-found state. |
 | `/search` | `src/pages/Search.jsx` | Grouped catalogs via `searchAll()` | Accent-insensitive ranked search, URL query/type filter, and safe result highlighting. |
-| `/status` | `src/pages/Status.jsx` | Verification metadata from civic catalogs and requirements | Counts, review age, time-sensitive records, and gaps; illustrative documents are excluded. |
+| `/status` | `src/pages/Status.jsx` | Verification metadata from civic catalogs and canonical requirements | Counts, review age, time-sensitive records, and gaps; document guides are not duplicated as separate records. |
 | `/contribute` | `src/pages/Contribute.jsx` | Existing catalog records | Local correction form prepares a public GitHub issue. |
 | `/credits` | `src/pages/Credits.jsx` | Static project documentation | Static credits page. |
 | `/history` | `src/pages/History.jsx` | `history.json` | Empty state; no history entries supplied. |
@@ -59,9 +61,10 @@ excluded. Search query and type are reflected in the URL. Barangay filters
 also use query parameters and provide a CSV export of the visible real records.
 
 The Home total and data audit use the same centralized counter for civic JSON
-catalogs plus requirements. The shared total is 218. The four illustrative
-document tracker examples are excluded from that total; Home's unverified
-count is derived separately from the Status report's non-sample gaps.
+catalogs plus requirements. The current audit total is 219. Document guides
+are derived from requirements and are not counted as separate civic records;
+Home's unverified count is derived separately from the Status report's
+non-sample gaps.
 
 All route components are lazy-loaded from `src/App.jsx`. Keyboard focus moves
 to each new page heading, document titles follow the current page, focus styles
@@ -77,8 +80,10 @@ this pass.
   barangays, three legislative districts, eleven administrative districts,
   1,776,949 residents in 2020, 2,443.61 square kilometers, and 80,538 for
   Bucana. The data pack notes these sources and review limitations.
-- `src/data/requirements.json` and `src/data/documents.json` contain
-  illustrative prototype records and status values; they are not verified
-  civic facts or user accounts.
+- Goal membership is stored in `goals.json` requirement ID references.
+  `requirements.json` holds canonical requirement definitions and
+  `requirementSources.json` holds linked evidence with claim limits. First-job
+  suggestions without sources are not universal requirements; Davao
+  health-card details remain unverified historical claims.
 - The page presents no barangay population values; the imported fields remain
   `null` pending a PSA merge.

@@ -3,6 +3,41 @@
 Run these checks after the language strings or layout change. Include desktop
 and a 360px-wide viewport.
 
+## Reproducible core browser walkthrough
+
+Start the existing app from the repository root with `npm run dev`, then open
+the local URL printed by Vite. This walkthrough uses only the public UI and
+browser-local checklist storage:
+
+1. Open `/goals`, choose **Apply for first job**, and open its checklist.
+2. Change each employer-request question between its available answers. Confirm
+   conditional requirements appear only for matching answers and the order
+   remains usable.
+3. Change one checklist item to in progress, then to ready. Refresh the page and
+   confirm both the answer and status persist. Open its document guide, use the
+   return link, and confirm the same goal and progress remain selected.
+4. Open `/checklist?goal=2` (a goal without a supported requirements catalog).
+   Confirm it shows the research-pending state and never reports “Ready to
+   apply.”
+5. Repeat the first-job flow at desktop width and 360px. Complete the keyboard
+   checks below, including tabbing through questions, status controls, guide
+   links, and navigation.
+
+For a production-preview walkthrough, run `npm run build` followed by
+`npm run preview`, then use the local URL printed by Vite Preview. If either
+server cannot bind to localhost in a restricted environment, do not weaken
+server settings or production behavior; run these steps in a local environment
+that permits localhost listeners and record the restriction instead.
+
+## HTTP integration tests
+
+Run `npm test` from the repository root. The HTTP integration tests create a
+temporary listener on `127.0.0.1` using an ephemeral port, so the test
+environment must permit loopback listeners. If Node reports `listen EPERM`,
+the tests did not reach their HTTP assertions; rerun `npm test` in a local
+environment where loopback networking is authorized. Do not change the tests
+or production listener configuration to bypass that restriction.
+
 - [ ] Tab from the address bar and confirm the skip link appears on focus and
   moves focus to the main content.
 - [ ] Navigate every primary and footer link with Tab / Shift+Tab and Enter.

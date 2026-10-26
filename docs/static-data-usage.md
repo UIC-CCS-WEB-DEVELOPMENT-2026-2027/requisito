@@ -4,11 +4,19 @@ The current catalog contracts and helper list are maintained in
 [data-contract.md](data-contract.md). Pages should read catalog data through
 `src/data/helpers.js`, not import catalog arrays directly.
 
-- `getGoals()` returns seven predefined goals. The original First Job remains
-  ID 1; the Davao health-card example is goal ID 7.
-- `getRequirementsByGoal(1)` returns the six existing illustrative requirements.
-- `getRequirementsByGoal(7)` returns seven unverified health-card entries.
-- `getDocuments()` returns four fictional document tracker entries.
+- `getGoals()` returns seven predefined goals, including one clearly marked
+  sample fixture. Six are published; First Job is ID 1 and Davao City Health
+  Card is ID 7.
+- `getRequirementsByGoal(1)` resolves six canonical first-job entries. Employer
+  requests and employment-status-dependent topics are conditional; the SSS
+  record has specific support from an official FAQ, while unsupported BIR,
+  Pag-IBIG, birth-certificate, and NBI procedures remain explicitly unverified.
+- `getRequirementsByGoal(7)` returns eight health-card requirements from the
+  same catalog, all linked to the dated unverified announcement. They are not
+  included in the general First Job goal because current applicability was not
+  established.
+- `getDocuments()` returns fourteen document guides derived from canonical
+  requirements. It is not a personal document tracker or file store.
 - Directory helper functions provide services, the 182 unverified barangay records,
   officials, city facts, updates, history, briefs, budget, procurement,
   elections, accountability, global search, derived status, and City Monitor.

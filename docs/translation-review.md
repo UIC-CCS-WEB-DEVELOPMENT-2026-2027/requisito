@@ -16,6 +16,13 @@ claims, or verification states. Catalog content remains English; only
 interface labels and guidance are localized. Missing keys fall back to English
 and emit one development warning per language/key.
 
+Part 6 adds translations for the route-family empty states, service-guide
+filters, source-lead warnings, assistant dialog controls, and help/privacy/terms
+copy. Those Filipino and Bisaya strings are still draft translations and have
+not been reviewed by native speakers. The assistant receives the selected
+interface language (`en`, `fil`, or `ceb`) so the provider is asked to reply in
+that language; this does not replace human translation review.
+
 Before release, have native speakers review each translated string in context,
 especially form errors, authentication notices, document/checklist terminology,
 privacy guidance, and source-verification language. Update the catalog review

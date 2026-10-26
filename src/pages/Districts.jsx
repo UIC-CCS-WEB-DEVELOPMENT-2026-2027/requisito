@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import EmptyState from '../components/EmptyState.jsx'
 import { getDistrictSummary } from '../data/helpers.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
+import { href } from '../routeManifest.js'
 
 function Districts() {
   const { t } = useLanguage()
@@ -15,7 +16,7 @@ function Districts() {
         <ul className="portal-grid">
           {districts.map(({ name, count }) => (
             <li className="portal-card" key={name}>
-              <h2><Link to={`/districts/${encodeURIComponent(name)}`}>{name}</Link></h2>
+              <h2><Link to={href('districtProfile', { name })}>{name}</Link></h2>
               <p>{t('districts.barangayCount').replace('{count}', count)}</p>
             </li>
           ))}

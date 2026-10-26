@@ -2,9 +2,9 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { getSignInDestination } from '../utils/authRedirect.js'
 
-test('signed-out visit to /goals goes to /login and returns to /goals after sign-in', () => {
+test('a guarded route can preserve its intended return location through sign-in', () => {
   const requestedLocation = {
-    pathname: '/goals',
+    pathname: '/restricted-area',
     search: '?step=1',
     hash: '#requirements',
     key: 'requested',

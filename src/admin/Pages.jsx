@@ -2,11 +2,17 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { adminRequest } from './api.js'
 import { useAdminAuth } from './AdminAuthContext.js'
+import { getAdminSignInDestination } from './adminRedirect.js'
+import firstJobEvidence from '../data/firstJobEvidence.json'
 
 const recordTypes = [
   'services', 'barangays', 'officials', 'cityFacts', 'updates', 'history',
   'budget', 'procurement', 'briefs', 'elections', 'accountability', 'requirements',
+  'requirementSources',
 ]
+const firstJobEvidenceById = new Map(
+  firstJobEvidence.requirements.map((entry) => [entry.requirementId, entry]),
+)
 
 function useResource(path) {
   const [revision, setRevision] = useState(0)
@@ -70,8 +76,7 @@ export function AdminLoginPage() {
     setError('')
     try {
       await login(username.trim(), password)
-      const from = location.state?.from
-      navigate(from?.pathname?.startsWith('/admin') ? `${from.pathname}${from.search ?? ''}${from.hash ?? ''}` : '/admin', { replace: true })
+      navigate(getAdminSignInDestination(location.state), { replace: true })
     } catch (failure) {
       setError(failure.message)
     } finally {
@@ -205,7 +210,11 @@ export function AdminRecords() {
   )
 }
 
-const editableKeys = ['title', 'description', 'category', 'sourceUrl', 'notes']
+const editableRecordKeys = ['title', 'description', 'category', 'sourceUrl', 'notes']
+const editableSourceKeys = [
+  'agency', 'title', 'url', 'publishedDate', 'statementDate', 'effectiveDate',
+  'evidenceType', 'supports', 'limitations', 'relatedSources',
+]
 
 export function AdminRecordDetail() {
   const { type = '', id = '' } = useParams()
@@ -213,6 +222,8 @@ export function AdminRecordDetail() {
   const { data, error, loading, reload } = useResource(path)
   const history = useResource(`${path}/verification`)
   const { user } = useAdminAuth()
+  const isRequirementSource = type === 'requirementSources'
+  const editableKeys = isRequirementSource ? editableSourceKeys : editableRecordKeys
   const [draft, setDraft] = useState(null)
   const [editNote, setEditNote] = useState('')
   const [sourceAccessedOn, setSourceAccessedOn] = useState('')
@@ -223,9 +234,15 @@ export function AdminRecordDetail() {
   const editable = user.role !== 'viewer'
 
   const record = data?.record
+  function fieldValue(key) {
+    const value = record?.[key]
+    return ['supports', 'relatedSources'].includes(key)
+      ? JSON.stringify(value ?? [], null, 2)
+      : value ?? ''
+  }
   const fields = draft ?? (record ? Object.fromEntries([
     ...[...editableKeys, ...(type === 'barangays' ? ['adminDistrict', 'legislativeDistrict'] : [])]
-      .map((key) => [key, record[key] ?? '']),
+      .map((key) => [key, fieldValue(key)]),
     ...(type === 'barangays' ? [['population2020', record.population2020 ?? '']] : []),
   ]) : null)
   function setField(key, value) {
@@ -240,13 +257,30 @@ export function AdminRecordDetail() {
     setMessage('')
     try {
       const nextFields = { ...fields }
+      if (isRequirementSource) {
+        for (const key of ['supports', 'relatedSources']) {
+          try {
+            nextFields[key] = JSON.parse(nextFields[key])
+          } catch {
+            throw new Error(`${key} must be valid JSON.`)
+          }
+          if (!Array.isArray(nextFields[key])) throw new Error(`${key} must be a JSON array.`)
+        }
+        for (const key of ['publishedDate', 'statementDate', 'effectiveDate']) {
+          if (nextFields[key] === '') nextFields[key] = null
+        }
+      }
       if (type === 'barangays') {
         const text = String(nextFields.population2020).trim()
         nextFields.population2020 = text === '' ? null : Number(text)
       }
       const result = await adminRequest(path, {
         method: 'PATCH',
-        body: { data: nextFields, source_url: nextFields.sourceUrl ?? '', note: editNote },
+        body: {
+          data: nextFields,
+          source_url: nextFields.sourceUrl ?? nextFields.url ?? '',
+          note: editNote,
+        },
       })
       setMessage(result.record.verification === 'unverified' && data.record.verification === 'verified'
         ? 'Saved; the record is unverified again and needs a new two-person review.'
@@ -270,7 +304,11 @@ export function AdminRecordDetail() {
     try {
       await adminRequest(`${path}/verification`, {
         method: 'POST',
-        body: { source_url: fields?.sourceUrl ?? data.record.sourceUrl, source_accessed_on: sourceAccessedOn, note: verificationNote },
+        body: {
+          source_url: fields?.sourceUrl ?? fields?.url ?? data.record.sourceUrl ?? data.record.url,
+          source_accessed_on: sourceAccessedOn,
+          note: verificationNote,
+        },
       })
       setMessage('Verification request submitted. A different reviewer or admin must decide it.')
       setSourceAccessedOn('')
@@ -295,9 +333,10 @@ export function AdminRecordDetail() {
       {fields && <form className="admin-form admin-card" onSubmit={saveRecord}>
         <h2>Edit record</h2>
         {editableKeys.map((key) => <label htmlFor={`record-${key}`} key={key}>{key}
-          {key === 'description' || key === 'notes'
+          {key === 'description' || key === 'notes' || key === 'limitations' ||
+          key === 'supports' || key === 'relatedSources'
             ? <textarea id={`record-${key}`} value={fields[key]} disabled={!editable} onChange={(event) => setField(key, event.target.value)} />
-            : <input id={`record-${key}`} value={fields[key]} disabled={!editable} onChange={(event) => setField(key, event.target.value)} />}
+            : <input id={`record-${key}`} type={key === 'url' || key === 'sourceUrl' ? 'url' : 'text'} value={fields[key]} disabled={!editable} onChange={(event) => setField(key, event.target.value)} />}
         </label>)}
         {type === 'barangays' && <>
           <label htmlFor="record-adminDistrict">Administrative district<input id="record-adminDistrict" value={fields.adminDistrict} disabled={!editable} onChange={(event) => setField('adminDistrict', event.target.value)} /></label>
@@ -314,7 +353,7 @@ export function AdminRecordDetail() {
       </form>}
       {record.verification !== 'verified' && <form className="admin-form admin-card" onSubmit={requestVerification}>
         <h2>Request verification</h2>
-        <label htmlFor="verification-source">Official HTTPS source URL<input id="verification-source" type="url" value={fields?.sourceUrl ?? record.sourceUrl ?? ''} readOnly /></label>
+        <label htmlFor="verification-source">Official HTTPS source URL<input id="verification-source" type="url" value={fields?.sourceUrl ?? fields?.url ?? record.sourceUrl ?? record.url ?? ''} readOnly /></label>
         <label htmlFor="verification-accessed">Date source was accessed<input id="verification-accessed" type="date" required value={sourceAccessedOn} disabled={!editable} onChange={(event) => setSourceAccessedOn(event.target.value)} /></label>
         <label htmlFor="verification-note">What exactly did you compare?<textarea id="verification-note" required minLength="10" value={verificationNote} disabled={!editable} onChange={(event) => setVerificationNote(event.target.value)} /></label>
         <ErrorMessage message={actionError} />
@@ -324,7 +363,10 @@ export function AdminRecordDetail() {
         <h2>Verification history and record audit</h2>
         {history.loading ? <Loading /> : history.error ? <ErrorMessage message={history.error} /> : <>
           <h3>Requests</h3>
-          {history.data.requests.length ? <ul>{history.data.requests.map((item) => <li key={item.id}>#{item.id}: {item.status}, submitted by {item.requested_by_name}, source {item.source_url}, accessed {item.source_accessed_on}; {item.note}</li>)}</ul> : <EmptyMessage>No verification requests yet.</EmptyMessage>}
+          {history.data.requests.length ? <ul>{history.data.requests.map((item) => <li key={item.id}>
+            #{item.id}: {item.status}, submitted by {item.requested_by_name}, source {item.source_url}, accessed {item.source_accessed_on}; comparison: {item.note}
+            {item.decided_by_name && <> Decision by {item.decided_by_name} on {item.decided_at}: {item.decision_note}</>}
+          </li>)}</ul> : <EmptyMessage>No verification requests yet.</EmptyMessage>}
           <h3>Audit entries</h3>
           {history.data.audit.length ? <ol>{history.data.audit.map((entry) => <li key={entry.id}>{entry.at} · {entry.actor} · {entry.action} · {entry.note}</li>)}</ol> : <EmptyMessage>No audit entries yet.</EmptyMessage>}
         </>}
@@ -336,16 +378,23 @@ export function AdminRecordDetail() {
 export function AdminReview() {
   const { user } = useAdminAuth()
   const { data, error, loading, reload } = useResource('/review')
+  const sourceRecords = useResource('/records?type=requirementSources&limit=100')
   const [busy, setBusy] = useState(0)
   const [message, setMessage] = useState('')
   const [actionError, setActionError] = useState('')
+  const [reviewNotes, setReviewNotes] = useState({})
 
   async function decide(requestId, decision) {
+    const note = reviewNotes[requestId]?.trim() ?? ''
+    if (note.length < 10 || note.length > 2000) {
+      setActionError('Write a substantive review note between 10 and 2000 characters.')
+      return
+    }
     setBusy(requestId)
     setActionError('')
     setMessage('')
     try {
-      await adminRequest(`/review/${requestId}/decision`, { method: 'POST', body: { decision } })
+      await adminRequest(`/review/${requestId}/decision`, { method: 'POST', body: { decision, note } })
       setMessage(`Request ${requestId} ${decision}.`)
       reload()
     } catch (failure) {
@@ -355,8 +404,10 @@ export function AdminReview() {
     }
   }
 
-  if (loading) return <Loading />
+  if (loading || sourceRecords.loading) return <Loading />
   if (error) return <ErrorMessage message={error} />
+  if (sourceRecords.error) return <ErrorMessage message={sourceRecords.error} />
+  const sourceRecordById = new Map(sourceRecords.data.records.map((record) => [record.id, record]))
   const canReview = user.role === 'reviewer' || user.role === 'admin'
   return (
     <>
@@ -365,17 +416,99 @@ export function AdminReview() {
       <p role="status">{message}</p>
       {data.requests.length ? <div className="admin-grid">{data.requests.map((request) => {
         const ownRequest = request.requested_by === user.id
+        const evidence = request.record.type === 'requirement'
+          ? firstJobEvidenceById.get(Number(request.record.id))
+          : null
+        const sourceReview = request.record.type === 'requirementSource' ? request.record : null
+        const affectedRequirements = sourceReview
+          ? firstJobEvidence.requirements.filter((entry) => entry.sourceIds.includes(sourceReview.id))
+          : []
         return <article className="admin-card" key={request.id}>
           <h2>{request.record.title ?? request.record.label} ({request.record_type})</h2>
           <p>Submitted by {request.requested_by_name} on {request.created_at}</p>
           <p>Source: <a href={request.source_url} target="_blank" rel="noopener noreferrer">{request.source_url}</a></p>
           <p>Source accessed: {request.source_accessed_on}</p>
           <p>Comparison note: {request.note}</p>
-          <p>Current state: {request.record_verification}</p>
+          <label htmlFor={`review-note-${request.id}`}>Reviewer decision note
+            <textarea
+              id={`review-note-${request.id}`}
+              minLength="10"
+              maxLength="2000"
+              required
+              value={reviewNotes[request.id] ?? ''}
+              disabled={!canReview || ownRequest || busy === request.id}
+              onChange={(event) => setReviewNotes((current) => ({ ...current, [request.id]: event.target.value }))}
+              aria-describedby={`review-note-help-${request.id}`}
+            />
+          </label>
+          <p id={`review-note-help-${request.id}`}>Explain what you checked and why the evidence supports approval or requires rejection.</p>
+          {evidence && <section aria-labelledby={`evidence-title-${request.id}`}>
+            <h3 id={`evidence-title-${request.id}`}>First Job evidence package</h3>
+            <p>Research status: {evidence.researchStatus}. Evidence completeness: {evidence.evidenceCompleteness}. Release disposition: {evidence.releaseDisposition}. Approval status: {evidence.independentApprovalStatus}.</p>
+            <p><strong>Original catalog claim:</strong> {evidence.originalPublicClaim}</p>
+            <p><strong>Proposed public wording:</strong> {evidence.proposedPublicInstruction}</p>
+            <h4>Claim evidence</h4>
+            <ol>{evidence.claims.map((claim, index) => <li key={`${request.id}-claim-${index}`}>
+              <p>{claim.claim}</p>
+              <blockquote>{claim.supportingPassage}</blockquote>
+              <p>Accessed {claim.accessedOn}. {claim.conditionsAndExceptions}</p>
+              <p>Evidence status: {claim.researchStatus}</p>
+              <ul>{claim.sourceIds.map((sourceId) => {
+                const source = sourceRecordById.get(sourceId)
+                return <li key={sourceId}>
+                  {source ? <a href={source.url} target="_blank" rel="noopener noreferrer">
+                    {source.title} ({source.agency})
+                  </a> : `Missing source: ${sourceId}`}
+                  {source && <> · source record status: {source.verification}</>}
+                  {source && <> · checked {source.lastChecked ?? 'date not recorded'} · {source.limitations}</>}
+                  {source?.relatedSources?.map((url) => <span key={url}> · <a href={url} target="_blank" rel="noopener noreferrer">Additional research source</a></span>)}
+                </li>
+              })}</ul>
+            </li>)}</ol>
+            {evidence.conflictsOrOutdatedInformation.length > 0 && <>
+              <h4>Conflicts and outdated details</h4>
+              <ul>{evidence.conflictsOrOutdatedInformation.map((item) => <li key={item}>{item}</li>)}</ul>
+            </>}
+            {evidence.reviewerQuestions.length > 0 && <>
+              <h4>Questions for the reviewer</h4>
+              <ul>{evidence.reviewerQuestions.map((item) => <li key={item}>{item}</li>)}</ul>
+            </>}
+          </section>}
+          {sourceReview && <section aria-labelledby={`source-evidence-title-${request.id}`}>
+            <h3 id={`source-evidence-title-${request.id}`}>Source record evidence</h3>
+            <p>Agency: {sourceReview.agency}. Evidence type: {sourceReview.evidenceType}.</p>
+            <p>Source URL: <a href={sourceReview.url} target="_blank" rel="noopener noreferrer">{sourceReview.url}</a></p>
+            <p>Source record status: {sourceReview.verification}.</p>
+            <p>Source last checked: {sourceReview.lastChecked ?? 'Not recorded'}</p>
+            <h4>Claims this source is recorded as supporting</h4>
+            <ul>{(sourceReview.supports ?? []).map((claim) => <li key={claim}>{claim}</li>)}</ul>
+            <p><strong>Limitations:</strong> {sourceReview.limitations}</p>
+            {sourceReview.relatedSources?.length > 0 && <>
+              <h4>Related research sources</h4>
+              <ul>{sourceReview.relatedSources.map((url) => <li key={url}>
+                <a href={url} target="_blank" rel="noopener noreferrer">{url}</a>
+              </li>)}</ul>
+            </>}
+            {affectedRequirements.length > 0 && <>
+              <h4>First Job requirement claims using this source</h4>
+              <ul>{affectedRequirements.map((entry) => <li key={entry.requirementId}>
+                <p><strong>{entry.title}.</strong> {entry.originalPublicClaim}</p>
+                <p>Proposed wording: {entry.proposedPublicInstruction}</p>
+                <ul>{entry.claims.filter((claim) => claim.sourceIds.includes(sourceReview.id)).map((claim, index) => <li key={`${entry.requirementId}-claim-${index}`}>
+                  <p>{claim.claim}</p>
+                  <blockquote>{claim.supportingPassage}</blockquote>
+                  <p>Accessed {claim.accessedOn}. {claim.conditionsAndExceptions}</p>
+                  <p>Evidence status: {claim.researchStatus}</p>
+                </li>)}</ul>
+                <ul>{entry.reviewerQuestions.map((question) => <li key={question}>{question}</li>)}</ul>
+              </li>)}</ul>
+            </>}
+          </section>}
+          <p>Current state: {request.record.verification}</p>
           {ownRequest && <p className="admin-notice">You submitted this request. Two-person review requires another reviewer, so both decision buttons are disabled.</p>}
           {!canReview && <p className="admin-notice">Viewer access is read-only.</p>}
-          <button type="button" disabled={!canReview || ownRequest || busy === request.id} onClick={() => decide(request.id, 'approved')}>Approve</button>{' '}
-          <button type="button" disabled={!canReview || ownRequest || busy === request.id} onClick={() => decide(request.id, 'rejected')}>Reject</button>
+          <button type="button" disabled={!canReview || ownRequest || busy === request.id || (reviewNotes[request.id]?.trim().length ?? 0) < 10} onClick={() => decide(request.id, 'approved')}>Approve</button>{' '}
+          <button type="button" disabled={!canReview || ownRequest || busy === request.id || (reviewNotes[request.id]?.trim().length ?? 0) < 10} onClick={() => decide(request.id, 'rejected')}>Reject</button>
         </article>
       })}</div> : <EmptyMessage>No requests are waiting for review.</EmptyMessage>}
     </>

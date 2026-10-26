@@ -3,6 +3,7 @@ import CatalogEmptyState from '../components/CatalogEmptyState.jsx'
 import RecordMeta from '../components/RecordMeta.jsx'
 import { getStatusReport, STALE_DAYS } from '../data/helpers.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
+import { href } from '../routeManifest.js'
 
 function Integrity() {
   const { t } = useLanguage()
@@ -27,7 +28,7 @@ function Integrity() {
       <p>{t('heading.staleRecords')} {STALE_DAYS} {t('integrity.days')}. {t('integrity.coverage').replace('{verified}', verified).replace('{total}', total)}</p>
       <p>{t('integrity.assistant')}</p>
       <p>{t('integrity.corrections')}</p>
-      <p><Link to="/contribute">{t('integrity.suggestCorrection')}</Link> · <Link to="/credits">{t('integrity.credits')}</Link></p>
+      <p><Link to={href('contribute')}>{t('integrity.suggestCorrection')}</Link> · <Link to={href('credits')}>{t('integrity.credits')}</Link></p>
       <h2>{t('heading.verificationExample')}</h2>
       <RecordMeta record={policyRecord} />
       <h2>{t('heading.aiDisclosure')}</h2>

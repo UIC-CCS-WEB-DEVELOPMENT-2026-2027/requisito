@@ -1,16 +1,17 @@
-import { lazy, Suspense, useState } from 'react'
+import { Suspense, useState } from 'react'
 import { Link, Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom'
 import AdminAuthProvider from './AdminAuth.jsx'
 import { useAdminAuth } from './AdminAuthContext.js'
-import { AdminLoginPage } from './Pages.jsx'
+import {
+  AdminAudit,
+  AdminDashboard,
+  AdminLoginPage,
+  AdminRecordDetail,
+  AdminRecords,
+  AdminReview,
+  AdminUsers,
+} from './Pages.jsx'
 import './admin.css'
-
-const AdminDashboard = lazy(() => import('./Pages.jsx').then((module) => ({ default: module.AdminDashboard })))
-const AdminRecords = lazy(() => import('./Pages.jsx').then((module) => ({ default: module.AdminRecords })))
-const AdminRecordDetail = lazy(() => import('./Pages.jsx').then((module) => ({ default: module.AdminRecordDetail })))
-const AdminReview = lazy(() => import('./Pages.jsx').then((module) => ({ default: module.AdminReview })))
-const AdminUsers = lazy(() => import('./Pages.jsx').then((module) => ({ default: module.AdminUsers })))
-const AdminAudit = lazy(() => import('./Pages.jsx').then((module) => ({ default: module.AdminAudit })))
 
 function AdminGuard() {
   const { status, error } = useAdminAuth()

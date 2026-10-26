@@ -2,6 +2,7 @@ import EmptyState from '../components/EmptyState.jsx'
 import RecordMeta from '../components/RecordMeta.jsx'
 import { getOfficials } from '../data/helpers.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
+import { href } from '../routeManifest.js'
 import { Link } from 'react-router-dom'
 
 function Officials() {
@@ -23,7 +24,7 @@ function Officials() {
                 : <p>{t('officials.asOf')} <time dateTime={office.lastVerified}>{office.lastVerified}</time>.</p>}
               {office.verification === 'verified' && office.notes && <p className="sample-notice">{office.notes}</p>}
               <RecordMeta record={office} />
-              <Link to={`/officials/${office.slug}`}>{t('officials.viewProfile')}</Link>
+              <Link to={href('officialProfile', { slug: office.slug })}>{t('officials.viewProfile')}</Link>
             </li>
           ))}
         </ul>

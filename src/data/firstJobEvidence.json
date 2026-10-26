@@ -1,0 +1,244 @@
+{
+  "schemaVersion": 1,
+  "researchedOn": "2026-10-26",
+  "purpose": "Evidence package for an independent reviewer. Researcher access is not verification or approval.",
+  "approvalPolicy": "Do not change a requirement or source verification status without the existing independent review workflow. A reviewer must compare each quoted claim with the official source and consider the unresolved questions.",
+  "requirements": [
+    {
+      "requirementId": 1,
+      "title": "Birth certificate",
+      "releaseDisposition": "included",
+      "sourceIds": ["ra11261-first-time-jobseekers-act", "psa-birth-certificate-request"],
+      "originalPublicClaim": "An employer may request a birth certificate; current PSA steps and implementation of the Act's waiver are not confirmed.",
+      "proposedPublicInstruction": "Only obtain a birth certificate if the employer requests it; confirm the accepted issuing authority and format first. RA 11261 concerns fee waivers for some employment documents, but this catalog has not verified coverage, eligibility, proof, exceptions, or current procedure. Ask your barangay and the issuing agency before relying on a waiver.",
+      "claims": [
+        {
+          "claim": "Section 4(e) of RA 11261 names a birth certificate among the government documents covered by the Act, subject to Section 5.",
+          "sourceIds": ["ra11261-first-time-jobseekers-act"],
+          "supportingPassage": "Secondary cross-check only: Lawphil's transcription says Section 4(e) lists “Birth Certificate” and Section 5 describes barangay certification. The Official Gazette article confirms the Act title and signing date and links its PDF, but the PDF text was not extracted or reviewed; the section wording is not yet supported by directly inspected official statutory text.",
+          "accessedOn": "2026-10-26",
+          "conditionsAndExceptions": "Section 3 says the benefit is availed of only once. Section 8 lists excluded transactions; Section 10 excludes Jobstart beneficiaries and beneficiaries of laws with similar exemptions. The Act does not establish a blanket promise of free processing.",
+          "researchStatus": "pending_independent_comparison"
+        },
+        {
+          "claim": "Current PSA ordering procedure, fee, delivery, acceptable certificate format, and use of the RA 11261 waiver have not been established by this research.",
+          "sourceIds": ["psa-birth-certificate-request"],
+          "supportingPassage": "The attempted PSA civil-registration URL and CRS portal could not be retrieved due to transport/DNS failures; no procedural passage was obtained.",
+          "accessedOn": "2026-10-26",
+          "conditionsAndExceptions": "Do not infer that PSA service is unavailable from a failed fetch. No fee or ordering channel is asserted.",
+          "researchStatus": "blocked"
+        }
+      ],
+      "conflictsOrOutdatedInformation": [
+        "Prior catalog wording described the benefit as applying to “eligible” jobseekers without spelling out the one-time limit and statutory exceptions. The guidance now states those limits and still warns that implementation is unconfirmed."
+      ],
+      "evidenceCompleteness": "partial",
+      "researchStatus": "blocked",
+      "independentApprovalStatus": "pending",
+      "reviewerQuestions": [
+        "Compare Sections 3–5, 8, and 10 against the Official Gazette PDF and confirm whether later amendments or implementing guidance affect the benefit.",
+        "Identify the current PSA-authorized birth-certificate request route, charges, delivery options, and any current fee-waiver procedure from an accessible official source."
+      ]
+    },
+    {
+      "requirementId": 2,
+      "title": "TIN",
+      "releaseDisposition": "included",
+      "sourceIds": ["ra11261-first-time-jobseekers-act", "bir-orus-portal"],
+      "originalPublicClaim": "An employer may request TIN details or registration; the current first-time employee BIR route is not confirmed.",
+      "proposedPublicInstruction": "If the employer asks for TIN details or registration, ask which step it will handle and confirm current instructions with BIR. RA 11261 concerns fee waivers for some employment documents, but this catalog has not verified TIN coverage, eligibility, proof, exceptions, or current procedure. Ask BIR and your barangay before relying on a waiver. This is not a TIN registration procedure.",
+      "claims": [
+        {
+          "claim": "Section 4(h) of RA 11261 names TIN among covered government transactions, subject to the Act's proof and exception provisions.",
+          "sourceIds": ["ra11261-first-time-jobseekers-act"],
+          "supportingPassage": "Secondary cross-check only: Lawphil's transcription says Section 4(h) lists “Tax Identification Number (TIN)” and Section 5 describes barangay certification. The Official Gazette article confirms the Act title and signing date and links its PDF, but the PDF text was not extracted or reviewed; the section wording is not yet supported by directly inspected official statutory text.",
+          "accessedOn": "2026-10-26",
+          "conditionsAndExceptions": "The benefit is one-time under Section 3. Sections 8 and 10 identify exclusions. Current BIR procedures and implementation are separate and not established by the Act's list.",
+          "researchStatus": "pending_independent_comparison"
+        },
+        {
+          "claim": "This review did not verify the current BIR route for an employee's first TIN, required documents or information, who files, timing, or any applicable charge.",
+          "sourceIds": ["bir-orus-portal"],
+          "supportingPassage": "The official ORUS URL returned a JavaScript application shell with title “ORUS”; no employee-registration instructions were exposed. The attempted BIR registration pages failed at transport/DNS.",
+          "accessedOn": "2026-10-26",
+          "conditionsAndExceptions": "The portal is a destination lead only and is not procedural evidence.",
+          "researchStatus": "blocked"
+        }
+      ],
+      "conflictsOrOutdatedInformation": [],
+      "evidenceCompleteness": "partial",
+      "researchStatus": "blocked",
+      "independentApprovalStatus": "pending",
+      "reviewerQuestions": [
+        "Compare the statutory sections and current amendments against the Official Gazette PDF.",
+        "Find current BIR-issued employee TIN instructions and distinguish employee steps from employer filing responsibilities before adding a procedure."
+      ]
+    },
+    {
+      "requirementId": 3,
+      "title": "SSS number",
+      "releaseDisposition": "included",
+      "sourceIds": ["sss-become-member-faq", "sss-list-of-valid-ids"],
+      "originalPublicClaim": "A person without an SS Number can use the SSS online application or a branch E-Center; SSS describes application data, a five-day continuation link, optional supporting-document upload, and employer reporting effective from the first employment day.",
+      "proposedPublicInstruction": "If you may already have an SS Number, confirm your record with SSS before starting another application. SSS directs people without an SS Number to its online application or a branch E-Center. Its described online flow permits proceeding without uploading a supporting document; the separate ID list is not a universal upload checklist. SSS says the employer reports a prospective employee for coverage effective on the first day of employment. Confirm current onboarding details with SSS and the employer.",
+      "claims": [
+        {
+          "claim": "SSS says people without an SS Number may apply through the SSS website or an SSS branch E-Center.",
+          "sourceIds": ["sss-become-member-faq"],
+          "supportingPassage": "“If without SS Number yet: Apply for SS number thru the SSS website; or Apply for SS number thru electronic center (E-Center) of SSS branch.”",
+          "accessedOn": "2026-10-26",
+          "conditionsAndExceptions": "The page describes first-time number registration. It separately identifies prior registrants and does not instruct existing members to obtain a second number.",
+          "researchStatus": "evidence_complete_pending_approval"
+        },
+        {
+          "claim": "The SSS online instructions say the email continuation link is valid for five calendar days and an application may proceed without uploading documentary requirements.",
+          "sourceIds": ["sss-become-member-faq"],
+          "supportingPassage": "The online procedure says the email link is valid for “five (5) calendar days only”; step 10 says, “You may proceed without submitting any documentary requirement.”",
+          "accessedOn": "2026-10-26",
+          "conditionsAndExceptions": "This refers only to the online procedure described on that page; it is not a universal statement about every SSS transaction or identity-check scenario.",
+          "researchStatus": "evidence_complete_pending_approval"
+        },
+        {
+          "claim": "SSS says an employer reports a prospective employee for coverage and employee coverage takes effect on the first day of employment.",
+          "sourceIds": ["sss-become-member-faq"],
+          "supportingPassage": "“A prospective employee (EE) shall be reported for coverage by his/her employer (ER). SSS coverage of EE shall take effect on the first day of his/her employment.”",
+          "accessedOn": "2026-10-26",
+          "conditionsAndExceptions": "This does not state an employer-specific deadline to provide an SS Number before hiring, nor does the page state an application fee.",
+          "researchStatus": "evidence_complete_pending_approval"
+        },
+        {
+          "claim": "The separate SSS identification list has a hierarchy of documents; it is not an instruction that every item must be uploaded with a first-time online application.",
+          "sourceIds": ["sss-list-of-valid-ids", "sss-become-member-faq"],
+          "supportingPassage": "The SSS list starts with a birth certificate, gives alternatives if unavailable, and then a two-document fallback. The SS Number online procedure separately says applicants may proceed without submitting documentary requirements.",
+          "accessedOn": "2026-10-26",
+          "conditionsAndExceptions": "Do not convert this list into a universal application-upload checklist; confirm identity evidence for the particular service with SSS.",
+          "researchStatus": "evidence_complete_pending_approval"
+        }
+      ],
+      "conflictsOrOutdatedInformation": [
+        "The SSS pages were accessible on the research date, but the online procedure does not establish a fee or a deadline imposed by a specific employer."
+      ],
+      "evidenceCompleteness": "complete_for_limited_claims",
+      "researchStatus": "pending",
+      "independentApprovalStatus": "pending",
+      "reviewerQuestions": [
+        "Confirm the quoted SSS page passages and whether they remain current.",
+        "Ensure the ID hierarchy is not represented as required online-upload evidence.",
+        "Approve only the limited claims above; do not infer a universal first-job requirement, a fee, or a pre-hiring deadline."
+      ]
+    },
+    {
+      "requirementId": 4,
+      "title": "PhilHealth number",
+      "releaseDisposition": "included",
+      "sourceIds": ["philhealth-direct-contributors", "philhealth-member-services"],
+      "originalPublicClaim": "PhilHealth lists workers with an established employee-employer relationship as direct contributors; the current first-time enrollment procedure is not confirmed.",
+      "proposedPublicInstruction": "When an employee-employer relationship is established, PhilHealth identifies government and private workers in that relationship as direct contributors. Its reviewed pages do not establish first-time enrollment steps or required documents. Ask the employer and confirm the current process with PhilHealth.",
+      "claims": [
+        {
+          "claim": "PhilHealth identifies government and private-sector workers with established employee-employer relations as qualified under the formal-economy direct-contributor program.",
+          "sourceIds": ["philhealth-direct-contributors"],
+          "supportingPassage": "Formal-economy page: “Workers in the government and private sectors who have established employee-employer relations are qualified under this program.” The linked member-category page further describes government employees, private employees, and other workers rendering services; it does not describe first-time enrollment.",
+          "accessedOn": "2026-10-26",
+          "conditionsAndExceptions": "The page supports this category only; it does not provide a first-time enrollment procedure.",
+          "researchStatus": "evidence_complete_pending_approval"
+        },
+        {
+          "claim": "PhilHealth lists member-record services and employer online premium remittance, but these pages do not establish who enrolls a first-time employee or what documents are required.",
+          "sourceIds": ["philhealth-member-services"],
+          "supportingPassage": "The services page says members can access records, contributions, and MDR online, and says the Electronic Premium Remittance System enables employers to remit premium contributions online.",
+          "accessedOn": "2026-10-26",
+          "conditionsAndExceptions": "Member access and employer remittance are not proof of first-time registration or employer enrollment responsibility.",
+          "researchStatus": "evidence_complete_pending_approval"
+        }
+      ],
+      "conflictsOrOutdatedInformation": [],
+      "evidenceCompleteness": "partial",
+      "researchStatus": "blocked",
+      "independentApprovalStatus": "pending",
+      "reviewerQuestions": [
+        "Verify current first-time member enrollment steps and employer/applicant responsibilities through a current PhilHealth issuance or page.",
+        "Do not infer registration requirements from the direct-contributor classification or member portal."
+      ]
+    },
+    {
+      "requirementId": 5,
+      "title": "Pag-IBIG number",
+      "releaseDisposition": "included",
+      "sourceIds": ["pagibig-membership-registration"],
+      "originalPublicClaim": "Preparation prompt only; the catalog does not tell users to register or pay because applicability and first-time process were not confirmed.",
+      "proposedPublicInstruction": "Use this only as a reminder to ask the employer whether a membership action applies and who handles it. Confirm current instructions with Pag-IBIG before submitting information or paying. No first-time registration procedure is published here.",
+      "claims": [
+        {
+          "claim": "This research could not confirm the current first-time employee membership process, applicability, documents, contribution rules, fees, or employer responsibilities.",
+          "sourceIds": ["pagibig-membership-registration"],
+          "supportingPassage": "The official membership page and membership FAQ returned a browser-verification challenge; no procedural page content was available to compare.",
+          "accessedOn": "2026-10-26",
+          "conditionsAndExceptions": "A blocked page is not evidence that registration is unnecessary or that the service is unavailable.",
+          "researchStatus": "blocked"
+        }
+      ],
+      "conflictsOrOutdatedInformation": [],
+      "evidenceCompleteness": "insufficient",
+      "researchStatus": "blocked",
+      "independentApprovalStatus": "pending",
+      "reviewerQuestions": [
+        "Obtain an accessible current Pag-IBIG membership issuance or official page and verify mandatory coverage, first-registration steps, documents, contribution rules, and employer responsibilities.",
+        "Until that evidence is available, keep this as a non-directive prompt or exclude it from a definitive checklist."
+      ]
+    },
+    {
+      "requirementId": 6,
+      "title": "NBI clearance",
+      "releaseDisposition": "included",
+      "sourceIds": ["ra11261-first-time-jobseekers-act", "nbi-clearance-portal", "nbi-clearance-citizens-charter"],
+      "originalPublicClaim": "An employer may request an NBI clearance; this is not presented as a universal first-job requirement. RA 11261 may provide a conditional one-time fee waiver; current NBI and Davao procedures are not confirmed.",
+      "proposedPublicInstruction": "Ask the employer whether an NBI clearance is required and which purpose or timing applies. The official NBI Citizen's Charter page lists two valid government-issued IDs and describes service paths, but its publication date and Davao applicability are unclear. Confirm current requirements and fees directly with NBI. RA 11261 concerns fee waivers for some employment documents, but this guide has not verified NBI coverage, eligibility, proof, exceptions, or current procedure. Ask your barangay and NBI before relying on a waiver.",
+      "claims": [
+        {
+          "claim": "The NBI Citizen's Charter page lists two valid government-issued identification cards and describes walk-in and online clearance service paths.",
+          "sourceIds": ["nbi-clearance-citizens-charter"],
+          "supportingPassage": "The page's “Requirements” section says “Two Valid Identification Cards issued by the government”; it includes walk-in, online without e-payment, and online with e-payment procedures and links the latter to clearance.nbi.gov.ph.",
+          "accessedOn": "2026-10-26",
+          "conditionsAndExceptions": "The charter page has no visible publication/effective date. Its specific fee amounts are unexplained and its listed address is in Manila, not Davao. Do not present those fees, local details, or procedures as current for Davao without confirmation.",
+          "researchStatus": "pending_currentness_and_independent_review"
+        },
+        {
+          "claim": "Section 4(b) of RA 11261 names NBI clearance among specified transactions covered by the Act, subject to barangay certification and statutory exceptions.",
+          "sourceIds": ["ra11261-first-time-jobseekers-act"],
+          "supportingPassage": "Secondary cross-check only: Lawphil's transcription says Section 4(b) lists “National Bureau of Investigation clearance” and Section 5 describes barangay certification. The Official Gazette article confirms the Act title and signing date and links its PDF, but the PDF text was not extracted or reviewed; the section wording is not yet supported by directly inspected official statutory text.",
+          "accessedOn": "2026-10-26",
+          "conditionsAndExceptions": "The waiver is one-time under Section 3; Sections 8 and 10 list exclusions. The exact official PDF and current implementation require reviewer confirmation.",
+          "researchStatus": "pending_independent_comparison"
+        },
+        {
+          "claim": "The NBI online portal is a service destination, but its JavaScript shell did not expose transaction instructions during this review.",
+          "sourceIds": ["nbi-clearance-portal"],
+          "supportingPassage": "The retrieved portal shell has the title “OFFICIAL NBI CLEARANCE” and an empty application root; the official NBI Citizen's Charter links to this portal.",
+          "accessedOn": "2026-10-26",
+          "conditionsAndExceptions": "Portal identity alone does not establish current eligibility, appointment requirements, payment amounts, processing time, or Davao office procedure.",
+          "researchStatus": "blocked"
+        }
+      ],
+      "conflictsOrOutdatedInformation": [
+        "The NBI Citizen's Charter lists PHP 115, PHP 165, and PHP 415 without explaining which transaction each amount applies to or showing a publication date. These amounts are intentionally withheld.",
+        "The charter's listed location and schedule are for Manila; they are not Davao City office evidence."
+      ],
+      "evidenceCompleteness": "partial",
+      "researchStatus": "blocked",
+      "independentApprovalStatus": "pending",
+      "reviewerQuestions": [
+        "Confirm the current NBI Citizen's Charter and its two-ID instruction with the agency.",
+        "Find current NBI application, appointment, payment, and Davao office instructions from an official NBI source.",
+        "Compare RA 11261 sections against the Official Gazette PDF and confirm current implementation before presenting the waiver as applicable."
+      ]
+    }
+  ],
+  "outOfScopeSourceRecords": [
+    {
+      "sourceId": "davao-cho-health-card-2026",
+      "disposition": "excluded_from_first_job_requirement_review",
+      "reason": "This source is linked to the separate Davao health-card goal, not any of the six First Job requirements. The City notice was retrieved on 2026-10-26 but remains historical and does not establish current applicability to all first-job applicants."
+    }
+  ]
+}

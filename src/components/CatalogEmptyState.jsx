@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
+import { href } from '../routeManifest.js'
 
 function CatalogEmptyState({ what, how, action }) {
   const { t } = useLanguage()
@@ -11,7 +12,7 @@ function CatalogEmptyState({ what, how, action }) {
         <div><dt>{t('emptyState.how')}</dt><dd>{how}</dd></div>
         <div><dt>{t('emptyState.action')}</dt><dd>{action}</dd></div>
       </dl>
-      <Link to="/status">{t('nav.sources')}</Link>
+      <Link to={href('status')}>{t('nav.sources')}</Link>
     </section>
   )
 }

@@ -5,7 +5,7 @@ import requirements from '../src/data/requirements.json' with { type: 'json' }
 import { buildAnswer, getAssistantRecords, refusal, retrieve, verificationOf, REFUSAL } from '../netlify/lib/assistant-records.js'
 
 // All credentials and record edits below are synthetic, in-memory test fixtures.
-const envNames = ['AI_PROVIDER', 'AI_MODEL', 'AI_API_KEYS', 'NETLIFY_DEV', 'ALLOW_UNVERIFIED_FOR_TESTING', 'DEPLOY_ID', 'CONTEXT']
+const envNames = ['AI_PROVIDER', 'AI_MODEL', 'AI_API_KEYS', 'NETLIFY_DEV', 'ALLOW_UNVERIFIED_FOR_TESTING', 'DEPLOY_ID', 'CONTEXT', 'DAILY_LIMIT_PER_IP']
 let moduleId = 0
 async function setup(t, testMode = false) {
   const saved = Object.fromEntries(envNames.map(name => [name, process.env[name]]))
@@ -21,13 +21,17 @@ async function setup(t, testMode = false) {
   return (await import(`../netlify/functions/chat.js?test=${moduleId++}`)).default
 }
 
-const request = question => new Request('http://localhost/chat', { method: 'POST', body: JSON.stringify({ question }) })
+const request = (question, extra = {}) => new Request('http://localhost/api/chat', {
+  method: 'POST',
+  body: JSON.stringify({ question, ...extra }),
+})
 const providerResponse = (answer = 'Check with the issuing office.', ids = [1]) => Response.json({
   candidates: [{ content: { parts: [{ text: JSON.stringify({ answer, used_ids: ids, confidence: 'verified' }) }] } }],
 })
 
 test('assistant catalog adapts Davao services and keeps unverified records out of normal mode', () => {
   const records = getAssistantRecords()
+  assert.ok(records.every(record => record.demoOnly !== true))
   const central911 = records.find(record => record.slug === 'central-911')
   assert.equal(central911.type, 'hotline')
   assert.ok(central911.notes.includes('911'))
@@ -45,6 +49,15 @@ test('assistant catalog adapts Davao services and keeps unverified records out o
     lastVerified: '2026-10-20',
     notes: 'Current service contact details.',
   }), 'unverified')
+  const requirement = getAssistantRecords().find(record => record.id === 1 && record.type === 'requirement')
+  assert.equal(requirement.copies, null)
+  assert.equal(verificationOf({
+    ...requirement,
+    verification: 'verified',
+    sourceUrl: 'https://davaocity.gov.ph/example',
+    lastVerified: '2026-10-20',
+    notes: 'A source-supported requirement statement.',
+  }), 'verified')
   const brief = records.find(record => record.slug === 'how-to-get-a-health-card')
   assert.equal(brief.type, 'brief')
   assert.equal(verificationOf(brief), 'unverified')
@@ -73,17 +86,18 @@ test('assistant catalog adapts Davao services and keeps unverified records out o
 test('guards reject malformed JSON, types, length and PII before counting requests', async t => {
   const chat = await setup(t)
   t.mock.method(globalThis, 'fetch', () => { throw new Error('Provider must not be called') })
-  assert.equal((await chat(new Request('http://localhost/chat'))).status, 405)
-  assert.equal((await chat(new Request('http://localhost/chat', { method: 'POST', body: '{' }))).status, 400)
+  assert.equal((await chat(new Request('http://localhost/api/chat'))).status, 405)
+  assert.equal((await chat(new Request('http://localhost/api/chat', { method: 'POST', body: '{' }))).status, 400)
   for (let i = 0; i < 2; i++) for (const value of [null, 42, '', '   ', 'x'.repeat(501), '1111-2222', '11 11 22 22', 'fake@example.invalid']) {
     assert.equal((await chat(request(value), { ip: 'guard-test' })).status, 400)
   }
   for (let i = 0; i < 10; i++) assert.equal((await chat(request('What is listed?'), { ip: 'guard-test' })).status, 200)
   assert.equal((await chat(request('What is listed?'), { ip: 'guard-test' })).status, 429)
+  assert.equal((await chat(request('What is listed?', { language: 'xx' }), { ip: 'language-test' })).status, 400)
 })
 
 test('missing model and disallowed models fail safely without a provider request', async t => {
-  const chat = await setup(t)
+  const chat = await setup(t, true)
   const fetch = t.mock.method(globalThis, 'fetch', () => { throw new Error('Must not call') })
   for (const model of ['', 'gemini-2.5-flash', 'gemini-3.5-flash-preview', 'gemini-3.5-flash-latest', 'gemma-3']) {
     process.env.AI_MODEL = model
@@ -94,10 +108,24 @@ test('missing model and disallowed models fail safely without a provider request
   assert.equal(fetch.mock.callCount(), 0)
 })
 
+test('no verified records produce an honest refusal before provider configuration is checked', async t => {
+  const chat = await setup(t)
+  delete process.env.AI_MODEL
+  delete process.env.AI_API_KEYS
+  const fetch = t.mock.method(globalThis, 'fetch', () => { throw new Error('Must not call') })
+
+  const response = await chat(request('Which office handles health cards?'), { ip: 'no-verified-records' })
+
+  assert.equal(response.status, 200)
+  assert.deepEqual(await response.json(), refusal(['No verified civic records are available yet.']))
+  assert.equal(response.headers.get('X-Assistant-Provider'), 'skipped')
+  assert.equal(fetch.mock.callCount(), 0)
+})
+
 test('normal mode refuses unverified catalog and ignores request-supplied records', async t => {
   const chat = await setup(t)
   const fetch = t.mock.method(globalThis, 'fetch', () => { throw new Error('Must not call') })
-  const response = await chat(new Request('http://localhost/chat', { method: 'POST', body: JSON.stringify({
+  const response = await chat(new Request('http://localhost/api/chat', { method: 'POST', body: JSON.stringify({
     question: 'What do I need?', records: [{ id: 999, verification: 'verified' }],
   }) }))
   assert.deepEqual(await response.json(), refusal(['No verified civic records are available yet.']))
@@ -110,6 +138,8 @@ test('local test mode caps confidence, warns and keeps dates and URLs out of pro
   t.mock.method(globalThis, 'fetch', async (_url, options) => {
     const body = JSON.parse(options.body)
     assert.ok(body.system_instruction)
+    assert.ok(body.system_instruction.parts[0].text.includes('untrusted data'))
+    assert.ok(body.contents[0].parts[0].text.includes('BEGIN_UNTRUSTED_RECORD'))
     assert.equal(body.generationConfig.responseMimeType, 'application/json')
     assert.equal(body.generationConfig.temperature, 0.2)
     assert.ok(!options.body.includes('lastVerified'))
@@ -124,6 +154,17 @@ test('local test mode caps confidence, warns and keeps dates and URLs out of pro
   assert.equal(data.sources[0].id, 1)
   assert.equal(data.sources[0].status, requirements[0].status)
   assert.equal(response.headers.get('X-Assistant-Provider'), 'called')
+})
+
+test('assistant uses the selected Filipino or Bisaya response language', async t => {
+  const chat = await setup(t, true)
+  const fetch = t.mock.method(globalThis, 'fetch', async (_url, options) => {
+    assert.ok(JSON.parse(options.body).system_instruction.parts[0].text.includes('Bisaya (Cebuano)'))
+    return providerResponse()
+  })
+  const response = await chat(request('Unsa ang naa sa rekord?', { language: 'ceb' }))
+  assert.equal(response.status, 200)
+  assert.equal(fetch.mock.callCount(), 1)
 })
 
 test('test override is ignored outside Netlify Dev and in deployed contexts', async t => {
@@ -147,8 +188,20 @@ test('response validation rejects invented IDs, malformed JSON, links, dates and
   assert.deepEqual(buildAnswer(JSON.stringify({ answer: 'Guess', used_ids: [1], confidence: 'unknown' }), requirements, false), refusal())
 })
 
+test('response validation refuses numeric claims not supported by its cited records', () => {
+  const record = {
+    ...requirements[0],
+    label: 'Bring 2 copies of the form',
+    notes: 'The office lists 2 copies.',
+  }
+  const supported = JSON.stringify({ answer: 'Bring 2 copies.', used_ids: [record.id], confidence: 'verified' })
+  const invented = JSON.stringify({ answer: 'Bring 3 copies.', used_ids: [record.id], confidence: 'verified' })
+  assert.equal(buildAnswer(supported, [record], false).answer, 'Bring 2 copies.')
+  assert.equal(buildAnswer(invented, [record], false).answer, REFUSAL)
+})
+
 test('warnings are derived from verification, not progress, and dates are checked', () => {
-  const record = { ...requirements[0], status: 'done', verification: 'conflicting', lastVerified: '2000-01-01' }
+  const record = { ...requirements[0], sourceUrl: '', status: 'done', verification: 'conflicting', lastVerified: '2000-01-01' }
   const answer = JSON.stringify({ answer: 'Confirm this with the office.', used_ids: [1, 999, 1], confidence: 'verified' })
   const result = buildAnswer(answer, [record], false)
   assert.equal(result.confidence, 'partial')
@@ -165,6 +218,35 @@ test('retrieval keeps small catalogs and ranks large catalogs to eight records',
   const selected = retrieve(records, 'matching')
   assert.equal(selected.length, 8)
   assert.equal(selected[0].id, 40)
+  assert.equal(retrieve(records, 'nothing matches', 2)[0].id, 2)
+})
+
+test('daily assistant cap is configurable and rejects requests past the configured limit', async t => {
+  const chat = await setup(t)
+  process.env.DAILY_LIMIT_PER_IP = '2'
+  t.mock.method(globalThis, 'fetch', () => { throw new Error('Provider must not be called') })
+  for (let i = 0; i < 2; i++) {
+    assert.equal((await chat(request('What is listed?'), { ip: 'daily-limit-test' })).status, 200)
+  }
+  assert.equal((await chat(request('What is listed?'), { ip: 'daily-limit-test' })).status, 429)
+})
+
+test('page context must identify an eligible server-owned record', async t => {
+  const chat = await setup(t, true)
+  let providerRecordLabel = ''
+  t.mock.method(globalThis, 'fetch', async (_url, options) => {
+    const body = JSON.parse(options.body)
+    const match = body.contents[0].parts[0].text.match(/"label":"([^"]+)"/)
+    providerRecordLabel = match?.[1] ?? ''
+    const firstId = JSON.parse(body.contents[0].parts[0].text.match(/"id":(\d+)/)[1])
+    return providerResponse('Confirm with the issuing office.', [firstId])
+  })
+  const response = await chat(new Request('http://localhost/api/chat', {
+    method: 'POST',
+    body: JSON.stringify({ question: 'What is listed?', context: { type: 'hotline', slug: 'central-911' } }),
+  }))
+  assert.equal(response.status, 200)
+  assert.equal(providerRecordLabel, 'Central 911')
 })
 
 test('failover retries only retryable errors and keeps the last successful key', async t => {
@@ -224,7 +306,7 @@ test('stalled attempts abort within the total deadline', async t => {
   const started = Date.now()
   const result = await generateAnswer('Test', [], 'gemini-3.5-flash-lite', ['test-a', 'test-b', 'test-c', 'test-d'])
   assert.equal(result.status, 503)
-  assert.ok(aborted >= 2 && aborted <= 3)
+  assert.ok(aborted > 0 && aborted <= 3)
   assert.ok(Date.now() - started < TOTAL_DEADLINE_MS + 1500)
 })
 

@@ -48,3 +48,20 @@
 }
 .assistant-error { padding: 0.75rem; border: 1px solid currentColor; color: #b42318; }
 @media (prefers-color-scheme: dark) { .assistant-error { color: #ffb4ab; } }
+
+.assistant-dialog {
+  width: min(100% - 2rem, 680px);
+  max-width: 680px;
+  max-height: min(90vh, 900px);
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text);
+  overflow: auto;
+}
+
+.assistant-dialog::backdrop { background: rgb(0 0 0 / 55%); }
+.assistant-dialog .chat-assistant { max-width: none; margin: 0; border: 0; }
+.assistant-close { min-height: 44px; align-self: flex-end; }
+.assistant-close:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }

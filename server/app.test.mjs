@@ -59,7 +59,22 @@ function createFixture(db, id) {
 
 async function startHarness(t) {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'requisito-api-test-'))
-  const db = openDatabase(path.join(directory, 'test.sqlite'))
+  let db
+  let server
+  t.after(async () => {
+    try {
+      if (server?.listening) {
+        await new Promise((resolve, reject) => server.close((error) => error ? reject(error) : resolve()))
+      }
+    } finally {
+      try {
+        db?.close()
+      } finally {
+        fs.rmSync(directory, { recursive: true, force: true })
+      }
+    }
+  })
+  db = openDatabase(path.join(directory, 'test.sqlite'))
   const config = {
     port: 0,
     databasePath: path.join(directory, 'test.sqlite'),
@@ -70,18 +85,21 @@ async function startHarness(t) {
     now: () => new Date(`${verificationDate}T08:00:00.000Z`),
   }
   const app = createApp({ db, config })
-  const server = app.listen(0, '127.0.0.1')
+  server = app.listen(0, '127.0.0.1')
   await new Promise((resolve, reject) => {
-    server.once('listening', resolve)
-    server.once('error', reject)
+    const onListening = () => {
+      server.off('error', onError)
+      resolve()
+    }
+    const onError = (error) => {
+      server.off('listening', onListening)
+      reject(error)
+    }
+    server.once('listening', onListening)
+    server.once('error', onError)
   })
   const address = server.address()
   const baseUrl = `http://127.0.0.1:${address.port}`
-  t.after(async () => {
-    await new Promise((resolve, reject) => server.close((error) => error ? reject(error) : resolve()))
-    db.close()
-    fs.rmSync(directory, { recursive: true, force: true })
-  })
   return { db, config, baseUrl }
 }
 
@@ -229,7 +247,7 @@ test('every role is checked against read, edit, verify, review, and admin-only r
       now: harness.config.now().toISOString(),
     })
     const decision = await request(harness, `/api/review/${decisionRequestId}/decision`, {
-      method: 'POST', token, body: { decision: 'rejected' },
+      method: 'POST', token, body: { decision: 'rejected', note: 'Rejected after checking the source evidence.' },
     })
     assert.equal(decision.status, role === 'viewer' ? 403 : 200, `${role} POST verification decision`)
 
@@ -273,14 +291,18 @@ test('state-changing requests require the portal header and matching Origin', { 
   assert.equal(missingOrigin.status, 403)
 })
 
-test('verification endpoint rejects look-alike official hosts and self-approval', { skip: integrationSkip }, async (t) => {
+test('verification decisions enforce independent reviewers through the API', { skip: integrationSkip }, async (t) => {
   const harness = await startHarness(t)
+  const submitter = await createUser(harness.db, 'reviewer')
   const reviewer = await createUser(harness.db, 'reviewer')
+  const viewer = await createUser(harness.db, 'viewer')
   createFixture(harness.db, 'verification-fixture')
-  const token = issueSession(harness, reviewer)
+  const submitterToken = issueSession(harness, submitter)
+  const reviewerToken = issueSession(harness, reviewer)
+  const viewerToken = issueSession(harness, viewer)
   const invalidSource = await request(harness, '/api/records/barangay/verification-fixture/verification', {
     method: 'POST',
-    token,
+    token: submitterToken,
     body: {
       source_url: 'https://psa.gov.ph.evil.example/path',
       source_accessed_on: verificationDate,
@@ -290,19 +312,83 @@ test('verification endpoint rejects look-alike official hosts and self-approval'
   assert.equal(invalidSource.status, 400)
   const created = await request(harness, '/api/records/barangay/verification-fixture/verification', {
     method: 'POST',
-    token,
+    token: submitterToken,
     body: {
       source_url: 'https://psa.gov.ph/system/files/Region%20XI.xlsx',
       source_accessed_on: verificationDate,
       note: 'Compared the test-only record fields against this source.',
     },
   })
+  assert.equal(created.status, 201)
   const { requestId } = await created.json()
   const selfApproval = await request(harness, `/api/review/${requestId}/decision`, {
-    method: 'POST', token, body: { decision: 'approved' },
+    method: 'POST',
+    token: submitterToken,
+    body: { decision: 'approved', reviewer_id: reviewer.id, note: 'Reviewed the source passage and claim.' },
   })
   assert.equal(selfApproval.status, 403)
+  assert.deepEqual(await selfApproval.json(), { error: 'You cannot decide your own verification request.' })
+  const selfRejection = await request(harness, `/api/review/${requestId}/decision`, {
+    method: 'POST',
+    token: submitterToken,
+    body: { decision: 'rejected', user_id: reviewer.id, note: 'Reviewed the source passage and claim.' },
+  })
+  assert.equal(selfRejection.status, 403)
+  assert.deepEqual(await selfRejection.json(), { error: 'You cannot decide your own verification request.' })
+  const unauthenticated = await request(harness, `/api/review/${requestId}/decision`, {
+    method: 'POST',
+    body: { decision: 'approved' },
+  })
+  assert.equal(unauthenticated.status, 401)
+  const unauthorized = await request(harness, `/api/review/${requestId}/decision`, {
+    method: 'POST',
+    token: viewerToken,
+    body: { decision: 'approved' },
+  })
+  assert.equal(unauthorized.status, 403)
+  const invalidDecision = await request(harness, `/api/review/${requestId}/decision`, {
+    method: 'POST',
+    token: reviewerToken,
+    body: { decision: 'verified' },
+  })
+  assert.equal(invalidDecision.status, 400)
+  const missingReviewNote = await request(harness, `/api/review/${requestId}/decision`, {
+    method: 'POST',
+    token: reviewerToken,
+    body: { decision: 'approved', note: 'Too short' },
+  })
+  assert.equal(missingReviewNote.status, 400)
+  const missingRequest = await request(harness, '/api/review/999999/decision', {
+    method: 'POST',
+    token: reviewerToken,
+    body: { decision: 'rejected', note: 'Reviewed the available source evidence.' },
+  })
+  assert.equal(missingRequest.status, 404)
+  const unchangedRequest = harness.db.prepare('SELECT status, decided_by FROM verification_requests WHERE id = ?').get(requestId)
+  assert.equal(unchangedRequest.status, 'pending')
+  assert.equal(unchangedRequest.decided_by, null)
   assert.equal(harness.db.prepare("SELECT verification FROM records WHERE id = 'verification-fixture'").get().verification, 'unverified')
+  assert.equal(harness.db.prepare("SELECT COUNT(*) AS count FROM audit_log WHERE action IN ('verification.approved', 'verification.rejected')").get().count, 0)
+
+  const approved = await request(harness, `/api/review/${requestId}/decision`, {
+    method: 'POST',
+    token: reviewerToken,
+    body: { decision: 'approved', reviewer_id: submitter.id, note: 'Reviewed the available source evidence.' },
+  })
+  assert.equal(approved.status, 200)
+  assert.equal((await approved.json()).record.verification, 'verified')
+  const alreadyDecided = await request(harness, `/api/review/${requestId}/decision`, {
+    method: 'POST',
+    token: reviewerToken,
+    body: { decision: 'rejected', note: 'Reviewed the available source evidence.' },
+  })
+  assert.equal(alreadyDecided.status, 404)
+  assert.equal(harness.db.prepare('SELECT status FROM verification_requests WHERE id = ?').get(requestId).status, 'approved')
+  assert.equal(
+    harness.db.prepare('SELECT decision_note FROM verification_requests WHERE id = ?').get(requestId).decision_note,
+    'Reviewed the available source evidence.',
+  )
+  assert.equal(harness.db.prepare("SELECT COUNT(*) AS count FROM audit_log WHERE action = 'verification.approved'").get().count, 1)
 })
 
 test('record edits reject non-HTTPS source URLs without changing stored data', { skip: integrationSkip }, async (t) => {

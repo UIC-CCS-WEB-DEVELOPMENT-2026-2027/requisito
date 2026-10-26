@@ -12,6 +12,7 @@ import {
   getProcurement,
   getElections,
   getAccountability,
+  getGoals,
   getOfficials,
   getServiceBySlug,
   getServices,
@@ -59,8 +60,9 @@ test('facts, offices, and dated updates remain unverified source records', () =>
 test('search trims and lowercases query, groups results, and finds real barangays', () => {
   const results = searchAll('  CENTRAL 911 ')
   assert.deepEqual(Object.keys(results), [
-    'services', 'barangays', 'requirements', 'updates', 'history', 'briefs',
-    'budget', 'procurement', 'elections', 'accountability', 'districts',
+    'goals', 'services', 'barangays', 'requirements', 'sources', 'updates',
+    'history', 'briefs', 'budget', 'procurement', 'elections', 'accountability',
+    'districts',
   ])
   assert.equal(results.services.length, 1)
   assert.equal(results.services[0].title, 'Central 911')
@@ -68,6 +70,31 @@ test('search trims and lowercases query, groups results, and finds real barangay
   assert.equal(searchAll('district').districts.length, 11)
   assert.equal(Object.values(searchAll('   ')).flat().length, 0)
   assert.equal(searchAll('health card').briefs.length, 1)
+})
+
+test('search discovers goals, canonical guides, agencies, and their official sources', () => {
+  assert.equal(searchAll('first job').goals[0].slug, 'first-job')
+  const requirementResult = searchAll('SSS number').requirements[0]
+  assert.equal(requirementResult.slug, 'first-job-sss-number')
+  assert.deepEqual(requirementResult.sourceAgencies, ['Social Security System'])
+  assert.deepEqual(requirementResult.sourceTitles, ['Be an SSS Member', 'List of Valid IDs'])
+  assert.deepEqual(requirementResult.linkedSources.map(({ id, url }) => ({ id, url })), [
+    {
+      id: 'sss-become-member-faq',
+      url: 'https://www.sss.gov.ph/become-an-sss-member/',
+    },
+    {
+      id: 'sss-list-of-valid-ids',
+      url: 'https://www.sss.gov.ph/list-of-valid-ids/',
+    },
+  ])
+  assert.equal(requirementResult.verification, 'unverified')
+  const agencyResults = searchAll('Social Security System').sources
+  assert.equal(agencyResults[0].id, 'sss-become-member-faq')
+  assert.deepEqual(agencyResults[0].linkedRequirementSlugs, ['first-job-sss-number'])
+  assert.equal(agencyResults[0].verification, 'unverified')
+  assert.equal(searchAll('RA 11261').sources[0].id, 'ra11261-first-time-jobseekers-act')
+  assert.doesNotThrow(() => searchAll('<script>alert(1)</script>'))
 })
 
 test('Part 2 catalogs preserve empty data states and exclude samples from monitor counts', () => {
@@ -96,5 +123,5 @@ test('dashboard total shares the audit scope and its unverified count matches st
   const counts = getSummaryCounts()
   assert.equal(counts.total, Object.values(counts.collections).reduce((total, count) => total + count, 0))
   assert.equal(counts.unverified, getStatusReport().knownGaps.length)
-  assert.equal(counts.goals, 7)
+  assert.equal(counts.goals, getGoals().filter(goal => !goal.isSample).length)
 })

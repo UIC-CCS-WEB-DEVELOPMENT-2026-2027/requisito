@@ -6,8 +6,10 @@ import { useLanguage } from './i18n/LanguageContext.jsx'
 
 const Home = lazy(() => import('./pages/Home.jsx'))
 const Goals = lazy(() => import('./pages/Goals.jsx'))
+const GoalDetail = lazy(() => import('./pages/GoalDetail.jsx'))
 const Checklist = lazy(() => import('./pages/Checklist.jsx'))
 const Documents = lazy(() => import('./pages/Documents.jsx'))
+const DocumentGuide = lazy(() => import('./pages/DocumentGuide.jsx'))
 const QuestionFlow = lazy(() => import('./pages/QuestionFlow.jsx'))
 const NotFound = lazy(() => import('./pages/NotFound.jsx'))
 const Login = lazy(() => import('./pages/Login.jsx'))
@@ -34,7 +36,18 @@ const Participate = lazy(() => import('./pages/Participate.jsx'))
 const Integrity = lazy(() => import('./pages/Integrity.jsx'))
 const Districts = lazy(() => import('./pages/Districts.jsx'))
 const DistrictProfile = lazy(() => import('./pages/DistrictProfile.jsx'))
+const ServiceGuides = lazy(() => import('./pages/ServiceGuides.jsx'))
+const WhereToGo = lazy(() => import('./pages/WhereToGo.jsx'))
+const FeaturePage = lazy(() => import('./pages/FeaturePage.jsx'))
 const AdminApp = lazy(() => import('./admin/AdminApp.jsx'))
+import { routeManifest } from './routeManifest.js'
+
+const pages = {
+  Home, Goals, GoalDetail, Checklist, Documents, DocumentGuide, QuestionFlow, NotFound, Login, Services, ServiceDetail,
+  Barangays, BarangayProfile, AboutDavao, Updates, Officials, Search, Status, Contribute, Credits,
+  History, Budget, Procurement, Briefs, Monitor, OfficialProfile, Elections, Accountability,
+  Participate, Integrity, Districts, DistrictProfile, ServiceGuides, WhereToGo, FeaturePage,
+}
 
 function RouteLoading() {
   const { t } = useLanguage()
@@ -45,41 +58,22 @@ function RouteLoading() {
 function App() {
   return (
     <Suspense fallback={<RouteLoading />}>
-    <Routes>
-      <Route path="/admin/*" element={<AdminApp />} />
-      <Route element={<Layout />}>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/goals" element={<ProtectedRoute><Goals /></ProtectedRoute>} />
-        <Route path="/checklist" element={<ProtectedRoute><Checklist /></ProtectedRoute>} />
-        <Route path="/documents" element={<ProtectedRoute><Documents /></ProtectedRoute>} />
-        <Route path="/questions" element={<QuestionFlow />} />
-        <Route path="/services" element={<Services />} />
-        <Route path="/services/:slug" element={<ServiceDetail />} />
-        <Route path="/barangays" element={<Barangays />} />
-        <Route path="/barangays/:slug" element={<BarangayProfile />} />
-        <Route path="/districts" element={<Districts />} />
-        <Route path="/districts/:name" element={<DistrictProfile />} />
-        <Route path="/about-davao" element={<AboutDavao />} />
-        <Route path="/updates" element={<Updates />} />
-        <Route path="/officials" element={<Officials />} />
-        <Route path="/officials/:slug" element={<OfficialProfile />} />
-        <Route path="/search" element={<Search />} />
-        <Route path="/status" element={<Status />} />
-        <Route path="/contribute" element={<Contribute />} />
-        <Route path="/credits" element={<Credits />} />
-        <Route path="/history" element={<History />} />
-        <Route path="/budget" element={<Budget />} />
-        <Route path="/procurement" element={<Procurement />} />
-        <Route path="/briefs" element={<Briefs />} />
-        <Route path="/monitor" element={<Monitor />} />
-        <Route path="/elections" element={<Elections />} />
-        <Route path="/accountability" element={<Accountability />} />
-        <Route path="/participate" element={<Participate />} />
-        <Route path="/integrity" element={<Integrity />} />
-        <Route path="*" element={<NotFound />} />
-      </Route>
-    </Routes>
+      <Routes>
+        <Route path="/admin/*" element={<AdminApp />} />
+        <Route element={<Layout />}>
+          {routeManifest.map((route) => {
+            const Page = pages[route.component]
+            const page = <Page {...(route.feature ? { feature: route.feature } : {})} />
+            return (
+              <Route
+                key={route.id}
+                path={route.path}
+                element={route.access === 'protected' ? <ProtectedRoute>{page}</ProtectedRoute> : page}
+              />
+            )
+          })}
+        </Route>
+      </Routes>
     </Suspense>
   )
 }

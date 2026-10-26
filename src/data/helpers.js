@@ -2,7 +2,7 @@
 // Helpers return copies so pages and cards can use local data without mutating the source catalogs.
 import goals from './goals.json' with { type: 'json' }
 import requirements from './requirements.json' with { type: 'json' }
-import documents from './documents.json' with { type: 'json' }
+import requirementSources from './requirementSources.json' with { type: 'json' }
 import services from './services.json' with { type: 'json' }
 import barangays from './barangays.json' with { type: 'json' }
 import officials from './officials.json' with { type: 'json' }
@@ -14,6 +14,7 @@ import procurement from './procurement.json' with { type: 'json' }
 import briefs from './briefs.json' with { type: 'json' }
 import elections from './elections.json' with { type: 'json' }
 import accountability from './accountability.json' with { type: 'json' }
+import featureCatalogs from './featureCatalogs.json' with { type: 'json' }
 import sourceWatchState from '../../data/source-watch-state.json' with { type: 'json' }
 import { planningQuestions, planningRules } from './planningRules.js'
 import { generatePlan } from '../utils/planGenerator.js'
@@ -29,7 +30,20 @@ const administrativeDistricts = [
 
 // Return copies so callers can use goals without changing the sample catalog.
 export function getGoals() {
-  return goals.map((goal) => ({ ...goal }))
+  return goals.map((goal) => ({
+    ...goal,
+    requirementIds: [...(goal.requirementIds ?? [])],
+  }))
+}
+
+export function getGoalById(goalId) {
+  const goal = goals.find((item) => item.id === goalId && !item.isSample)
+  return goal ? { ...goal, requirementIds: [...(goal.requirementIds ?? [])] } : null
+}
+
+export function getGoalBySlug(slug) {
+  const goal = goals.find((item) => item.slug === slug && !item.isSample)
+  return goal ? { ...goal, requirementIds: [...(goal.requirementIds ?? [])] } : null
 }
 
 // Return service copies with nested contact details isolated from the catalog.
@@ -130,6 +144,40 @@ export function getBriefs() {
   return briefs.map((item) => ({ ...item, steps: [...item.steps], whatYouNeed: [...item.whatYouNeed] }))
 }
 
+// Empty feature catalogs stay explicit until reviewed, source-backed records exist.
+export function getFeatureRecords(catalogName) {
+  const records = featureCatalogs[catalogName]
+  if (!Array.isArray(records)) throw new Error(`Unknown feature catalog: ${catalogName}`)
+  return records.map((record) => structuredClone(record))
+}
+
+// Finder results are limited to complete briefs whose source review is verified.
+export function getVerifiedGuides(category = '') {
+  return filterVerifiedGuides(getBriefs(), category)
+}
+
+export function filterVerifiedGuides(guides, category = '') {
+  return guides.filter((brief) =>
+    brief.verification === 'verified' &&
+    (!category || brief.category === category) &&
+    Boolean(brief.title?.trim()) &&
+    Boolean(brief.description?.trim()) &&
+    hasHttpsSource(brief.sourceUrl) &&
+    Array.isArray(brief.steps) &&
+    brief.steps.length > 0 &&
+    Array.isArray(brief.whatYouNeed),
+  )
+}
+
+function hasHttpsSource(value) {
+  try {
+    const source = new URL(value)
+    return source.protocol === 'https:' && !source.username && !source.password
+  } catch {
+    return false
+  }
+}
+
 export function getElections() {
   return elections.map((item) => ({ ...item }))
 }
@@ -140,30 +188,96 @@ export function getAccountability() {
 
 // Return copies of matching requirements to keep the sample catalog unchanged.
 export function getRequirementsByGoal(goalId) {
-  return requirements.filter((requirement) => requirement.goalId === goalId)
-    .map((requirement) => ({ ...requirement }))
+  const goal = goals.find((item) => item.id === goalId)
+  if (!goal) return []
+  const byId = new Map(requirements.map((item) => [item.id, item]))
+  return [...new Set(goal.requirementIds ?? [])]
+    .map((id) => byId.get(id))
+    .filter(Boolean)
+    .map(copyRequirement)
 }
 
-// Return copies so callers can use documents without changing the sample records.
+// Document guides are the same canonical records used to build goal checklists.
 export function getDocuments() {
-  return documents.map((document) => ({ ...document }))
+  return requirements.filter((requirement) => requirement.guideInstructions)
+    .map((requirement) => getDocumentGuideBySlug(requirement.slug))
+}
+
+export function getDocumentGuideBySlug(slug) {
+  const requirement = requirements.find((item) => item.slug === slug && item.guideInstructions)
+  if (!requirement) return null
+  const linkedGoals = goals.filter((goal) =>
+    !goal.isSample && (goal.requirementIds ?? []).includes(requirement.id),
+  )
+  const sourcesById = new Map(requirementSources.map((source) => [source.id, source]))
+  return {
+    ...copyRequirement(requirement),
+    goals: linkedGoals.map((goal) => ({ ...goal, requirementIds: [...goal.requirementIds] })),
+    sources: (requirement.sourceIds ?? [])
+      .map((id) => sourcesById.get(id))
+      .filter(Boolean)
+      .map((source) => structuredClone(source)),
+  }
+}
+
+export function getRequirementSources() {
+  return requirementSources.map((source) => structuredClone(source))
 }
 
 // Derive dashboard counts from the catalog so totals follow the sample records.
 export function getSummaryCounts() {
   return {
     ...getRecordCounts(),
-    goals: goals.length,
+    goals: goals.filter((goal) => !goal.isSample).length,
     unverified: getStatusReport().knownGaps.length,
   }
 }
 
 // Search public directories and return matching records grouped by type.
 export function searchAll(query) {
+  const sourcesById = new Map(requirementSources.map((source) => [source.id, source]))
+  const requirementsWithSources = withoutSamples(requirements).map((requirement) => {
+    const linkedSources = (requirement.sourceIds ?? [])
+      .map((sourceId) => sourcesById.get(sourceId))
+      .filter(Boolean)
+    return {
+      ...requirement,
+      sourceAgencies: [...new Set(linkedSources.map((source) => source.agency))],
+      sourceTitles: linkedSources.map((source) => source.title),
+      sourceClaims: linkedSources.flatMap((source) => source.supports ?? []),
+      linkedSources: linkedSources.map((source) => ({
+        id: source.id,
+        title: source.title,
+        url: source.url,
+        verification: source.verification,
+        lastChecked: source.lastChecked,
+      })),
+    }
+  })
+  const requirementSlugsBySourceId = new Map()
+  for (const requirement of requirementsWithSources) {
+    for (const sourceId of requirement.sourceIds ?? []) {
+      const slugs = requirementSlugsBySourceId.get(sourceId) ?? []
+      slugs.push(requirement.slug)
+      requirementSlugsBySourceId.set(sourceId, slugs)
+    }
+  }
+
   const searchable = {
+    goals: withoutSamples(goals),
     services: withoutSamples(services),
     barangays: withoutSamples(barangays),
-    requirements: withoutSamples(requirements),
+    requirements: requirementsWithSources,
+    sources: requirementSources.map((source) => ({
+      ...source,
+      searchTerms: [source.id.replace(/([a-z])(\d)/gi, '$1 $2').replaceAll('-', ' ')],
+      description: (source.supports ?? []).join(' '),
+      notes: source.limitations ?? '',
+      category: source.agency,
+      verification: source.verification,
+      sourceUrl: source.url,
+      linkedRequirementSlugs: requirementSlugsBySourceId.get(source.id) ?? [],
+    })),
     updates: withoutSamples(updates),
     history: withoutSamples(history),
     briefs: withoutSamples(briefs),
@@ -189,7 +303,9 @@ export function searchAll(query) {
     type,
     rankSearchRecords(records, query)
       .map((record) => type === 'services' ? copyService(record) :
-        type === 'briefs' ? { ...record, steps: [...record.steps], whatYouNeed: [...record.whatYouNeed] } : { ...record }),
+        type === 'briefs' ? { ...record, steps: [...record.steps], whatYouNeed: [...record.whatYouNeed] } :
+          type === 'sources' ? { ...record, supports: [...record.supports], linkedRequirementSlugs: [...record.linkedRequirementSlugs] } :
+            { ...record }),
   ]))
 }
 
@@ -259,11 +375,14 @@ export function getSourceWatchStatus() {
 }
 
 // Copy questions and options so callers cannot change the sample choices.
-export function getPlanningQuestions() {
-  return planningQuestions.map((question) => ({
+export function getPlanningQuestions(goalId) {
+  return planningQuestions
+    .filter((question) => goalId === undefined || !question.goalIds || question.goalIds.includes(goalId))
+    .map((question) => ({
     ...question,
+    ...(question.goalIds ? { goalIds: [...question.goalIds] } : {}),
     options: question.options.map((option) => ({ ...option })),
-  }))
+    }))
 }
 
 function copyService(service) {
@@ -294,15 +413,15 @@ export function getChecklistPlan(goalId, answers = {}) {
   if (!goal) {
     return { steps: [], unresolved: [], cycles: [], warnings: ['Unknown goal.'], ok: false }
   }
-  const catalog = getRequirementsByGoal(goalId)
+  const catalog = requirements.map(copyRequirement)
   const result = generatePlan(
-    { id: String(goalId), requirements: catalog.map((item) => String(item.id)) },
+    { id: String(goalId), requirements: [...new Set(goal.requirementIds ?? [])].map(String) },
     answers,
     catalog.map((item) => ({
+      ...planningRules[item.id],
       ...item,
       id: String(item.id),
       title: item.label,
-      ...planningRules[item.id],
     })),
   )
   const records = new Map(catalog.map((item) => [String(item.id), item]))
@@ -311,7 +430,11 @@ export function getChecklistPlan(goalId, answers = {}) {
     steps: result.steps.map((step) => ({
       ...step,
       id: step.kind === 'requirement' ? records.get(step.id).id : step.id,
-      requirement: records.has(step.id) ? { ...records.get(step.id) } : null,
+      requirement: records.has(step.id) ? copyRequirement(records.get(step.id)) : null,
     })),
   }
+}
+
+function copyRequirement(requirement) {
+  return structuredClone(requirement)
 }
