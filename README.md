@@ -226,9 +226,9 @@ changes manually; source-watch never changes record verification metadata.
 - The assistant answers only from eligible verified records in normal mode.
   New history, brief, and budget records are included only after they meet the
   verified-source checks. Provider configuration and keys stay on the server.
-- The development server and browser route checks were not started by this
-  automation run; use the manual route list supplied with the completion
-  report to check refresh behavior and the 360px layout.
+- Desktop/mobile Chromium validation and current limitations are recorded in
+  [the completion report](docs/completion-validation-2026-10-26.md). This does
+  not certify accessibility, government information, or live agency transactions.
 
 ## Deployment
 

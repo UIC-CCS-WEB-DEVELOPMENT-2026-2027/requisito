@@ -92,7 +92,7 @@ export function assessMvpReadiness({ goals, requirements, sources, evidence, loc
     blockers,
     limitations: [
       'This assessment checks catalog structure and public-safety qualifications; it does not prove that agency procedures are current.',
-      'HTTP integration and Playwright browser tests are not included because local listener execution is restricted in this environment.',
+      'HTTP integration and Playwright browser tests run separately; this assessment does not execute them or imply they passed.',
       'Passing this assessment does not authorize deployment or establish operational readiness.',
     ],
   }
