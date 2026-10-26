@@ -34,6 +34,13 @@ function RequirementSourceCard({ source }) {
     : 'unverified'
   const hasDatedEvidence = [record.publishedDate, record.statementDate, record.effectiveDate]
     .some(isDate)
+  const researchAttribution = record.researchAttribution &&
+    typeof record.researchAttribution === 'object' &&
+    typeof record.researchAttribution.documentTitle === 'string' &&
+    Array.isArray(record.researchAttribution.documentPages) &&
+    record.researchAttribution.documentPages.every((page) => Number.isInteger(page) && page > 0)
+    ? record.researchAttribution
+    : null
 
   return (
     <li className="guidance-card">
@@ -53,6 +60,23 @@ function RequirementSourceCard({ source }) {
         <p>{t('goals.effectiveDate')}: <time dateTime={record.effectiveDate}>{record.effectiveDate}</time></p>
       )}
       {!hasDatedEvidence && <p>{t('goals.sourceDateUnavailable')}</p>}
+      {researchAttribution && (
+        <details className="source-research-attribution">
+          <summary>{t('goals.reportedResearchLead')}</summary>
+          <div>
+            <p>{researchAttribution.documentTitle}</p>
+            <p>
+              {t('goals.researchHandoffPages')}: {researchAttribution.documentPages.join(', ')}
+            </p>
+            <p>
+              {t('goals.sourceCheckDateReported')}:{' '}
+              {isDate(researchAttribution.sourceCheckDateReported)
+                ? <time dateTime={researchAttribution.sourceCheckDateReported}>{researchAttribution.sourceCheckDateReported}</time>
+                : t('goals.lastCheckedUnavailable')}
+            </p>
+          </div>
+        </details>
+      )}
       <p>
         {t('goals.lastChecked')}:{' '}
         {isDate(record.lastChecked)

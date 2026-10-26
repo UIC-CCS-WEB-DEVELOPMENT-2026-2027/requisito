@@ -13,6 +13,40 @@ export function reviewIsExpired(value, today, intervalDays = REVIEW_INTERVAL_DAY
   return currentDate - checkedAt > intervalDays * 24 * 60 * 60 * 1000
 }
 
+export function requirementSourceCheckDateIssues(source, today) {
+  const attribution = source.researchAttribution
+  const hasAttribution = attribution !== undefined
+  const validAttribution = attribution &&
+    typeof attribution === 'object' &&
+    !Array.isArray(attribution) &&
+    typeof attribution.documentTitle === 'string' &&
+    attribution.documentTitle.trim() &&
+    Array.isArray(attribution.documentPages) &&
+    attribution.documentPages.length > 0 &&
+    attribution.documentPages.every((page) => Number.isInteger(page) && page > 0) &&
+    validDate(attribution.sourceCheckDateReported) &&
+    attribution.sourceCheckDateReported <= today
+  const issues = []
+
+  if (hasAttribution && !validAttribution) {
+    issues.push('invalid researchAttribution')
+  }
+  if (source.lastChecked === null) {
+    if (source.verification !== 'unverified' || !validAttribution) {
+      issues.push('missing lastChecked requires an unverified source with valid research attribution')
+    }
+    return issues
+  }
+  if (!validDate(source.lastChecked) || source.lastChecked > today) {
+    issues.push('invalid or future lastChecked')
+    return issues
+  }
+  if (reviewIsExpired(source.lastChecked, today)) {
+    issues.push('source review is older than 365 days')
+  }
+  return issues
+}
+
 export function allowedSource(value, allowedHosts = []) {
   let source
   try {

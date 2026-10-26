@@ -3,12 +3,40 @@
   "researchedOn": "2026-10-26",
   "purpose": "Evidence package for an independent reviewer. Researcher access is not verification or approval.",
   "approvalPolicy": "Do not change a requirement or source verification status without the existing independent review workflow. A reviewer must compare each quoted claim with the official source and consider the unresolved questions.",
+  "referenceDocuments": [
+    {
+      "id": "egovph-requirements-summary",
+      "filename": "Document requirements (Requisito).pdf",
+      "title": "eGovPH document requirements (Requisito)",
+      "compiledOn": "2026-10-19",
+      "publisher": "Requisito compilation; not an issuing government agency",
+      "reviewBasis": "All three pages extracted directly from the local PDF with macOS PDFKit on 2026-10-26. Secondary compilation; not agency evidence.",
+      "evidenceRole": "Secondary research lead only",
+      "limitations": "The summary says most references are guide articles rather than agency pages. It contains no page references in the supplied text and directs readers to confirm requirements against issuing-agency sources. Its claims were not used to change public guidance or verification status."
+    },
+    {
+      "id": "first-job-government-requirements-research",
+      "filename": "Requisito_Government_IDs_and_First_Job_Requirements.docx.pdf",
+      "title": "FIRST-JOB GOVERNMENT REQUIREMENTS IN THE PHILIPPINES",
+      "preparedOn": "2026-10-20",
+      "reportedSourceCheckWindow": "2026-10-19 to 2026-10-20",
+      "publisher": "Requisito research handoff; not an issuing government agency",
+      "reviewBasis": "All printed pages 1–13 extracted directly from the local PDF with macOS PDFKit on 2026-10-26, including source-register tables and Appendix A. The earlier reported 8-page count is superseded by this 13-page extraction.",
+      "reportedPageCounts": {
+        "extractedPrintedPages": 13,
+        "localPdfUtility": 13,
+        "browserPdfReader": 13
+      },
+      "evidenceRole": "Secondary research handoff describing reported inspections of official sources; not independent approval",
+      "limitations": "The report states that no agency confirmation or end-to-end transaction was conducted and leaves several procedures, fees, eligibility details, and service times unresolved. Its source claims must be compared directly with official materials by an independent reviewer before public claims or verification statuses change."
+    }
+  ],
   "requirements": [
     {
       "requirementId": 1,
       "title": "Birth certificate",
       "releaseDisposition": "included",
-      "sourceIds": ["ra11261-first-time-jobseekers-act", "psa-birth-certificate-request"],
+      "sourceIds": ["ra11261-first-time-jobseekers-act", "psa-birth-certificate-request", "psa-birth-certificate-service"],
       "originalPublicClaim": "An employer may request a birth certificate; current PSA steps and implementation of the Act's waiver are not confirmed.",
       "proposedPublicInstruction": "Only obtain a birth certificate if the employer requests it; confirm the accepted issuing authority and format first. RA 11261 concerns fee waivers for some employment documents, but this catalog has not verified coverage, eligibility, proof, exceptions, or current procedure. Ask your barangay and the issuing agency before relying on a waiver.",
       "claims": [
@@ -27,6 +55,20 @@
           "accessedOn": "2026-10-26",
           "conditionsAndExceptions": "Do not infer that PSA service is unavailable from a failed fetch. No fee or ordering channel is asserted.",
           "researchStatus": "blocked"
+        },
+        {
+          "claim": "The PSA service page reportedly identifies Census Serbilis Centres and requires an appointment for walk-in service.",
+          "sourceIds": ["psa-birth-certificate-service"],
+          "supportingPassage": "The Requisito research handoff reports that the PSA birth-certificate page, lines 332–347, names Census Serbilis Centres and says walk-in requests require an appointment. This is a report of the source, not a quotation independently checked in this integration.",
+          "accessedOn": "2026-10-26",
+          "conditionsAndExceptions": "This does not establish online appointment requirements, applicant authorization, fees, delivery, accepted digital/printed formats, or how RA 11261 is implemented. The separate eGovPH summary cites secondary guides and does not fill these gaps.",
+          "researchStatus": "pending_independent_comparison",
+          "documentEvidence": {
+            "documentId": "first-job-government-requirements-research",
+            "printedPage": 5,
+            "sourceCheckDateReported": "2026-10-19",
+            "evidenceNature": "Secondary report of an official source; direct comparison still required"
+          }
         }
       ],
       "conflictsOrOutdatedInformation": [
@@ -44,7 +86,7 @@
       "requirementId": 2,
       "title": "TIN",
       "releaseDisposition": "included",
-      "sourceIds": ["ra11261-first-time-jobseekers-act", "bir-orus-portal"],
+      "sourceIds": ["ra11261-first-time-jobseekers-act", "bir-orus-portal", "bir-citizens-charter-2026", "bir-cdr-2025"],
       "originalPublicClaim": "An employer may request TIN details or registration; the current first-time employee BIR route is not confirmed.",
       "proposedPublicInstruction": "If the employer asks for TIN details or registration, ask which step it will handle and confirm current instructions with BIR. RA 11261 concerns fee waivers for some employment documents, but this catalog has not verified TIN coverage, eligibility, proof, exceptions, or current procedure. Ask BIR and your barangay before relying on a waiver. This is not a TIN registration procedure.",
       "claims": [
@@ -63,6 +105,34 @@
           "accessedOn": "2026-10-26",
           "conditionsAndExceptions": "The portal is a destination lead only and is not procedural evidence.",
           "researchStatus": "blocked"
+        },
+        {
+          "claim": "A Requisito research handoff reports a no-fee, within-10-days BIR route only for a first-time hired employee without an existing TIN who earns purely compensation income in the Philippines.",
+          "sourceIds": ["bir-citizens-charter-2026"],
+          "supportingPassage": "The handoff reports that the 2026 BIR Citizen's Charter, pages 2–6, describes employer/ORUS processing, registration within 10 days from employment, no processing fee, and a manual Form 1902 fallback. It also reports 3-day online and 6-hour manual service standards, explicitly not guarantees. The Charter itself was not independently re-opened in this integration.",
+          "accessedOn": "2026-10-26",
+          "conditionsAndExceptions": "Narrowly scoped to first-time hired employees without an existing TIN and purely compensation income in the Philippines. Do not generalize to other TIN applicants or treat service standards as guaranteed processing times.",
+          "researchStatus": "pending_independent_comparison",
+          "documentEvidence": {
+            "documentId": "first-job-government-requirements-research",
+            "printedPages": [4, 7],
+            "sourceCheckDateReported": "2026-10-19",
+            "evidenceNature": "Secondary report of an official source; direct comparison still required"
+          }
+        },
+        {
+          "claim": "A Requisito research handoff reports that the 2025 BIR Checklist of Documentary Requirements, item CDR F1102 on page 8, supports the employer/ORUS route, manual Form 1902, supporting-document details, and no fee.",
+          "sourceIds": ["bir-cdr-2025"],
+          "supportingPassage": "This is the handoff author's description of the cited checklist passage (printed research handoff p. 7); the PDF and exact supporting-document list were not independently checked in this integration.",
+          "accessedOn": "2026-10-26",
+          "conditionsAndExceptions": "The applicant scope and exact documentary requirements require direct review of the cited checklist and comparison with the 2026 Citizen's Charter.",
+          "researchStatus": "pending_independent_comparison",
+          "documentEvidence": {
+            "documentId": "first-job-government-requirements-research",
+            "printedPages": [7, 11],
+            "sourceCheckDateReported": "2026-10-19",
+            "evidenceNature": "Secondary report of an official source; direct comparison still required"
+          }
         }
       ],
       "conflictsOrOutdatedInformation": [],
@@ -78,7 +148,7 @@
       "requirementId": 3,
       "title": "SSS number",
       "releaseDisposition": "included",
-      "sourceIds": ["sss-become-member-faq", "sss-list-of-valid-ids"],
+      "sourceIds": ["sss-become-member-faq", "sss-list-of-valid-ids", "sss-employees-coverage"],
       "originalPublicClaim": "A person without an SS Number can use the SSS online application or a branch E-Center; SSS describes application data, a five-day continuation link, optional supporting-document upload, and employer reporting effective from the first employment day.",
       "proposedPublicInstruction": "If you may already have an SS Number, confirm your record with SSS before starting another application. SSS directs people without an SS Number to its online application or a branch E-Center. Its described online flow permits proceeding without uploading a supporting document; the separate ID list is not a universal upload checklist. SSS says the employer reports a prospective employee for coverage effective on the first day of employment. Confirm current onboarding details with SSS and the employer.",
       "claims": [
@@ -113,6 +183,20 @@
           "accessedOn": "2026-10-26",
           "conditionsAndExceptions": "Do not convert this list into a universal application-upload checklist; confirm identity evidence for the particular service with SSS.",
           "researchStatus": "evidence_complete_pending_approval"
+        },
+        {
+          "claim": "The SSS research handoff distinguishes SS Number issuance from employee coverage and recommends recovering an existing SS Number before initiating another registration.",
+          "sourceIds": ["sss-become-member-faq", "sss-employees-coverage"],
+          "supportingPassage": "The handoff describes checking or recovering an existing number first and treats number issuance, employer reporting, and the start of coverage as distinct matters (printed research handoff pp. 2–3 and source register p. 7). The employee-coverage page was not independently re-opened in this integration.",
+          "accessedOn": "2026-10-26",
+          "conditionsAndExceptions": "This does not establish that every jobseeker needs a new SS Number before hiring or a universal employer deadline. Existing SSS instructions in the catalog already caution against duplicate registration.",
+          "researchStatus": "pending_independent_comparison",
+          "documentEvidence": {
+            "documentId": "first-job-government-requirements-research",
+            "printedPages": [2, 3, 7],
+            "sourceCheckDateReported": "2026-10-19",
+            "evidenceNature": "Secondary report of official sources; direct comparison still required"
+          }
         }
       ],
       "conflictsOrOutdatedInformation": [
@@ -131,7 +215,7 @@
       "requirementId": 4,
       "title": "PhilHealth number",
       "releaseDisposition": "included",
-      "sourceIds": ["philhealth-direct-contributors", "philhealth-member-services"],
+      "sourceIds": ["philhealth-direct-contributors", "philhealth-member-services", "philhealth-formal-employee-registration", "philhealth-employer-reporting"],
       "originalPublicClaim": "PhilHealth lists workers with an established employee-employer relationship as direct contributors; the current first-time enrollment procedure is not confirmed.",
       "proposedPublicInstruction": "When an employee-employer relationship is established, PhilHealth identifies government and private workers in that relationship as direct contributors. Its reviewed pages do not establish first-time enrollment steps or required documents. Ask the employer and confirm the current process with PhilHealth.",
       "claims": [
@@ -150,6 +234,34 @@
           "accessedOn": "2026-10-26",
           "conditionsAndExceptions": "Member access and employer remittance are not proof of first-time registration or employer enrollment responsibility.",
           "researchStatus": "evidence_complete_pending_approval"
+        },
+        {
+          "claim": "A Requisito research handoff reports that a formal-economy employee with no PhilHealth PIN submits two PMRF copies to HR; an employee with an existing PIN provides it to the employer for ER2 reporting.",
+          "sourceIds": ["philhealth-formal-employee-registration"],
+          "supportingPassage": "The handoff attributes the no-PIN and existing-PIN steps to PhilHealth's formal employee registration page (printed research handoff pp. 3 and 7). The page was not independently re-opened in this integration.",
+          "accessedOn": "2026-10-26",
+          "conditionsAndExceptions": "Limited to the formal-economy employee route described in the report. No fee or processing time is stated. Do not generalize to other membership categories.",
+          "researchStatus": "pending_independent_comparison",
+          "documentEvidence": {
+            "documentId": "first-job-government-requirements-research",
+            "printedPages": [3, 7],
+            "sourceCheckDateReported": "2026-10-19",
+            "evidenceNature": "Secondary report of an official source; direct comparison still required"
+          }
+        },
+        {
+          "claim": "A Requisito research handoff reports that employers submit ER2 reporting for newly hired employees within 30 days from assumption.",
+          "sourceIds": ["philhealth-employer-reporting"],
+          "supportingPassage": "The handoff attributes this timeline to PhilHealth's employer-reporting page (printed research handoff pp. 3 and 7). The page was not independently re-opened in this integration.",
+          "accessedOn": "2026-10-26",
+          "conditionsAndExceptions": "This is reported as the employer's reporting timeline, not a universal applicant deadline or proof that the employee must independently register.",
+          "researchStatus": "pending_independent_comparison",
+          "documentEvidence": {
+            "documentId": "first-job-government-requirements-research",
+            "printedPages": [3, 7],
+            "sourceCheckDateReported": "2026-10-19",
+            "evidenceNature": "Secondary report of an official source; direct comparison still required"
+          }
         }
       ],
       "conflictsOrOutdatedInformation": [],
@@ -185,13 +297,30 @@
       "reviewerQuestions": [
         "Obtain an accessible current Pag-IBIG membership issuance or official page and verify mandatory coverage, first-registration steps, documents, contribution rules, and employer responsibilities.",
         "Until that evidence is available, keep this as a non-directive prompt or exclude it from a definitive checklist."
+      ],
+      "researchLeads": [
+        {
+          "claim": "The handoff reports that the MID Inquiry asks for an RTN, surname, and birthdate, and that the online registration interface displays a National ID QR/liveness route and an alternative route without National ID.",
+          "reportedSourceUrls": [
+            "https://www.pagibigfundservices.com/OnlineMembershipRegistration",
+            "https://www.pagibigfundservices.com/virtualpagibig/Membership.aspx",
+            "https://www.pagibigfundservices.com/virtualpagibig/MIDInquiry.aspx"
+          ],
+          "documentEvidence": {
+            "documentId": "first-job-government-requirements-research",
+            "printedPages": [3, 4, 7],
+            "sourceCheckDateReported": "2026-10-19"
+          },
+          "researchStatus": "partial_report_not_independently_compared",
+          "limitations": "These are reported interface observations, not direct verification in this integration. The report says the full current workflow, fee, timing, and employer/manual alternatives remain unresolved. Do not claim instant issuance, an API, or a fixed walk-in duration."
+        }
       ]
     },
     {
       "requirementId": 6,
       "title": "NBI clearance",
       "releaseDisposition": "included",
-      "sourceIds": ["ra11261-first-time-jobseekers-act", "nbi-clearance-portal", "nbi-clearance-citizens-charter"],
+      "sourceIds": ["ra11261-first-time-jobseekers-act", "nbi-clearance-portal", "nbi-clearance-citizens-charter", "nbi-clearance-how-to-apply", "nbi-ftjs-citizens-charter"],
       "originalPublicClaim": "An employer may request an NBI clearance; this is not presented as a universal first-job requirement. RA 11261 may provide a conditional one-time fee waiver; current NBI and Davao procedures are not confirmed.",
       "proposedPublicInstruction": "Ask the employer whether an NBI clearance is required and which purpose or timing applies. The official NBI Citizen's Charter page lists two valid government-issued IDs and describes service paths, but its publication date and Davao applicability are unclear. Confirm current requirements and fees directly with NBI. RA 11261 concerns fee waivers for some employment documents, but this guide has not verified NBI coverage, eligibility, proof, exceptions, or current procedure. Ask your barangay and NBI before relying on a waiver.",
       "claims": [
@@ -218,11 +347,41 @@
           "accessedOn": "2026-10-26",
           "conditionsAndExceptions": "Portal identity alone does not establish current eligibility, appointment requirements, payment amounts, processing time, or Davao office procedure.",
           "researchStatus": "blocked"
+        },
+        {
+          "claim": "The handoff reports that NBI standard-clearance instructions describe online profile, appointment, and payment-reference steps and two government IDs, while fee mapping and general validity remain unresolved.",
+          "sourceIds": ["nbi-clearance-how-to-apply", "nbi-clearance-citizens-charter"],
+          "supportingPassage": "The handoff reports two government IDs in the standard Citizen's Charter/how-to materials. It reports a PHP 130 base fee plus an e-payment fee usually around PHP 25–30 on the how-to page and PHP 115/PHP 165/PHP 415 in the Charter without clear category mapping; it explicitly rejects a fixed PHP 155 total and a general one-year validity claim (printed research handoff pp. 4, 7–8). The cited pages were not independently re-opened in this integration.",
+          "accessedOn": "2026-10-26",
+          "conditionsAndExceptions": "Do not publish a fixed total or general validity period. HIT/quality-control cases may require further processing. Current Davao office instructions remain unconfirmed.",
+          "researchStatus": "pending_independent_comparison",
+          "documentEvidence": {
+            "documentId": "first-job-government-requirements-research",
+            "printedPages": [4, 7, 8],
+            "sourceCheckDateReported": "2026-10-19",
+            "evidenceNature": "Secondary report of official sources; direct comparison still required"
+          }
+        },
+        {
+          "claim": "The handoff reports a free NBI route for eligible First-Time Job Seekers, with a Barangay Certification, two IDs or acceptable certificates, and in-person biometrics; the Oath of Undertaking remains disputed.",
+          "sourceIds": ["nbi-ftjs-citizens-charter", "nbi-clearance-how-to-apply"],
+          "supportingPassage": "The handoff reports that the FTJS Citizen's Charter omits the Oath that the NBI how-to page says to bring with the original Barangay Certification. It records the discrepancy and does not resolve document handling (printed research handoff pp. 4, 7–8). The cited pages were not independently re-opened in this integration.",
+          "accessedOn": "2026-10-26",
+          "conditionsAndExceptions": "The fee exemption is conditional on statutory eligibility and one-time requirements; do not present it as a general free-clearance entitlement. Do not conflate Barangay Certification for the FTJS route with a universal barangay-clearance prerequisite.",
+          "researchStatus": "pending_independent_comparison",
+          "documentEvidence": {
+            "documentId": "first-job-government-requirements-research",
+            "printedPages": [4, 7, 8, 12],
+            "sourceCheckDateReported": "2026-10-19",
+            "evidenceNature": "Secondary report of official sources; direct comparison still required"
+          }
         }
       ],
       "conflictsOrOutdatedInformation": [
         "The NBI Citizen's Charter lists PHP 115, PHP 165, and PHP 415 without explaining which transaction each amount applies to or showing a publication date. These amounts are intentionally withheld.",
-        "The charter's listed location and schedule are for Manila; they are not Davao City office evidence."
+        "The charter's listed location and schedule are for Manila; they are not Davao City office evidence.",
+        "The eGovPH summary cites guide articles that variously describe clearance validity as six months to one year; the research handoff reports that current general validity was not confirmed. Do not publish a fixed validity period.",
+        "The eGovPH summary says a prior barangay clearance is not required, while the reported FTJS route calls for a Barangay Certification. These are distinct processes and document names; neither source establishes a universal barangay-clearance prerequisite."
       ],
       "evidenceCompleteness": "partial",
       "researchStatus": "blocked",
@@ -230,6 +389,7 @@
       "reviewerQuestions": [
         "Confirm the current NBI Citizen's Charter and its two-ID instruction with the agency.",
         "Find current NBI application, appointment, payment, and Davao office instructions from an official NBI source.",
+        "Resolve the current FTJS Oath of Undertaking handling discrepancy directly with NBI.",
         "Compare RA 11261 sections against the Official Gazette PDF and confirm current implementation before presenting the waiver as applicable."
       ]
     }

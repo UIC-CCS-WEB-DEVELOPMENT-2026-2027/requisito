@@ -77,7 +77,7 @@ test('search discovers goals, canonical guides, agencies, and their official sou
   const requirementResult = searchAll('SSS number').requirements[0]
   assert.equal(requirementResult.slug, 'first-job-sss-number')
   assert.deepEqual(requirementResult.sourceAgencies, ['Social Security System'])
-  assert.deepEqual(requirementResult.sourceTitles, ['Be an SSS Member', 'List of Valid IDs'])
+  assert.deepEqual(requirementResult.sourceTitles, ['Be an SSS Member', 'List of Valid IDs', 'Employees'])
   assert.deepEqual(requirementResult.linkedSources.map(({ id, url }) => ({ id, url })), [
     {
       id: 'sss-become-member-faq',
@@ -87,11 +87,18 @@ test('search discovers goals, canonical guides, agencies, and their official sou
       id: 'sss-list-of-valid-ids',
       url: 'https://www.sss.gov.ph/list-of-valid-ids/',
     },
+    {
+      id: 'sss-employees-coverage',
+      url: 'https://www.sss.gov.ph/employees/',
+    },
   ])
   assert.equal(requirementResult.verification, 'unverified')
   const agencyResults = searchAll('Social Security System').sources
   assert.equal(agencyResults[0].id, 'sss-become-member-faq')
-  assert.deepEqual(agencyResults[0].linkedRequirementSlugs, ['first-job-sss-number'])
+  assert.deepEqual(agencyResults[0].linkedRequirementSlugs, [
+    'first-job-sss-number', 'social-registration-employment-status',
+    'sss-existing-number', 'sss-no-existing-number', 'social-employer-onboarding',
+  ])
   assert.equal(agencyResults[0].verification, 'unverified')
   assert.equal(searchAll('RA 11261').sources[0].id, 'ra11261-first-time-jobseekers-act')
   assert.doesNotThrow(() => searchAll('<script>alert(1)</script>'))

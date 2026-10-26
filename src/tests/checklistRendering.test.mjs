@@ -64,7 +64,7 @@ test('health-card checklist renders dated-source uncertainty and conditional que
   assert.match(html, /Hepatitis B antibody test/)
   assert.match(html, /href="\/services\/city-health-office"/)
   assert.match(html, /Some details may need confirmation\. Check the linked agency source/)
-  assert.doesNotMatch(html, /Never verified/)
+  assert.match(html, /Never verified/)
 
   const passportHtml = renderRoute(Checklist, LanguageProvider, '/checklist?goal=2', '/checklist')
   assert.match(passportHtml, /Philippine Passport/)
@@ -86,7 +86,7 @@ test('unknown and malformed goal links show a safe browse-goals empty state', as
 })
 
 test('every public goal has an available checklist and localized action links', async (t) => {
-  const { Goals, LanguageProvider } = await loadPages(t)
+  const { Checklist, Goals, LanguageProvider } = await loadPages(t)
   const previousWindow = Object.getOwnPropertyDescriptor(globalThis, 'window')
   Object.defineProperty(globalThis, 'window', {
     configurable: true,
@@ -106,6 +106,10 @@ test('every public goal has an available checklist and localized action links', 
   assert.match(html, /href="\/checklist\?goal=3"/)
   assert.match(html, /href="\/checklist\?goal=4"/)
   assert.match(html, /href="\/checklist\?goal=5"/)
+
+  const dashboardHtml = renderRoute(Checklist, LanguageProvider, '/checklist', '/checklist')
+  assert.match(dashboardHtml, /Next checklist item: <\/span>Birth certificate/)
+  assert.match(dashboardHtml, /aria-label="First Job 0 ready of 6 applicable requirements"/)
 })
 
 test('first-job checklist separates employer requests from registration guidance and links full guides', async (t) => {
@@ -182,7 +186,12 @@ test('demo guides have localized instructions, agency links, and a return path t
     const checklist = renderRoute(Checklist, LanguageProvider, `/checklist?goal=${item.goal}`, '/checklist')
     assert.match(checklist, item.title)
     assert.doesNotMatch(checklist, /MVP demonstration content/)
-    assert.doesNotMatch(checklist, /Not yet verified|Never verified|Unverified/)
+    if ([3, 5].includes(item.goal)) {
+      assert.match(checklist, /Sources and evidence/)
+      assert.match(checklist, /Never verified/)
+    } else {
+      assert.doesNotMatch(checklist, /Not yet verified|Never verified|Unverified/)
+    }
     assert.match(checklist, new RegExp(`href="\\/documents\\/${item.slug}\\?goal=${item.goal}&amp;from=checklist"`))
 
     const guide = renderRoute(
@@ -300,6 +309,50 @@ test('source cards safely disclose missing or malformed source metadata', async 
   assert.match(html, /Source limitations are not recorded/)
   assert.match(html, /Source link not provided/)
   assert.doesNotMatch(html, /href="javascript:/)
+})
+
+test('source cards disclose secondary handoff page citations without implying approval', async (t) => {
+  const { RequirementSourceCard, LanguageProvider } = await loadPages(t)
+  const html = renderToStaticMarkup(
+    createElement(LanguageProvider, null,
+      createElement(RequirementSourceCard, {
+        source: {
+          id: 'reported-source',
+          title: 'Sample agency page',
+          agency: 'Sample agency',
+          evidenceType: 'Official agency page, reported in secondary research handoff',
+          url: 'https://example.gov.ph/service',
+          lastChecked: null,
+          verification: 'unverified',
+          supports: ['A narrowly scoped claim reported by the handoff.'],
+          limitations: 'The source has not been independently reviewed.',
+          researchAttribution: {
+            documentTitle: 'FIRST-JOB GOVERNMENT REQUIREMENTS IN THE PHILIPPINES',
+            documentPages: [3, 7],
+            sourceCheckDateReported: '2026-10-19',
+          },
+        },
+      }),
+    ),
+  )
+
+  assert.match(html, /Research handoff — not independently reviewed/)
+  assert.match(html, /<details class="source-research-attribution">/)
+  assert.match(html, /Handoff pages: 3, 7/)
+  assert.match(html, /Source-check date reported by handoff:[\s\S]*2026-10-19/)
+  assert.match(html, /No last-checked date is recorded/)
+  assert.match(html, /Not yet verified/)
+})
+
+test('First Job checklist makes linked source evidence available on each requirement card', async (t) => {
+  const { Checklist, LanguageProvider } = await loadPages(t)
+  const html = renderRoute(Checklist, LanguageProvider, '/checklist?goal=1', '/checklist')
+
+  assert.match(html, /<summary>Sources and evidence<\/summary>/)
+  assert.match(html, /BIR Citizen&#x27;s Charter \(2026 Edition\)/)
+  assert.match(html, /Research handoff — not independently reviewed/)
+  assert.match(html, /Handoff pages: 4, 7/)
+  assert.match(html, /href="https:\/\/bir-cdn\.bir\.gov\.ph\/BIR\/pdf\/BIR%20Citizen/)
 })
 
 test('public search connects canonical guides to unverified source links and handles empty results', async (t) => {

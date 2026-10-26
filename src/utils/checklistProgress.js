@@ -22,6 +22,7 @@ export function getGoalProgressSummary(goalId, storage = null) {
       status: 'unavailable',
       statusText: 'Checklist unavailable',
       actionLabel: 'View checklist status',
+      nextRequirement: null,
     }
   }
 
@@ -42,6 +43,7 @@ export function getGoalProgressSummary(goalId, storage = null) {
         status: 'unavailable',
         statusText: 'Checklist unavailable',
         actionLabel: 'View checklist status',
+        nextRequirement: null,
       }
     }
     const requirements = plan.steps
@@ -72,6 +74,10 @@ export function getGoalProgressSummary(goalId, storage = null) {
       status,
       statusText: status,
       actionLabel: total === 0 ? 'View checklist' : (completed === total ? 'Continue checklist' : 'View checklist'),
+      nextRequirement: requirements.find((requirement) => {
+        const status = reconciled.items[String(requirement.id)]?.status ?? 'not-started'
+        return status !== 'ready' && status !== 'not-applicable'
+      }) ?? null,
     }
   } catch {
     return {
@@ -84,6 +90,7 @@ export function getGoalProgressSummary(goalId, storage = null) {
       status: 'unavailable',
       statusText: 'Checklist unavailable',
       actionLabel: 'View checklist status',
+      nextRequirement: null,
     }
   }
 }

@@ -3,13 +3,16 @@ import { Link, useSearchParams } from 'react-router-dom'
 import EmptyState from '../components/EmptyState.jsx'
 import RequirementCard from '../components/RequirementCard.jsx'
 import ChatAssistant from '../components/ChatAssistant.jsx'
-import { getChecklistPlan, getGoals, getPlanningQuestions, getRequirementsByGoal } from '../data/helpers.js'
+import { getChecklistPlan, getGoals, getPlanningQuestions, getRequirementsByGoal, getRequirementSources } from '../data/helpers.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
 import { href } from '../routeManifest.js'
 import { getGoalProgressSummary, readChecklistProgress, reconcileChecklistProgress, writeChecklistProgress } from '../utils/checklistProgress.js'
 import { assessChecklistReadiness } from '../utils/readinessAssessment.js'
 
 const EMPTY_ANSWERS = Object.freeze({})
+const REQUIREMENT_SOURCES_BY_ID = new Map(
+  getRequirementSources().map((source) => [source.id, source]),
+)
 
 function ChecklistOverview() {
   const { t } = useLanguage()
@@ -53,12 +56,22 @@ function ChecklistOverview() {
                 </p>
                 {summary.available && (
                   <>
-                    <div className="goal-progress-wrap" aria-label={`${goalTitle} ${t('checklist.progressLabel')}`}>
+                    <div className="goal-progress-wrap" aria-label={`${goalTitle} ${t('checklist.progressLabel')
+                      .replace('{ready}', String(summary.completed))
+                      .replace('{total}', String(summary.total))}`}>
                       <div className="goal-progress-bar" aria-hidden="true">
                         <span style={{ width: `${summary.percent}%` }} />
                       </div>
                       <span className="goal-progress-value">{statusText}</span>
                     </div>
+                    {summary.nextRequirement && (
+                      <p className="goal-card-next-item">
+                        <span>{t('checklist.nextItem')}: </span>
+                        {summary.nextRequirement.labelKey
+                          ? t(summary.nextRequirement.labelKey)
+                          : summary.nextRequirement.label}
+                      </p>
+                    )}
                   </>
                 )}
                 <div className="goal-card-actions">
@@ -290,6 +303,9 @@ function ChecklistView({ goalId, requirements, definitions, saved, saveProgress,
                 applicationUrl={item.applicationUrl}
                 applicationLabelKey={item.applicationLabelKey}
                 supportingDocumentsUrl={item.supportingDocumentsUrl}
+                sources={(item.sourceIds ?? [])
+                  .map((sourceId) => REQUIREMENT_SOURCES_BY_ID.get(sourceId))
+                  .filter(Boolean)}
                 demoOnly={item.demoOnly}
                 lastVerified={item.lastVerified}
                 status={savedItem?.status ?? 'not-started'}

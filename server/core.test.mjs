@@ -133,7 +133,9 @@ test('session tokens are stored only as keyed hashes and expire after eight hour
 test('official-source allowlist requires HTTPS and exact host matches', () => {
   assert.equal(isAllowedSourceUrl('https://psa.gov.ph/system/files/example.xlsx'), true)
   assert.equal(isAllowedSourceUrl('https://www.sss.gov.ph/become-an-sss-member/'), true)
+  assert.equal(isAllowedSourceUrl('https://bir-cdn.bir.gov.ph/BIR/pdf/BIR%20Citizen%27s%20Charter.pdf'), true)
   assert.equal(isAllowedSourceUrl('https://www.officialgazette.gov.ph/downloads/2019/04apr/20190410-RA-11261-RRD.pdf'), true)
+  assert.equal(isAllowedSourceUrl('https://bir-cdn.bir.gov.ph.evil.example/document.pdf'), false)
   assert.equal(isAllowedSourceUrl('https://psa.gov.ph.evil.example/path'), false)
   assert.equal(isAllowedSourceUrl('https://subdomain.sss.gov.ph/become-an-sss-member/'), false)
   assert.equal(isAllowedSourceUrl('http://psa.gov.ph/path'), false)

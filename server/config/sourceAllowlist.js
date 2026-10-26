@@ -10,6 +10,7 @@ export const sourceAllowlist = new Set([
   'www.philhealth.gov.ph',
   'nbi.gov.ph',
   'clearance.nbi.gov.ph',
+  'bir-cdn.bir.gov.ph',
   'www.pagibigfund.gov.ph',
   'orus.bir.gov.ph',
   'www.officialgazette.gov.ph',

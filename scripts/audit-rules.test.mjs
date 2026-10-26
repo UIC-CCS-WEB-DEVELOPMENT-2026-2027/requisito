@@ -6,6 +6,7 @@ import {
   allowedSource,
   barangayCatalogIssues,
   requirementEvidenceIssues,
+  requirementSourceCheckDateIssues,
   reviewIsExpired,
   validBarangayDistrict,
   validDate,
@@ -56,6 +57,31 @@ test('verified records require independent reviewer and source evidence', () => 
     .some((issue) => issue.includes('independent review evidence')))
   assert.equal(reviewIsExpired('2025-10-22', '2026-10-23'), true)
   assert.equal(reviewIsExpired('2025-10-23', '2026-10-23'), false)
+})
+
+test('reported source dates are not treated as direct checks without unverified provenance', () => {
+  const source = {
+    verification: 'unverified',
+    lastChecked: null,
+    researchAttribution: {
+      documentTitle: 'Research handoff',
+      documentPages: [2, 5],
+      sourceCheckDateReported: '2026-10-19',
+    },
+  }
+  assert.deepEqual(requirementSourceCheckDateIssues(source, '2026-10-26'), [])
+  assert.ok(requirementSourceCheckDateIssues({
+    ...source,
+    verification: 'verified',
+  }, '2026-10-26').length > 0)
+  assert.ok(requirementSourceCheckDateIssues({
+    ...source,
+    researchAttribution: { ...source.researchAttribution, sourceCheckDateReported: '2026-10-27' },
+  }, '2026-10-26').length > 0)
+  assert.ok(requirementSourceCheckDateIssues({
+    ...source,
+    researchAttribution: undefined,
+  }, '2026-10-26').length > 0)
 })
 
 test('requirements need source links but do not inherit source-record review status', () => {

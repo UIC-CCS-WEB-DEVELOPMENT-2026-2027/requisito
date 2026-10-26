@@ -8,7 +8,7 @@ import {
   validBarangayDistrict,
   validDate,
   requirementEvidenceIssues,
-  reviewIsExpired,
+  requirementSourceCheckDateIssues,
   verificationIssues,
 } from './audit-rules.mjs'
 import { getRecordCounts } from '../src/data/recordCounts.js'
@@ -266,11 +266,8 @@ for (const [index, source] of requirementSources.entries()) {
   if (!allowedSource(source.url, officialHosts)) {
     errors.push(`${sourceLabel}: source URL must use HTTPS and an allowed official host`)
   }
-  if (!validDate(source.lastChecked) || source.lastChecked > today) {
-    errors.push(`${sourceLabel}: invalid or future lastChecked`)
-  } else if (reviewIsExpired(source.lastChecked, today)) {
-    errors.push(`${sourceLabel}: source review is older than 365 days`)
-  }
+  errors.push(...requirementSourceCheckDateIssues(source, today)
+    .map((issue) => `${sourceLabel}: ${issue}`))
   if (!['verified', 'unverified', 'conflicting'].includes(source.verification)) {
     errors.push(`${sourceLabel}: invalid verification`)
   }

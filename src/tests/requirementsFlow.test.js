@@ -355,10 +355,13 @@ test('first-job official sources record exact claims, conditions, check dates, a
       : item.sourceIds.length === 0) &&
     /not confirmed|not researched|could not be reviewed|not established|no universal|unconfirmed|no current/i.test(`${item.notes} ${item.guideInstructions}`),
   ))
-  assert.equal(sources.length, 11)
+  assert.equal(sources.length, 19)
   assert.ok(sources.every((source) =>
     source.url.startsWith('https://') &&
-    /^\d{4}-\d{2}-\d{2}$/.test(source.lastChecked) &&
+    (source.lastChecked === null
+      ? source.verification === 'unverified' &&
+        /^\d{4}-\d{2}-\d{2}$/.test(source.researchAttribution?.sourceCheckDateReported)
+      : /^\d{4}-\d{2}-\d{2}$/.test(source.lastChecked)) &&
     source.supports.length > 0
   ))
   assert.match(byId.get('davao-cho-health-card-2026').limitations, /not current confirmation/i)
@@ -534,13 +537,52 @@ test('demo goal progress follows applicable items and remains isolated by goal',
   assert.equal(passportSummary.total, 4)
   assert.equal(passportSummary.completed, 1)
   assert.equal(passportSummary.status, 'in-progress')
+  assert.equal(passportSummary.nextRequirement.id, 16)
   assert.equal(getGoalProgressSummary(3, storage).total, 5)
   assert.equal(getGoalProgressSummary(3, storage).completed, 0)
+})
+
+test('goal progress summary skips completed and not-applicable items when choosing the next item', () => {
+  const values = new Map()
+  const storage = {
+    getItem: (key) => values.get(key) ?? null,
+    setItem: (key, value) => values.set(key, value),
+  }
+  const plan = getChecklistPlan(2, { passportApplicationType: 'first-time' })
+  const progress = reconcileChecklistProgress({
+    answers: { passportApplicationType: 'first-time' },
+    items: {
+      15: { status: 'ready', revision: 1 },
+      16: { status: 'not-applicable', revision: 1 },
+    },
+  }, getRequirementsByGoal(2))
+  writeChecklistProgress(storage, 2, progress)
+
+  const summary = getGoalProgressSummary(2, storage)
+  assert.equal(summary.nextRequirement.id, plan.steps.find((step) => step.id === 18).id)
+
+  for (const step of plan.steps) {
+    progress.items[String(step.id)] = {
+      status: 'ready',
+      revision: step.requirement.revision,
+      needsReview: false,
+    }
+  }
+  writeChecklistProgress(storage, 2, progress)
+  assert.equal(getGoalProgressSummary(2, storage).nextRequirement, null)
+
+  const unavailable = getGoalProgressSummary(2, {
+    getItem() {
+      throw new Error('Storage unavailable')
+    },
+  })
+  assert.equal(unavailable.nextRequirement, null)
 })
 
 test('new demo journey labels and notice are localized in every supported language', () => {
   for (const locale of [en, fil, ceb]) {
     assert.ok(locale['disclaimer.banner']?.includes('MVP'))
+    assert.ok(locale['checklist.nextItem']?.trim())
     assert.ok(locale['demo.commonMistakesHeading']?.trim())
     assert.ok(locale['checklist.noApplicableItems']?.trim())
     for (const goal of getGoals().filter((item) => item.demoContent)) {

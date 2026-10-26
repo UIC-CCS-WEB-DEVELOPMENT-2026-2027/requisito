@@ -32,8 +32,12 @@ test('First Job gate blocks current records without losing evidence dispositions
     ],
   )
   assert.deepEqual(assessment.issues, [])
-  assert.equal(assessment.sources.length, 10)
-  assert.ok(assessment.sources.every((source) => source.status === 'PENDING'))
+  assert.equal(assessment.sources.length, 18)
+  assert.ok(assessment.sources.every((source) => source.verification === 'unverified'))
+  assert.ok(assessment.sources.every((source) =>
+    ['PENDING', 'BLOCKED'].includes(source.status),
+  ))
+  assert.ok(assessment.sources.every((source) => source.status !== 'PASS'))
   assert.ok(assessment.blockers.some((item) =>
     item.type === 'requirement' &&
     item.id === 1 &&

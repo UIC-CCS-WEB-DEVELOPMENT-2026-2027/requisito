@@ -1,6 +1,7 @@
 import { useId } from 'react'
 import { Link } from 'react-router-dom'
 import StatusBadge from './StatusBadge.jsx'
+import RequirementSourceCard from './RequirementSourceCard.jsx'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
 import './SprintCards.css'
 
@@ -18,6 +19,7 @@ function RequirementCard({
   applicationUrl,
   applicationLabelKey,
   supportingDocumentsUrl,
+  sources = [],
   demoOnly,
   lastVerified,
   status,
@@ -92,6 +94,16 @@ function RequirementCard({
             {t('requirement.supportingDocuments')}
           </a>
         </p>
+      )}
+      {sources.length > 0 && (
+        <details className="requirement-source-details">
+          <summary>{t('requirement.sourcesAndEvidence')}</summary>
+          <ul className="guidance-list">
+            {sources.map((source) => (
+              <RequirementSourceCard key={source.id} source={source} />
+            ))}
+          </ul>
+        </details>
       )}
       {!sourceUrl && !demoOnly && <p className="card-detail">{t('record.sourceMissing')}</p>}
       {guidePath && <Link to={guidePath}>{t('goals.openDocumentGuide')}</Link>}

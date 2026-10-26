@@ -443,6 +443,33 @@
   line-height: 1.4;
 }
 
+.goal-card-next-item {
+  margin: 0.65rem 0 0;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.goal-card-next-item span {
+  color: var(--text);
+}
+
+.goal-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  margin-top: 0.75rem;
+}
+
+.goal-card-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 44px;
+  color: var(--accent);
+  text-underline-offset: 0.2em;
+}
+
 .goal-grid > li {
   display: flex;
 }
@@ -807,6 +834,53 @@
   background: var(--surface);
   padding: 1rem;
   overflow-wrap: anywhere;
+}
+
+.source-research-attribution {
+  margin: 1rem 0;
+  border-left: 3px solid var(--accent);
+  background: var(--accent-bg);
+  padding: 0.75rem 1rem;
+  line-height: 1.5;
+}
+
+.source-research-attribution summary {
+  color: var(--text-h);
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.source-research-attribution > div {
+  padding-top: 0.5rem;
+}
+
+.source-research-attribution p {
+  margin: 0;
+}
+
+.source-research-attribution p + p {
+  margin-top: 0.25rem;
+}
+
+.requirement-source-details {
+  margin-top: 1rem;
+}
+
+.requirement-source-details > summary {
+  color: var(--accent);
+  cursor: pointer;
+  font-weight: 700;
+  text-underline-offset: 0.15em;
+}
+
+.requirement-source-details > summary:focus-visible,
+.source-research-attribution > summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.requirement-source-details > .guidance-list {
+  margin-top: 0.75rem;
 }
 
 .guidance-card h3 {

@@ -76,6 +76,13 @@ verification state, and limitations. A source URL or fetch date is not
 approval. Source records and linked requirements remain unverified until the
 existing two-person review process approves them.
 
+`lastChecked` is `null` when the source itself has not been checked directly.
+If an unverified record relies on a research handoff that reports when its
+author checked the source, retain that separate date and the report's page
+references in `researchAttribution`; do not copy the reported date into
+`lastChecked`. The data audit requires this provenance for source records that
+have no direct check date.
+
 Document guides are derived from the same requirement definitions and their
 stable slugs. `documents.json` and the former sample document-tracker records
 are removed; `/documents` is a searchable guide catalog, not personal

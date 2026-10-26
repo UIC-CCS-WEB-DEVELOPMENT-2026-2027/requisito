@@ -20,7 +20,7 @@ dist-ssr
 *.sqlite-*
 *.db
 *.db-*
-test-results/e2e/
+test-results/
 
 # Editor directories and files
 .vscode/*

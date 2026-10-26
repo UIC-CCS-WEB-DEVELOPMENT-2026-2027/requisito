@@ -21,7 +21,7 @@
       "employerRequestedBirthCertificate": "yes"
     },
     "conditionKey": "checklist.condition.employerBirthCertificate",
-    "sourceIds": ["ra11261-first-time-jobseekers-act", "psa-birth-certificate-request"],
+    "sourceIds": ["ra11261-first-time-jobseekers-act", "psa-birth-certificate-request", "psa-birth-certificate-service"],
     "revision": 5,
     "guideInstructions": "A birth certificate is not confirmed as a universal first-job requirement. If your employer requests one, ask which issuing authority and format it accepts before ordering. RA 11261 concerns fee waivers for some employment documents, but this guide has not verified the covered transactions, eligibility, proof, exceptions, or current procedure. Ask your barangay and the issuing agency before relying on a waiver."
   },
@@ -47,7 +47,7 @@
       "employerRequestedTin": "yes"
     },
     "conditionKey": "checklist.condition.employerTin",
-    "sourceIds": ["ra11261-first-time-jobseekers-act", "bir-orus-portal"],
+    "sourceIds": ["ra11261-first-time-jobseekers-act", "bir-orus-portal", "bir-citizens-charter-2026", "bir-cdr-2025"],
     "applicationUrl": "https://orus.bir.gov.ph/",
     "applicationLabelKey": "requirement.birOrusPortal",
     "revision": 5,
@@ -71,7 +71,7 @@
     "timeSensitive": false,
     "validityMonths": null,
     "requirementType": "recommended",
-    "sourceIds": ["sss-become-member-faq", "sss-list-of-valid-ids"],
+    "sourceIds": ["sss-become-member-faq", "sss-list-of-valid-ids", "sss-employees-coverage"],
     "applicationUrl": "https://member.sss.gov.ph/members/rcsmi/crosscontext/crossContextUtil.jsp?urlRedirect=https://member.sss.gov.ph/members/rcsmi/main.html&Portal_Role=RCS_WBREG&Portal_User_Id=WEB",
     "supportingDocumentsUrl": "https://www.sss.gov.ph/list-of-valid-ids/",
     "revision": 4,
@@ -99,7 +99,7 @@
       "hasEmploymentRelationship": "yes"
     },
     "conditionKey": "checklist.condition.employmentRelationship",
-    "sourceIds": ["philhealth-direct-contributors", "philhealth-member-services"],
+    "sourceIds": ["philhealth-direct-contributors", "philhealth-member-services", "philhealth-formal-employee-registration", "philhealth-employer-reporting"],
     "revision": 2,
     "guideInstructions": "When an employee-employer relationship is established, PhilHealth lists government and private workers in that relationship as direct contributors. The page does not provide first-time enrollment steps, required documents, timing, or division of work with the employer. Ask the employer and use PhilHealth's current official member services before acting."
   },
@@ -147,7 +147,7 @@
       "needsClearance": "yes"
     },
     "conditionKey": "checklist.condition.employerClearance",
-    "sourceIds": ["ra11261-first-time-jobseekers-act", "nbi-clearance-portal", "nbi-clearance-citizens-charter"],
+    "sourceIds": ["ra11261-first-time-jobseekers-act", "nbi-clearance-portal", "nbi-clearance-citizens-charter", "nbi-clearance-how-to-apply", "nbi-ftjs-citizens-charter"],
     "applicationUrl": "https://clearance.nbi.gov.ph/",
     "applicationLabelKey": "requirement.nbiApplication",
     "revision": 5,
@@ -491,7 +491,7 @@
     "requirementType": "recommended",
     "sourceIds": [],
     "demoOnly": true,
-    "applicationUrl": "https://consular.dfa.gov.ph/",
+    "applicationUrl": "https://passport.gov.ph/appointment",
     "applicationLabelKey": "demo.agencyHome",
     "revision": 1,
     "guideInstructions": "Use the official DFA Consular Affairs site to check the current application channel and appointment instructions. Do not assume an appointment is available or required based on this demo.",
@@ -547,7 +547,9 @@
     "timeSensitive": false,
     "validityMonths": null,
     "requirementType": "recommended",
-    "sourceIds": [],
+    "sourceIds": [
+      "nbi-clearance-how-to-apply"
+    ],
     "demoOnly": true,
     "applicationUrl": "https://clearance.nbi.gov.ph/",
     "applicationLabelKey": "demo.agencyHome",
@@ -576,7 +578,9 @@
     "timeSensitive": false,
     "validityMonths": null,
     "requirementType": "recommended",
-    "sourceIds": [],
+    "sourceIds": [
+      "nbi-clearance-how-to-apply"
+    ],
     "demoOnly": true,
     "applicationUrl": "https://clearance.nbi.gov.ph/",
     "applicationLabelKey": "demo.agencyHome",
@@ -605,7 +609,9 @@
     "timeSensitive": false,
     "validityMonths": null,
     "requirementType": "recommended",
-    "sourceIds": [],
+    "sourceIds": [
+      "nbi-clearance-how-to-apply"
+    ],
     "demoOnly": true,
     "applicationUrl": "https://clearance.nbi.gov.ph/",
     "applicationLabelKey": "demo.agencyHome",
@@ -634,7 +640,9 @@
     "timeSensitive": false,
     "validityMonths": null,
     "requirementType": "recommended",
-    "sourceIds": [],
+    "sourceIds": [
+      "nbi-clearance-how-to-apply"
+    ],
     "demoOnly": true,
     "applicationUrl": "https://clearance.nbi.gov.ph/",
     "applicationLabelKey": "demo.agencyHome",
@@ -663,9 +671,13 @@
     "timeSensitive": false,
     "validityMonths": null,
     "requirementType": "conditional",
-    "when": { "hasExistingNbiClearance": "yes" },
+    "when": {
+      "hasExistingNbiClearance": "yes"
+    },
     "conditionKey": "demo.condition.nbiExisting",
-    "sourceIds": [],
+    "sourceIds": [
+      "nbi-clearance-how-to-apply"
+    ],
     "demoOnly": true,
     "applicationUrl": "https://clearance.nbi.gov.ph/",
     "applicationLabelKey": "demo.agencyHome",
@@ -874,9 +886,12 @@
     "timeSensitive": false,
     "validityMonths": null,
     "requirementType": "recommended",
-    "sourceIds": [],
+    "sourceIds": [
+      "sss-become-member-faq",
+      "sss-employees-coverage"
+    ],
     "demoOnly": true,
-    "applicationUrl": "https://www.sss.gov.ph/",
+    "applicationUrl": "https://www.sss.gov.ph/become-an-sss-member/",
     "applicationLabelKey": "demo.agencyHome",
     "revision": 1,
     "guideInstructions": "Use the official SSS and PhilHealth sites and ask your employer which steps, if any, they handle. This checklist does not establish a universal employee-registration process.",
@@ -903,11 +918,16 @@
     "timeSensitive": false,
     "validityMonths": null,
     "requirementType": "conditional",
-    "when": { "hasExistingSssNumber": "yes" },
+    "when": {
+      "hasExistingSssNumber": "yes"
+    },
     "conditionKey": "demo.condition.sssExisting",
-    "sourceIds": [],
+    "sourceIds": [
+      "sss-become-member-faq",
+      "sss-employees-coverage"
+    ],
     "demoOnly": true,
-    "applicationUrl": "https://www.sss.gov.ph/",
+    "applicationUrl": "https://www.sss.gov.ph/become-an-sss-member/",
     "applicationLabelKey": "demo.agencyHome",
     "revision": 1,
     "guideInstructions": "If you already have an SS Number, ask SSS how to access or update that record. Do not apply for another number based only on this demo prompt.",
@@ -934,11 +954,16 @@
     "timeSensitive": false,
     "validityMonths": null,
     "requirementType": "conditional",
-    "when": { "hasExistingSssNumber": "no" },
+    "when": {
+      "hasExistingSssNumber": "no"
+    },
     "conditionKey": "demo.condition.sssNew",
-    "sourceIds": [],
+    "sourceIds": [
+      "sss-become-member-faq",
+      "sss-employees-coverage"
+    ],
     "demoOnly": true,
-    "applicationUrl": "https://www.sss.gov.ph/",
+    "applicationUrl": "https://www.sss.gov.ph/become-an-sss-member/",
     "applicationLabelKey": "demo.agencyHome",
     "revision": 1,
     "guideInstructions": "Review SSS's current official instructions for people without an SS Number and confirm which route applies. This prompt does not establish eligibility or a required application timeline.",
@@ -965,11 +990,15 @@
     "timeSensitive": false,
     "validityMonths": null,
     "requirementType": "conditional",
-    "when": { "hasExistingPhilhealthNumber": "yes" },
+    "when": {
+      "hasExistingPhilhealthNumber": "yes"
+    },
     "conditionKey": "demo.condition.philhealthExisting",
-    "sourceIds": [],
+    "sourceIds": [
+      "philhealth-formal-employee-registration"
+    ],
     "demoOnly": true,
-    "applicationUrl": "https://www.philhealth.gov.ph/",
+    "applicationUrl": "https://www.philhealth.gov.ph/members/formal/registration.php",
     "applicationLabelKey": "demo.agencyHome",
     "revision": 1,
     "guideInstructions": "If you already have a PhilHealth number, confirm your membership record and any needed update with PhilHealth or your employer.",
@@ -996,11 +1025,15 @@
     "timeSensitive": false,
     "validityMonths": null,
     "requirementType": "conditional",
-    "when": { "hasExistingPhilhealthNumber": "no" },
+    "when": {
+      "hasExistingPhilhealthNumber": "no"
+    },
     "conditionKey": "demo.condition.philhealthNew",
-    "sourceIds": [],
+    "sourceIds": [
+      "philhealth-formal-employee-registration"
+    ],
     "demoOnly": true,
-    "applicationUrl": "https://www.philhealth.gov.ph/",
+    "applicationUrl": "https://www.philhealth.gov.ph/members/formal/registration.php",
     "applicationLabelKey": "demo.agencyHome",
     "revision": 1,
     "guideInstructions": "Confirm the current PhilHealth route for your member category and circumstances with the agency or employer. This checklist does not create a registration requirement.",
@@ -1027,11 +1060,16 @@
     "timeSensitive": false,
     "validityMonths": null,
     "requirementType": "conditional",
-    "when": { "hasEmploymentRelationship": "yes" },
+    "when": {
+      "hasEmploymentRelationship": "yes"
+    },
     "conditionKey": "checklist.condition.employmentRelationship",
-    "sourceIds": [],
+    "sourceIds": [
+      "sss-become-member-faq",
+      "sss-employees-coverage"
+    ],
     "demoOnly": true,
-    "applicationUrl": "https://www.sss.gov.ph/",
+    "applicationUrl": "https://www.sss.gov.ph/become-an-sss-member/",
     "applicationLabelKey": "demo.agencyHome",
     "revision": 1,
     "guideInstructions": "Ask your employer which SSS and PhilHealth onboarding or reporting steps it handles. Confirm unresolved questions with the relevant agency.",
