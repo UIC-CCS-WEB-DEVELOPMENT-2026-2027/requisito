@@ -5,11 +5,14 @@ import HighlightedText from '../components/HighlightedText.jsx'
 import RecordMeta from '../components/RecordMeta.jsx'
 import { searchAll } from '../data/helpers.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
+import { href } from '../routeManifest.js'
 
 const groupKeys = {
+  goals: 'group.goals',
   services: 'group.services',
   barangays: 'group.barangays',
   requirements: 'group.requirements',
+  sources: 'group.sources',
   updates: 'group.updates',
   history: 'nav.history',
   briefs: 'nav.briefs',
@@ -21,17 +24,37 @@ const groupKeys = {
 }
 
 function recordLink(type, record) {
-  if (type === 'services') return `/services/${record.slug}`
-  if (type === 'barangays') return `/barangays/${record.slug}`
-  if (type === 'districts') return `/districts/${encodeURIComponent(record.slug)}`
-  if (type === 'requirements') return `/checklist?goal=${record.goalId}`
-  if (type === 'history') return '/history'
-  if (type === 'briefs') return '/briefs'
-  if (type === 'budget') return '/budget'
-  if (type === 'procurement') return '/procurement'
-  if (type === 'elections') return '/elections'
-  if (type === 'accountability') return '/accountability'
-  return '/updates'
+  if (type === 'goals') return href('goalDetail', { slug: record.slug })
+  if (type === 'services') return href('serviceDetail', { slug: record.slug })
+  if (type === 'barangays') return href('barangayProfile', { slug: record.slug })
+  if (type === 'districts') return href('districtProfile', { name: record.slug })
+  if (type === 'requirements') return href('documentGuide', { slug: record.slug })
+  if (type === 'history') return href('history')
+  if (type === 'briefs') return href('briefs')
+  if (type === 'budget') return href('budget')
+  if (type === 'procurement') return href('procurement')
+  if (type === 'elections') return href('elections')
+  if (type === 'accountability') return href('accountability')
+  return href('updates')
+}
+
+function safeSourceUrl(value) {
+  try {
+    const url = new URL(value)
+    return url.protocol === 'https:' && !url.username && !url.password ? url.href : null
+  } catch {
+    return null
+  }
+}
+
+function safeMetadataRecord(record) {
+  return {
+    ...record,
+    sourceUrl: safeSourceUrl(record.sourceUrl) ?? '',
+    relatedSources: Array.isArray(record.relatedSources)
+      ? record.relatedSources.map(safeSourceUrl).filter(Boolean)
+      : [],
+  }
 }
 
 function Search() {
@@ -99,8 +122,8 @@ function Search() {
           <EmptyState message={t('search.noResults').replace('{query}', query)} />
           <p>{t('search.suggestions')}</p>
           <ul>
-            <li><Link to="/services">{t('nav.services')}</Link></li>
-            <li><Link to="/barangays">{t('nav.barangays')}</Link></li>
+            <li><Link to={href('services')}>{t('nav.services')}</Link></li>
+            <li><Link to={href('barangays')}>{t('nav.barangays')}</Link></li>
             {selectedType && <li><button type="button" onClick={() => updateType('')}>{t('search.clearType')}</button></li>}
           </ul>
         </>
@@ -111,9 +134,59 @@ function Search() {
           <ul className="portal-grid">
             {records.map((record) => (
               <li className="portal-card" key={`${type}-${record.id}`}>
-                <h3><Link to={recordLink(type, record)}><HighlightedText text={record.title ?? record.label} query={query} /></Link></h3>
+                <h3>
+                  {type === 'sources' ? (
+                    safeSourceUrl(record.sourceUrl) ? (
+                      <a href={safeSourceUrl(record.sourceUrl)} target="_blank" rel="noopener noreferrer">
+                        <HighlightedText text={record.title ?? record.label} query={query} />
+                      </a>
+                    ) : <HighlightedText text={record.title ?? record.label} query={query} />
+                  ) : (
+                    <Link to={recordLink(type, record)}><HighlightedText text={record.title ?? record.label} query={query} /></Link>
+                  )}
+                </h3>
                 <p><HighlightedText text={record.description ?? record.notes ?? ''} query={query} /></p>
-                <RecordMeta record={record} />
+                {type === 'sources' && record.linkedRequirementSlugs.length > 0 && (
+                  <p>
+                    {record.linkedRequirementSlugs.map((slug, index) => (
+                      <span key={slug}>
+                        {index > 0 ? ', ' : ''}
+                        <Link to={href('documentGuide', { slug })}>{t('search.relatedGuidance')}</Link>
+                      </span>
+                    ))}
+                  </p>
+                )}
+                {type === 'requirements' && record.linkedSources?.length > 0 && (
+                  <div>
+                    <p>{t('search.relatedSources')}</p>
+                    <ul>
+                      {record.linkedSources.map((source) => {
+                        const sourceUrl = safeSourceUrl(source.url)
+                        const statusKey = {
+                          verified: 'record.verified',
+                          unverified: 'record.unverified',
+                          conflicting: 'record.conflicting',
+                        }[source.verification] ?? 'record.unverified'
+                        return (
+                          <li key={source.id}>
+                            {sourceUrl ? (
+                              <a href={sourceUrl} target="_blank" rel="noopener noreferrer">
+                                {source.title}
+                              </a>
+                            ) : source.title}
+                            {' — '}{t(statusKey)}; {t('goals.lastChecked')}:{' '}
+                            {source.lastChecked
+                              ? <time dateTime={source.lastChecked}>{source.lastChecked}</time>
+                              : t('goals.lastCheckedUnavailable')}
+                          </li>
+                        )
+                      })}
+                    </ul>
+                  </div>
+                )}
+                {!record.demoOnly && !record.demoContent && (
+                  <RecordMeta record={safeMetadataRecord(record)} />
+                )}
               </li>
             ))}
           </ul>

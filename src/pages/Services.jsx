@@ -4,6 +4,8 @@ import ServiceCard from '../components/ServiceCard.jsx'
 import { getServices } from '../data/helpers.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
 import { filterServices, sortServices } from '../utils/serviceFilters.js'
+import { href } from '../routeManifest.js'
+import { Link } from 'react-router-dom'
 
 const services = getServices()
 const categories = [...new Set(services.map((service) => service.category))]
@@ -36,6 +38,11 @@ function Services() {
       <p className="eyebrow">{t('services.eyebrow')}</p>
       <h1 id="services-title">{t('page.services')}</h1>
       <p className="page-description">{t('services.description')}</p>
+      <p>
+        <Link to={href('serviceGuides')}>{t('feature.serviceGuides.title')}</Link>
+        {' · '}
+        <Link to={href('whereToGo')}>{t('feature.whereToGo.title')}</Link>
+      </p>
       <div className="portal-filters">
         <div>
           <label htmlFor="services-search">{t('label.searchServices')}</label>

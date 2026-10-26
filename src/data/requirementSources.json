@@ -1,0 +1,447 @@
+[
+  {
+    "id": "davao-cho-health-card-2026",
+    "agency": "Davao City Information Office / City Health Office",
+    "title": "Health card issuance starts January 7",
+    "url": "https://davaocity.gov.ph/health/health-card-issuance-starts-january-7/",
+    "publishedDate": null,
+    "statementDate": "2026-01-06",
+    "effectiveDate": "2026-01-07",
+    "lastChecked": "2026-10-26",
+    "verification": "unverified",
+    "evidenceType": "dated official announcement",
+    "supports": [
+      "The announcement lists a chest x-ray and states a six-month validity period.",
+      "The announcement lists urinalysis and fecalysis and states three-month validity periods.",
+      "The announcement reports a PHP 50 receipt from the City Treasurer's Office.",
+      "The announcement lists a cedula and valid photo ID.",
+      "The announcement describes a food-safety seminar certificate for food-industry employees.",
+      "The announcement describes a Hepatitis B antibody test for occupations involving exchange of body fluids and the pink-card category.",
+      "The announcement says issuance was to begin January 7, 2026, at the fifth floor of Gaisano Ilustre."
+    ],
+    "limitations": "This is a dated announcement, not current confirmation. Current requirements, fees, location, schedule, accepted formats, and occupational categories have not been independently rechecked or approved through the two-person review."
+  },
+  {
+    "id": "philhealth-direct-contributors",
+    "agency": "Philippine Health Insurance Corporation",
+    "title": "Formal Economy Members — Who are Qualified",
+    "url": "https://www.philhealth.gov.ph/members/formal/",
+    "publishedDate": null,
+    "statementDate": null,
+    "effectiveDate": null,
+    "lastChecked": "2026-10-26",
+    "verification": "unverified",
+    "evidenceType": "official program page",
+    "supports": [
+      "The page identifies workers in government and private sectors with employee-employer relations as qualified under the direct-contributor program."
+    ],
+    "relatedSources": [
+      "https://www.philhealth.gov.ph/members/formal/member.php"
+    ],
+    "limitations": "The formal-economy page and its member-category page describe covered worker categories. Their content does not establish first-time enrollment steps, required supporting documents, who files, or the timing of employer onboarding."
+  },
+  {
+    "id": "sss-become-member-faq",
+    "agency": "Social Security System",
+    "title": "Be an SSS Member",
+    "url": "https://www.sss.gov.ph/become-an-sss-member/",
+    "publishedDate": null,
+    "statementDate": null,
+    "effectiveDate": null,
+    "lastChecked": "2026-10-26",
+    "verification": "unverified",
+    "evidenceType": "official agency FAQ",
+    "supports": [
+      "The page directs people without an SS Number to apply online or through an SSS branch E-Center.",
+      "The online application asks applicants to complete registrant verification, basic and contact information, home address, purpose of registration, social status, place of birth, beneficiary details when applicable, and personal-record details before generating the number.",
+      "The email link to continue an online application is valid for five calendar days; an expired link requires a new online application.",
+      "The procedure permits the applicant to proceed without uploading a supporting document; if the applicant uploads one, the page describes image format and file-size limits.",
+      "The page says the employer reports a prospective employee for coverage and that employee coverage takes effect on the first day of employment.",
+      "The page does not state an application fee or an employer-specific deadline for obtaining an SS Number."
+    ],
+    "limitations": "The page does not establish that every employer requires the applicant to obtain an SS Number before hiring, nor does it state a fee or employer-specific onboarding deadline. It does not define all eligibility scenarios or prove that the listed data fields are prerequisites for every applicant category. Its optional-upload statement must not be interpreted as a universal document checklist. Whether an existing member needs a new application or a record update should be confirmed with SSS. The source remains unverified pending the project's independent review workflow."
+  },
+  {
+    "id": "sss-list-of-valid-ids",
+    "agency": "Social Security System",
+    "title": "List of Valid IDs",
+    "url": "https://www.sss.gov.ph/list-of-valid-ids/",
+    "publishedDate": null,
+    "statementDate": null,
+    "effectiveDate": null,
+    "lastChecked": "2026-10-26",
+    "verification": "unverified",
+    "evidenceType": "official agency identification list",
+    "supports": [
+      "The page lists a birth certificate first; alternatives if it is unavailable; and a fallback of any two listed documents when the earlier documents are unavailable, with both showing the correct name and at least one showing date of birth."
+    ],
+    "limitations": "This page does not say that every listed document must be uploaded during an initial SS Number application. The application guidance says supporting-document upload is optional. Confirm which identity evidence applies to the specific transaction with SSS. This source remains unverified pending the project's independent review workflow."
+  },
+  {
+    "id": "philhealth-member-services",
+    "agency": "Philippine Health Insurance Corporation",
+    "title": "Online Services",
+    "url": "https://www.philhealth.gov.ph/services/",
+    "publishedDate": null,
+    "statementDate": null,
+    "effectiveDate": null,
+    "lastChecked": "2026-10-26",
+    "verification": "unverified",
+    "evidenceType": "official agency service page",
+    "supports": [
+      "PhilHealth lists online access to member records, contributions, and the Member Data Record, including viewing or printing the MDR.",
+      "PhilHealth describes the Electronic Premium Remittance System as enabling employers to remit premium contributions online."
+    ],
+    "limitations": "The page describes access to existing member information and employer contribution remittance, not first-time enrollment, required documents, or responsibility for enrolling an employee."
+  },
+  {
+    "id": "ra11261-first-time-jobseekers-act",
+    "agency": "Congress of the Philippines / Official Gazette",
+    "title": "Republic Act No. 11261 — First Time Jobseekers Assistance Act",
+    "url": "https://www.officialgazette.gov.ph/2019/04/10/republic-act-no-11261/",
+    "publishedDate": null,
+    "statementDate": "2019-04-10",
+    "effectiveDate": null,
+    "lastChecked": "2026-10-26",
+    "verification": "unverified",
+    "evidenceType": "Official Gazette publication page and linked PDF; article metadata reviewed",
+    "supports": [
+      "The Official Gazette article identifies Republic Act No. 11261, gives its signing date as April 10, 2019, and links a PDF bearing the Act number."
+    ],
+    "limitations": "The Official Gazette article page and PDF link were accessible, but the PDF text itself was not extracted or reviewed in this research. Exact section wording was cross-checked only against the Lawphil transcription at https://lawphil.net/statutes/repacts/ra2019/ra_11261_2019.html, which is not an official source and cannot establish the statutory claims. An independent reviewer must inspect the official PDF, check current amendments and implementation, and confirm the Act's conditions and exceptions before approving any legal guidance.",
+    "relatedSources": [
+      "https://www.officialgazette.gov.ph/downloads/2019/04apr/20190410-RA-11261-RRD.pdf",
+      "https://lawphil.net/statutes/repacts/ra2019/ra_11261_2019.html"
+    ]
+  },
+  {
+    "id": "nbi-clearance-portal",
+    "agency": "National Bureau of Investigation",
+    "title": "Official NBI Clearance portal",
+    "url": "https://clearance.nbi.gov.ph/",
+    "publishedDate": null,
+    "statementDate": null,
+    "effectiveDate": null,
+    "lastChecked": "2026-10-26",
+    "verification": "unverified",
+    "evidenceType": "official service portal landing page",
+    "supports": [
+      "The page title identifies the destination as OFFICIAL NBI CLEARANCE and is hosted on the clearance.nbi.gov.ph government subdomain."
+    ],
+    "limitations": "The retrieved page is a JavaScript application shell and does not expose its current transaction instructions in this review. Applicant eligibility, required documents, booking steps, fees, processing time, Davao office details, and implementation of Republic Act No. 11261 remain unconfirmed. The destination identity is not evidence that a particular applicant qualifies or that a fee is waived."
+  },
+  {
+    "id": "nbi-clearance-citizens-charter",
+    "agency": "National Bureau of Investigation",
+    "title": "Citizen's Charter — NBI Clearance Application",
+    "url": "https://nbi.gov.ph/citizens-charter/nbi-clearance-application/",
+    "publishedDate": null,
+    "statementDate": null,
+    "effectiveDate": null,
+    "lastChecked": "2026-10-26",
+    "verification": "unverified",
+    "evidenceType": "official Citizen's Charter page",
+    "supports": [
+      "The page identifies the service as NBI Clearance Processing and Issuance for the public and lists two valid government-issued identification cards.",
+      "The page describes walk-in, online without e-payment, and online with e-payment service paths, including biometric and image capture and clearance printing.",
+      "The page links the online-with-e-payment option to https://clearance.nbi.gov.ph/."
+    ],
+    "limitations": "The page does not state a publication or effective date. Its listed fee amounts (PHP 115, PHP 165, PHP 415) are not explained by transaction category or a currentness date and are not suitable for publication as current fees. Its address and schedule describe the NBI Clearance and Identification Center in Manila and do not confirm a Davao service office or local procedure. Confirm the current charter and applicable Davao instructions before relying on its requirements, steps, fees, location, or timing."
+  },
+  {
+    "id": "pagibig-membership-registration",
+    "agency": "Home Development Mutual Fund (Pag-IBIG Fund)",
+    "title": "Membership Registration",
+    "url": "https://www.pagibigfund.gov.ph/Membership_Registration.html",
+    "publishedDate": null,
+    "statementDate": null,
+    "effectiveDate": null,
+    "lastChecked": "2026-10-26",
+    "verification": "unverified",
+    "evidenceType": "official page URL; access challenge",
+    "supports": [
+      "The official Pag-IBIG Fund membership-registration URL was identified, but the page returned a browser-verification challenge during this review."
+    ],
+    "limitations": "No registration steps, applicant category, documents, contribution rules, fees, timing, employer responsibility, or first-time employee applicability could be confirmed from the challenged page. This record is only a research lead; confirm current instructions with Pag-IBIG before acting."
+  },
+  {
+    "id": "bir-orus-portal",
+    "agency": "Bureau of Internal Revenue",
+    "title": "Online Registration and Update System (ORUS)",
+    "url": "https://orus.bir.gov.ph/",
+    "publishedDate": null,
+    "statementDate": null,
+    "effectiveDate": null,
+    "lastChecked": "2026-10-26",
+    "verification": "unverified",
+    "evidenceType": "official online portal landing shell",
+    "supports": [
+      "The official BIR ORUS URL returned an application shell titled ORUS."
+    ],
+    "limitations": "The retrieved shell contains no visible TIN registration instructions. The correct employee registration route, employer/applicant responsibilities, required information, fees, timing, and the application of Republic Act No. 11261 remain unconfirmed. Do not treat this portal link as a complete registration procedure."
+  },
+  {
+    "id": "psa-birth-certificate-request",
+    "agency": "Philippine Statistics Authority",
+    "title": "Philippine Statistics Authority official website",
+    "url": "https://psa.gov.ph/",
+    "publishedDate": null,
+    "statementDate": null,
+    "effectiveDate": null,
+    "lastChecked": "2026-10-26",
+    "verification": "unverified",
+    "evidenceType": "official URL lead; page unavailable",
+    "supports": [
+      "The PSA URL was requested as a candidate civil-registry document reference, but a transport-level DNS or connection failure prevented retrieval; no procedure claim is supported."
+    ],
+    "limitations": "The page title, current URL validity, request channels, eligibility, documents, fees, delivery, authorized representatives, and current birth-certificate process were not confirmed. Treat this as an unverified research lead, not instructions."
+  },
+  {
+    "id": "psa-birth-certificate-service",
+    "agency": "Philippine Statistics Authority",
+    "title": "Birth Certificate",
+    "url": "https://psa.gov.ph/birth-certificate",
+    "publishedDate": null,
+    "statementDate": null,
+    "effectiveDate": null,
+    "lastChecked": "2026-10-26",
+    "verification": "unverified",
+    "evidenceType": "official agency page, directly read; independent approval pending",
+    "researchAttribution": {
+      "documentTitle": "FIRST-JOB GOVERNMENT REQUIREMENTS IN THE PHILIPPINES",
+      "documentPages": [
+        5,
+        8,
+        11
+      ],
+      "sourceCheckDateReported": "2026-10-19"
+    },
+    "supports": [
+      "The page identifies Census Serbilis Centers and requires appointments for walk-in requests; it separately links online ordering channels."
+    ],
+    "limitations": "No universal fee, delivery time, employer requirement, or fee-waiver eligibility is established. Direct page comparison is research only; independent approval remains pending.",
+    "directInspection": {
+      "checkedOn": "2026-10-26",
+      "section": "Walk-in Application; Through the Web",
+      "result": "readable",
+      "independentApproval": false
+    }
+  },
+  {
+    "id": "bir-citizens-charter-2026",
+    "agency": "Bureau of Internal Revenue",
+    "title": "BIR Citizen's Charter (2026 Edition)",
+    "url": "https://bir-cdn.bir.gov.ph/BIR/pdf/BIR%20Citizen%27s%20Charter%20%282026%20Edition%29v2.pdf",
+    "publishedDate": null,
+    "statementDate": null,
+    "effectiveDate": null,
+    "lastChecked": "2026-10-26",
+    "verification": "unverified",
+    "evidenceType": "official agency PDF; scoped text comparison; independent approval pending",
+    "researchAttribution": {
+      "documentTitle": "FIRST-JOB GOVERNMENT REQUIREMENTS IN THE PHILIPPINES",
+      "documentPages": [
+        4,
+        7
+      ],
+      "sourceCheckDateReported": "2026-10-19"
+    },
+    "supports": [
+      "Printed pages 2–4 (PDF pages 11–13) describe first-time hired employees without a TIN earning purely compensation income in the Philippines, employer-assisted ORUS registration within ten days of employment, no processing fee for the online route, and a separate manual Form 1902 route."
+    ],
+    "limitations": "Scope is the stated hired-employee route only; this does not establish a universal jobseeker obligation. No live transaction was tested. Full independent approval remains pending; service standards are not guarantees.",
+    "directInspection": {
+      "checkedOn": "2026-10-26",
+      "section": "Printed pages 2–4; PDF pages 11–13",
+      "result": "scoped text readable",
+      "independentApproval": false
+    }
+  },
+  {
+    "id": "bir-cdr-2025",
+    "agency": "Bureau of Internal Revenue",
+    "title": "Checklist of Documentary Requirements (2025)",
+    "url": "https://bir-cdn.bir.gov.ph/BIR/pdf/CDR%20-%202025%20%281%29.pdf",
+    "publishedDate": null,
+    "statementDate": null,
+    "effectiveDate": null,
+    "lastChecked": "2026-10-26",
+    "verification": "unverified",
+    "evidenceType": "official agency PDF; scoped text comparison; independent approval pending",
+    "researchAttribution": {
+      "documentTitle": "FIRST-JOB GOVERNMENT REQUIREMENTS IN THE PHILIPPINES",
+      "documentPages": [
+        7,
+        11
+      ],
+      "sourceCheckDateReported": "2026-10-19"
+    },
+    "supports": [
+      "CDR F1102, revised July 2025, page 8, describes employer-assisted ORUS registration for already-hired employees, manual Form 1902, identity evidence and conditional documents, with no fee listed."
+    ],
+    "limitations": "Scope is the stated hired-employee route only; this does not establish a universal jobseeker obligation. No live transaction was tested. Full independent approval remains pending; service standards are not guarantees.",
+    "directInspection": {
+      "checkedOn": "2026-10-26",
+      "section": "CDR F1102, page 8 (July 2025 revision)",
+      "result": "scoped text readable",
+      "independentApproval": false
+    }
+  },
+  {
+    "id": "sss-employees-coverage",
+    "agency": "Social Security System",
+    "title": "Employees",
+    "url": "https://www.sss.gov.ph/employees/",
+    "publishedDate": null,
+    "statementDate": null,
+    "effectiveDate": null,
+    "lastChecked": "2026-10-26",
+    "verification": "unverified",
+    "evidenceType": "official agency page, directly read; independent approval pending",
+    "researchAttribution": {
+      "documentTitle": "FIRST-JOB GOVERNMENT REQUIREMENTS IN THE PHILIPPINES",
+      "documentPages": [
+        2,
+        3,
+        7
+      ],
+      "sourceCheckDateReported": "2026-10-19"
+    },
+    "supports": [
+      "The page distinguishes employee coverage, effective from the first employment day, from securing an SS Number."
+    ],
+    "limitations": "This is not a universal pre-hiring deadline or proof that every jobseeker needs a new number. Direct page comparison is research only; independent approval remains pending.",
+    "directInspection": {
+      "checkedOn": "2026-10-26",
+      "section": "Definition; Registration",
+      "result": "readable",
+      "independentApproval": false
+    }
+  },
+  {
+    "id": "philhealth-formal-employee-registration",
+    "agency": "Philippine Health Insurance Corporation",
+    "title": "Formal Employee Registration",
+    "url": "https://www.philhealth.gov.ph/members/formal/registration.php",
+    "publishedDate": null,
+    "statementDate": null,
+    "effectiveDate": null,
+    "lastChecked": "2026-10-26",
+    "verification": "unverified",
+    "evidenceType": "official agency page, directly read; independent approval pending",
+    "researchAttribution": {
+      "documentTitle": "FIRST-JOB GOVERNMENT REQUIREMENTS IN THE PHILIPPINES",
+      "documentPages": [
+        3,
+        7,
+        11,
+        12
+      ],
+      "sourceCheckDateReported": "2026-10-19"
+    },
+    "supports": [
+      "Formal employees without a PIN are directed to submit two PMRF copies to HR; newly hired employees with a PIN provide it to the employer for ER2 reporting."
+    ],
+    "limitations": "Scope is formal employment only. No registration fee or processing-time guarantee is established. Direct page comparison is research only; independent approval remains pending.",
+    "directInspection": {
+      "checkedOn": "2026-10-26",
+      "section": "Registration procedures: employees without PIN; newly hired employees with PIN",
+      "result": "readable",
+      "independentApproval": false
+    }
+  },
+  {
+    "id": "philhealth-employer-reporting",
+    "agency": "Philippine Health Insurance Corporation",
+    "title": "Employer Reporting",
+    "url": "https://www.philhealth.gov.ph/partners/employers/report.php",
+    "publishedDate": null,
+    "statementDate": null,
+    "effectiveDate": null,
+    "lastChecked": "2026-10-26",
+    "verification": "unverified",
+    "evidenceType": "official agency page, directly read; independent approval pending",
+    "researchAttribution": {
+      "documentTitle": "FIRST-JOB GOVERNMENT REQUIREMENTS IN THE PHILIPPINES",
+      "documentPages": [
+        3,
+        7
+      ],
+      "sourceCheckDateReported": "2026-10-19"
+    },
+    "supports": [
+      "The page directs employers to report newly hired employees using ER2 within 30 days from assumption."
+    ],
+    "limitations": "This is an employer reporting timeline, not an applicant registration deadline. Direct page comparison is research only; independent approval remains pending.",
+    "directInspection": {
+      "checkedOn": "2026-10-26",
+      "section": "For newly hired employees",
+      "result": "readable",
+      "independentApproval": false
+    }
+  },
+  {
+    "id": "nbi-clearance-how-to-apply",
+    "agency": "National Bureau of Investigation",
+    "title": "How to Apply for NBI Clearance",
+    "url": "https://nbi.gov.ph/how-to-apply-nbi-clearance/",
+    "publishedDate": null,
+    "statementDate": null,
+    "effectiveDate": null,
+    "lastChecked": "2026-10-26",
+    "verification": "unverified",
+    "evidenceType": "official agency page, directly read; independent approval pending",
+    "researchAttribution": {
+      "documentTitle": "FIRST-JOB GOVERNMENT REQUIREMENTS IN THE PHILIPPINES",
+      "documentPages": [
+        4,
+        7,
+        8,
+        12
+      ],
+      "sourceCheckDateReported": "2026-10-19"
+    },
+    "supports": [
+      "The page describes online application and branch appointments. It directs FTJS applicants to bring an original Barangay Certificate and signed Oath of Undertaking."
+    ],
+    "limitations": "The FTJS Charter omits the Oath from its checklist. Fee mapping, general validity and current Davao counter handling remain unresolved; do not publish a fixed total or release guarantee. Direct page comparison is research only; independent approval remains pending.",
+    "directInspection": {
+      "checkedOn": "2026-10-26",
+      "section": "Phase 1; Phase 2, What to Bring",
+      "result": "readable",
+      "independentApproval": false
+    }
+  },
+  {
+    "id": "nbi-ftjs-citizens-charter",
+    "agency": "National Bureau of Investigation",
+    "title": "Citizen's Charter — NBI Clearance for First-Time Job Seekers",
+    "url": "https://nbi.gov.ph/citizens-charter/nbi-clearance-first-time-job-seekers/",
+    "publishedDate": null,
+    "statementDate": null,
+    "effectiveDate": null,
+    "lastChecked": "2026-10-26",
+    "verification": "unverified",
+    "evidenceType": "official agency page, directly read; independent approval pending",
+    "researchAttribution": {
+      "documentTitle": "FIRST-JOB GOVERNMENT REQUIREMENTS IN THE PHILIPPINES",
+      "documentPages": [
+        4,
+        5,
+        7,
+        12
+      ],
+      "sourceCheckDateReported": "2026-10-19"
+    },
+    "supports": [
+      "The Charter lists Barangay Certification and two government IDs or acceptable certificates, and a fee-free FTJS service path."
+    ],
+    "limitations": "The checklist omits the Oath mentioned by the how-to page. Statutory eligibility and local counter handling still require confirmation. Service standards are not guarantees. Direct page comparison is research only; independent approval remains pending.",
+    "directInspection": {
+      "checkedOn": "2026-10-26",
+      "section": "Checklist of requirements; With Online Application",
+      "result": "readable",
+      "independentApproval": false
+    }
+  }
+]

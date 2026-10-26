@@ -1,43 +1,28 @@
 import { Link } from 'react-router-dom'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
+import { href, routeManifest } from '../routeManifest.js'
 
 function Footer() {
   const { t } = useLanguage()
+  const footerGroups = [
+    { id: 'explore', labelKey: 'group.explore' },
+    { id: 'data', labelKey: 'group.data' },
+    { id: 'civic', labelKey: 'group.civic' },
+    { id: 'about', labelKey: 'group.about' },
+  ]
   return (
     <footer className="site-footer">
       <p>Requisito</p>
       <p className="footer-description">{t('footer.disclaimer')}</p>
       <nav className="footer-nav footer-nav-groups" aria-label={t('a11y.secondaryNavigation')}>
-        <section aria-label={t('group.explore')}>
-          <h2>{t('group.explore')}</h2>
-          <Link to="/services">{t('nav.services')}</Link>
-          <Link to="/barangays">{t('nav.barangays')}</Link>
-          <Link to="/districts">{t('nav.districts')}</Link>
-          <Link to="/about-davao">{t('nav.about')}</Link>
-          <Link to="/history">{t('nav.history')}</Link>
-          <Link to="/briefs">{t('nav.briefs')}</Link>
-        </section>
-        <section aria-label={t('group.data')}>
-          <h2>{t('group.data')}</h2>
-          <Link to="/budget">{t('nav.budget')}</Link>
-          <Link to="/procurement">{t('nav.procurement')}</Link>
-          <Link to="/status">{t('nav.status')}</Link>
-          <Link to="/monitor">{t('nav.monitor')}</Link>
-          <Link to="/status">{t('nav.sources')}</Link>
-        </section>
-        <section aria-label={t('group.civic')}>
-          <h2>{t('group.civic')}</h2>
-          <Link to="/officials">{t('nav.officials')}</Link>
-          <Link to="/elections">{t('nav.elections')}</Link>
-          <Link to="/accountability">{t('nav.accountability')}</Link>
-          <Link to="/participate">{t('nav.participate')}</Link>
-        </section>
-        <section aria-label={t('group.about')}>
-          <h2>{t('group.about')}</h2>
-          <Link to="/integrity">{t('nav.integrity')}</Link>
-          <Link to="/contribute">{t('nav.contribute')}</Link>
-          <Link to="/credits">{t('nav.credits')}</Link>
-        </section>
+        {footerGroups.map((group) => (
+          <section aria-label={t(group.labelKey)} key={group.id}>
+            <h2>{t(group.labelKey)}</h2>
+            {routeManifest.filter((route) => route.footer === group.id).map((route) => (
+              <Link key={route.id} to={href(route.id)}>{t(route.labelKey)}</Link>
+            ))}
+          </section>
+        ))}
       </nav>
     </footer>
   )

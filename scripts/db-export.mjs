@@ -5,7 +5,7 @@ import { spawnSync } from 'node:child_process'
 import { randomBytes } from 'node:crypto'
 import { fileURLToPath } from 'node:url'
 import { databasePathFromEnv } from '../server/config.js'
-import { catalogNames, recordTypesForCatalog } from '../server/db/catalogs.js'
+import { catalogNames, recordTypes, recordTypesForCatalog } from '../server/db/catalogs.js'
 import { openDatabase } from '../server/db/openDatabase.js'
 import { restoreId } from '../server/db/records.js'
 
@@ -39,17 +39,38 @@ function rowToRecord(row) {
   }
 }
 
-function hasMatchingRecordAudit(record) {
+function catalogRecord(name, record) {
+  if (name !== 'requirementSources') return record
+  const { id, verification } = record
+  const data = { ...record }
+  delete data.type
+  delete data.id
+  delete data.verification
+  delete data.lastVerified
+  const { sourceUrl, verificationReview, ...sourceData } = data
+  return {
+    ...sourceData,
+    ...(sourceUrl && !sourceData.url ? { url: sourceUrl } : {}),
+    id,
+    verification,
+    lastChecked: verificationReview?.sourceAccessedOn ?? sourceData.lastChecked,
+    ...(verificationReview ? { verificationReview } : {}),
+  }
+}
+
+function hasMatchingRecordAudit(name, record) {
+  const recordType = record.type ?? recordTypes[name]
   const entry = db.prepare(`
     SELECT action, next FROM audit_log
     WHERE record_type = ? AND record_id = ?
       AND action IN ('record.edited', 'record.edited.reset-verification', 'verification.approved')
     ORDER BY id DESC LIMIT 1
-  `).get(record.type, String(record.id))
+  `).get(recordType, String(record.id))
   if (!entry?.next) return false
   const next = JSON.parse(entry.next)
   const auditedRecord = entry.action === 'verification.approved' ? next.record : next
-  return Boolean(auditedRecord) && stableJson(auditedRecord) === stableJson(record)
+  return Boolean(auditedRecord) &&
+    stableJson(catalogRecord(name, auditedRecord)) === stableJson(record)
 }
 
 function createCatalog(name) {
@@ -59,7 +80,10 @@ function createCatalog(name) {
     SELECT type, id, data, verification, last_verified
     FROM records WHERE type IN (${types.map(() => '?').join(', ')}) ORDER BY type, id
   `).all(...types)
-  const dbRecords = new Map(rows.map((row) => [String(row.id), rowToRecord(row)]))
+  const dbRecords = new Map(rows.map((row) => [
+    String(row.id),
+    catalogRecord(name, rowToRecord(row)),
+  ]))
   const existingIds = new Set(existing.map((record) => String(record.id)))
   const missing = existing.filter((record) => !dbRecords.has(String(record.id)))
   if (missing.length) {
@@ -67,14 +91,14 @@ function createCatalog(name) {
   }
   const output = existing.map((record) => dbRecords.get(String(record.id)))
   const additions = rows
-    .map(rowToRecord)
+    .map((row) => catalogRecord(name, rowToRecord(row)))
     .filter((record) => !existingIds.has(String(record.id)))
     .sort((left, right) => String(left.id).localeCompare(String(right.id), 'en', { numeric: true }))
   output.push(...additions)
   const oldById = new Map(existing.map((record) => [String(record.id), stableJson(record)]))
   const changedRecords = output.filter((record) => oldById.get(String(record.id)) !== stableJson(record))
   for (const record of changedRecords) {
-    if (!hasMatchingRecordAudit(record)) {
+    if (!hasMatchingRecordAudit(name, record)) {
       throw new Error(`${name}.json export refused: ${record.id} has no matching state-change audit entry.`)
     }
   }
@@ -101,6 +125,8 @@ try {
     pendingWrites.push({ temporary, destination })
   }
   fs.copyFileSync(path.join(dataDirectory, 'goals.json'), path.join(tempDirectory, 'goals.json'))
+  fs.copyFileSync(path.join(dataDirectory, 'featureCatalogs.json'), path.join(tempDirectory, 'featureCatalogs.json'))
+  fs.copyFileSync(path.join(dataDirectory, 'requirementSources.json'), path.join(tempDirectory, 'requirementSources.json'))
 
   const audit = spawnSync(process.execPath, [path.join(root, 'scripts/audit-data.mjs')], {
     cwd: root,

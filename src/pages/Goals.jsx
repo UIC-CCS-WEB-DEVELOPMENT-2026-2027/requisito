@@ -1,19 +1,43 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useMemo, useState } from 'react'
 import EmptyState from '../components/EmptyState.jsx'
 import GoalCard from '../components/GoalCard.jsx'
 import { getGoals } from '../data/helpers.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
+import { href } from '../routeManifest.js'
+import { getGoalProgressSummary } from '../utils/checklistProgress.js'
+
+function getGoalProgress(goalId, t) {
+  const summary = getGoalProgressSummary(goalId)
+  const status = t(`checklist.status.${summary.available ? summary.status : 'unavailable'}`)
+
+  return {
+    total: summary.total,
+    completed: summary.completed,
+    percent: summary.percent,
+    available: summary.available,
+    status,
+    actionLabel: !summary.available
+      ? t('goals.viewChecklistStatus')
+      : summary.status === 'completed'
+        ? t('goals.continueChecklist')
+        : t('goals.viewChecklist'),
+  }
+}
 
 // Props: none. Goal data comes from helpers.js.
 function Goals() {
   const { t } = useLanguage()
-  const goals = getGoals()
+  const goals = getGoals().filter((goal) => !goal.isSample)
   const [searchText, setSearchText] = useState('')
+  const [category, setCategory] = useState('')
   const query = searchText.trim().toLowerCase()
-  const filteredGoals = goals.filter((goal) =>
-    goal.title.toLowerCase().includes(query),
-  )
+  const filteredGoals = useMemo(() => goals.filter((goal) =>
+    (!category || (goal.categoryKey ? t(goal.categoryKey) : goal.category) === category) &&
+    `${goal.title} ${goal.description} ${goal.category} ${goal.audience} ${goal.agency}`
+      .toLowerCase()
+      .includes(query),
+  ), [category, goals, query, t])
+  const categories = [...new Set(goals.map((goal) => goal.categoryKey ? t(goal.categoryKey) : goal.category))]
 
   return (
     <section className="page-content flow-content" aria-labelledby="goals-title">
@@ -33,19 +57,42 @@ function Goals() {
           autoComplete="off"
         />
       </div>
+      <div className="goal-category-filter">
+        <label htmlFor="goal-category">{t('label.category')}</label>
+        <select id="goal-category" value={category} onChange={(event) => setCategory(event.target.value)}>
+          <option value="">{t('goals.allCategories')}</option>
+          {categories.map((item) => <option key={item} value={item}>{item}</option>)}
+        </select>
+      </div>
       {filteredGoals.length > 0 ? (
         <ul className="goal-grid" aria-label={t('a11y.availableGoals')}>
-          {filteredGoals.map((goal) => (
-            <li key={goal.id}>
-              <Link className="goal-card-link" to={'/checklist?goal=' + goal.id}>
+          {filteredGoals.map((goal) => {
+            const progress = getGoalProgress(goal.id, t)
+            const checklistHref = href('checklist', {}, { goal: goal.id })
+            const detailHref = href('goalDetail', { slug: goal.slug })
+            return (
+              <li key={goal.id}>
                 <GoalCard
-                  title={goal.title}
-                  description={goal.description}
-                  stepsCount={goal.stepsCount}
+                  title={goal.titleKey ? t(goal.titleKey) : goal.title}
+                  description={goal.descriptionKey ? t(goal.descriptionKey) : goal.description}
+                  stepsCount={progress.total}
+                  checklistAvailable={progress.available}
+                  category={goal.categoryKey ? t(goal.categoryKey) : goal.category}
+                  countLabel={t('goals.requirementCount')}
+                  verificationLabel={t(`record.${goal.verification}`)}
+                  unavailableLabel={t('goals.checklistNotAvailable')}
+                  actionLabel={progress.actionLabel}
+                  detailActionLabel={t('goals.viewRequirements')}
+                  completedCount={progress.completed}
+                  totalCount={progress.total}
+                  progressPercent={progress.percent}
+                  statusText={progress.status}
+                  navigateTo={checklistHref}
+                  detailHref={detailHref}
                 />
-              </Link>
-            </li>
-          ))}
+              </li>
+            )
+          })}
         </ul>
       ) : (
         <EmptyState message={t('form.noRecords')} />

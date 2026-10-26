@@ -3,6 +3,7 @@ import EmptyState from '../components/EmptyState.jsx'
 import RecordMeta from '../components/RecordMeta.jsx'
 import { getBriefs } from '../data/helpers.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
+import { href } from '../routeManifest.js'
 
 function Briefs() {
   const { t } = useLanguage()
@@ -26,7 +27,7 @@ function Briefs() {
                 <ul>{brief.whatYouNeed.map((item) => <li key={item}>{item}</li>)}</ul>
               </>}
               <RecordMeta record={brief} />
-              <p><Link to={`/contribute?record=${encodeURIComponent(brief.slug)}`}>{t('common.reportCorrection')}</Link></p>
+              <p><Link to={href('contribute', {}, { record: brief.slug })}>{t('common.reportCorrection')}</Link></p>
             </article>
           ))}
         </div>

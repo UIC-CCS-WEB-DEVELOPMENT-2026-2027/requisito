@@ -3,7 +3,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { databasePathFromEnv } from '../server/config.js'
 import { openDatabase } from '../server/db/openDatabase.js'
-import { catalogNames } from '../server/db/catalogs.js'
+import { catalogNames, recordTypes } from '../server/db/catalogs.js'
 
 const root = fileURLToPath(new URL('../', import.meta.url))
 const dataDirectory = path.resolve(process.env.ADMIN_DATA_DIR ?? path.join(root, 'src/data'))
@@ -25,9 +25,11 @@ try {
       if (!source || typeof source !== 'object' || !['string', 'number'].includes(typeof source.id)) {
         throw new Error(`${name}.json contains a record without a valid id.`)
       }
-      if (!source.type || !source.slug) throw new Error(`${name}.json record ${source.id} lacks type or slug.`)
+      if (name !== 'requirementSources' && (!source.type || !source.slug)) {
+        throw new Error(`${name}.json record ${source.id} lacks type or slug.`)
+      }
       const data = { ...source }
-      const { type, id, verification = 'unverified', lastVerified = null } = data
+      const { type = recordTypes[name], id, verification = 'unverified', lastVerified = null } = data
       delete data.type
       delete data.id
       delete data.verification

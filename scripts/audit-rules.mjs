@@ -4,6 +4,49 @@ export function validDate(value) {
   return !Number.isNaN(date.getTime()) && date.toISOString().slice(0, 10) === value
 }
 
+export const REVIEW_INTERVAL_DAYS = 365
+
+export function reviewIsExpired(value, today, intervalDays = REVIEW_INTERVAL_DAYS) {
+  if (!validDate(value) || !validDate(today)) return false
+  const checkedAt = Date.parse(`${value}T00:00:00Z`)
+  const currentDate = Date.parse(`${today}T00:00:00Z`)
+  return currentDate - checkedAt > intervalDays * 24 * 60 * 60 * 1000
+}
+
+export function requirementSourceCheckDateIssues(source, today) {
+  const attribution = source.researchAttribution
+  const hasAttribution = attribution !== undefined
+  const validAttribution = attribution &&
+    typeof attribution === 'object' &&
+    !Array.isArray(attribution) &&
+    typeof attribution.documentTitle === 'string' &&
+    attribution.documentTitle.trim() &&
+    Array.isArray(attribution.documentPages) &&
+    attribution.documentPages.length > 0 &&
+    attribution.documentPages.every((page) => Number.isInteger(page) && page > 0) &&
+    validDate(attribution.sourceCheckDateReported) &&
+    attribution.sourceCheckDateReported <= today
+  const issues = []
+
+  if (hasAttribution && !validAttribution) {
+    issues.push('invalid researchAttribution')
+  }
+  if (source.lastChecked === null) {
+    if (source.verification !== 'unverified' || !validAttribution) {
+      issues.push('missing lastChecked requires an unverified source with valid research attribution')
+    }
+    return issues
+  }
+  if (!validDate(source.lastChecked) || source.lastChecked > today) {
+    issues.push('invalid or future lastChecked')
+    return issues
+  }
+  if (reviewIsExpired(source.lastChecked, today)) {
+    issues.push('source review is older than 365 days')
+  }
+  return issues
+}
+
 export function allowedSource(value, allowedHosts = []) {
   let source
   try {
@@ -25,8 +68,49 @@ export function validHttpsUrl(value) {
   }
 }
 
+export function verificationReviewIssues(record, today) {
+  if (record.verification !== 'verified') return []
+
+  const review = record.verificationReview
+  if (!review || typeof review !== 'object' || Array.isArray(review)) {
+    return ['verified record needs independent review evidence']
+  }
+
+  const issues = []
+  if (!Number.isSafeInteger(review.reviewedById) || review.reviewedById < 1) {
+    issues.push('verified record needs a reviewer ID')
+  }
+  if (!Number.isSafeInteger(review.requestId) || review.requestId < 1) {
+    issues.push('verified record needs a verification request ID')
+  }
+  if (review.independent !== true) {
+    issues.push('verified record needs an independent reviewer decision')
+  }
+  if (!validDate(review.reviewedAt) || review.reviewedAt > today) {
+    issues.push('verified record needs a valid review date')
+  }
+  if (!validDate(review.sourceAccessedOn) ||
+      review.sourceAccessedOn > today ||
+      (validDate(review.reviewedAt) && review.sourceAccessedOn > review.reviewedAt)) {
+    issues.push('verified record needs a valid source access date no later than review')
+  }
+  if (typeof review.note !== 'string' || review.note.trim().length < 10) {
+    issues.push('verified record needs a substantive review note')
+  }
+  return issues
+}
+
 export function verificationIssues(record, today, allowedHosts = []) {
   const problems = []
+  if (record.demoOnly === true && record.verification === 'verified') {
+    problems.push('demo-only content cannot be marked verified')
+  }
+  if (record.verification !== 'verified' && record.lastVerified !== null) {
+    problems.push('non-verified record must not have a lastVerified date')
+  }
+  if (record.verification !== 'verified' && record.verificationReview !== undefined) {
+    problems.push('non-verified record must not retain verification review evidence')
+  }
   if (record.type === 'fact' && record.sourceUrl && !validHttpsUrl(record.sourceUrl)) {
     problems.push('fact sourceUrl must be an HTTPS URL')
   }
@@ -42,12 +126,47 @@ export function verificationIssues(record, today, allowedHosts = []) {
     }
     if (!validDate(record.lastVerified) || record.lastVerified > today) {
       problems.push('verified record needs a current lastVerified date')
+    } else if (reviewIsExpired(record.lastVerified, today)) {
+      problems.push(`verified record review is older than ${REVIEW_INTERVAL_DAYS} days`)
     }
     if (/\b(sample|placeholder|fictional)\b/i.test(`${record.title} ${record.description} ${record.notes}`)) {
       problems.push('verified record contains fictional markers')
     }
+    problems.push(...verificationReviewIssues(record, today))
   }
   return problems
+}
+
+export function requirementEvidenceIssues(requirements, sources, today) {
+  const issues = []
+  const sourceById = new Map(sources.map((source) => [source.id, source]))
+
+  for (const requirement of requirements) {
+    const label = `requirement ${requirement.id}`
+    if (requirement.demoOnly === true) continue
+    if (!Array.isArray(requirement.sourceIds) || requirement.sourceIds.length === 0) {
+      issues.push(`${label}: needs at least one linked source`)
+      continue
+    }
+    if (new Set(requirement.sourceIds).size !== requirement.sourceIds.length) {
+      issues.push(`${label}: has duplicate source IDs`)
+    }
+
+    const linkedSources = requirement.sourceIds.map((sourceId) => sourceById.get(sourceId))
+    for (const [index, source] of linkedSources.entries()) {
+      if (!source) {
+        issues.push(`${label}: unknown source ID "${requirement.sourceIds[index]}"`)
+      }
+    }
+  }
+
+  for (const source of sources) {
+    if (source.verification === 'verified') {
+      issues.push(...verificationReviewIssues(source, today)
+        .map((issue) => `requirement source ${source.id}: ${issue}`))
+    }
+  }
+  return issues
 }
 
 export function validBarangayDistrict(value, districts) {

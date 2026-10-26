@@ -21,7 +21,8 @@ catalogs in `src/data`.
   a secondary list. Populations are blank; the list still needs checking against
   PSA and city sources and remains unverified.
 - City facts, a source-linked notices feed, and an offices-only officials page.
-- Global search across services, real barangay records, requirements, and updates.
+- Global search across goals, services, real barangay records, requirements,
+  official source records, and updates.
 - Source-linked civic briefs, a sourced history timeline, election links, and
   office profiles that show holders only after verification.
 - Budget and procurement dashboards with CSV importers; catalogs remain empty
@@ -34,7 +35,17 @@ catalogs in `src/data`.
   save content on a Requisito server.
 - English, Filipino, and Bisaya interface labels. Filipino and Bisaya strings
   need native-speaker review.
-- The existing goals, checklist, documents, demo sign-in, and AI assistant remain.
+- A connected goals → requirements → checklist → document-guide flow uses
+  shared requirement IDs, source metadata, conditional applicability, and
+  browser-local checklist progress. Current evidence is limited and remains
+  unverified pending the existing two-person review. The
+  [requirements research queue](docs/requirements-research-queue.md) lists the
+  next high-priority source checks.
+- Each currently listed public goal has a checklist. Passport, NBI Clearance,
+  driver's license, and SSS/PhilHealth include explicit `demoOnly` planning
+  prompts with localized questions and guides. These prompts are unverified,
+  non-mandatory demonstrations—not policy evidence—and do not satisfy the
+  separate First Job verification gate.
 - A loopback-only admin workspace supports record editing, two-person source
   verification, user roles, and an append-only audit trail.
 
@@ -43,12 +54,36 @@ catalogs in `src/data`.
 Part 2 adds `/history`, `/budget`, `/procurement`, `/briefs`, `/monitor`,
 `/officials/:slug`, `/elections`, `/accountability`, `/participate`, and
 `/integrity`. The remaining reference features and any data-dependent omissions
-are documented in [docs/parity-matrix.md](docs/parity-matrix.md). The broader
+are documented in [docs/parity-matrix.md](docs/parity-matrix.md) and
+[docs/parity-final.md](docs/parity-final.md). The broader
 accountability, participation, election, monitor, and integrity pages remain
 static prototypes: there is no public reporting system or live source feed.
 The local admin API does not change that public-site boundary. See the existing
 [database design draft](docs/database-design.md) before designing any public
 backend.
+
+## Part 6 route and data states
+
+Public routes are registered in `src/routeManifest.js`; header and footer
+navigation use that manifest, and the shared `href()` helper generates internal
+URLs. Run `npm run audit:links` to check JSX destinations and accessible
+controls, or `npm run check` to include that audit, the Node tests, and the
+production build.
+
+The `/service-guides` and `/where-to-go` pages expose only complete briefs
+whose source review is already marked verified. The current supplied briefs
+are unverified, so those finders intentionally show no verified results.
+Data-dependent routes such as `/map`, `/reports`, `/calendar`, `/assets`,
+`/mobility`, `/heritage`, and `/tourism` have usable empty states rather than
+invented Davao records. Their explicit arrays are in
+`src/data/featureCatalogs.json` and currently remain empty.
+
+`/help`, `/contact`, `/privacy`, and `/terms` are linked from the footer.
+Contact links are source leads, not confirmed details; the contact action
+remains disabled until an official address is configured. Privacy and terms
+copy is clearly marked as a draft. See [docs/parity-final.md](docs/parity-final.md)
+for the route-to-data map and [docs/link-audit.md](docs/link-audit.md) for the
+automated checks and their limits.
 
 ## Run locally
 
@@ -78,16 +113,32 @@ admin workspace. Run the validation suite with:
 npm run check
 ```
 
-`npm run check` runs the read-only data audit, all Node tests, then the
-production build. `npm run lint` is also available.
+`npm run check` runs the read-only data audit, route/link audit, complete Node
+test suite, and production build.
+`npm run lint` is also available.
 
-## Public demo sign-in
+Browser end-to-end tests cover the main first-job flow on desktop and mobile.
+Install the Chromium browser once, then run:
 
-Open `/login` and enter a well-formed email and a password of at least eight
-characters. No real account exists; credentials are not saved or sent to a
-server. Successful sign-in opens Home unless a protected page redirected you
-to sign in, in which case it returns you to that page. Goals, Checklist, and
-Documents require the in-memory demo sign-in. See the
+```sh
+npx playwright install chromium
+npm run test:e2e
+```
+
+Playwright starts Vite on loopback at `127.0.0.1:4173`; server integration
+tests also bind an ephemeral loopback port. Run both in a local or CI
+environment that permits local sockets. See the
+[release checklist](docs/release-checklist.md) for blocked checks, commands,
+and government-source review status.
+
+## Public guidance and demo sign-in
+
+Goals, goal details, checklist planning, document guides, and public search are
+available without signing in. Checklist answers and item progress are stored
+in the current browser profile only; they are not synced to an account or
+server. The `/login` page is a front-end demo flow, not a real account system.
+It does not authenticate users for the separately protected admin workspace.
+See the
 [mock-auth contract](docs/data-contract.md#existing-mock-auth-contract).
 
 ## Data and source verification
@@ -106,8 +157,10 @@ and the [admin runbook](docs/admin-runbook.md).
 Contact numbers, office hours, fees, health-card requirements, and schedules
 can change. Confirm them with the issuing city office before acting. The
 barangay names and district assignments are an unverified secondary-source
-compilation, and populations are still unavailable. Requirements and document
-examples also remain illustrative and unverified.
+compilation, and populations are still unavailable. The health-card catalog
+reflects only a dated January 2026 City announcement and does not establish
+current requirements. Several high-priority national services remain
+unresearched. See the [requirements flow and maintenance guide](docs/requirements-flow.md).
 
 ### Refresh the barangay directory
 
@@ -157,6 +210,12 @@ changes manually; source-watch never changes record verification metadata.
 - History, budget, procurement, and accountability records need data from the
   maintainer; imported civic and financial data remains unverified.
 - Participation instructions without an approved source explicitly say so.
+- Part 6 feature catalogs for reports, events, assets, transit, heritage,
+  tourism, and related records are empty until reviewed source data is supplied.
+- The new contact route has no configured official contact address, so its
+  action is disabled. Existing source links are unverified leads.
+- Privacy and terms routes contain draft disclosures and have not received
+  legal review.
 - The contribution form only prepares a GitHub issue link. Submitting is a
   separate action on GitHub and requires a repository account.
 - Public demo sign-in is front-end-only and is not a security boundary; it is
@@ -174,21 +233,33 @@ changes manually; source-watch never changes record verification metadata.
 ## Deployment
 
 The public app is deployed through Vercel CLI; automatic deployments from
-GitHub are not connected. `vercel.json` rewrites client-side routes to
-`index.html` for direct links and refreshes. The local admin API is not
-deployed. A production admin service would need a separately reviewed hosting
-design with persistent protected storage, TLS, same-origin routing, backups,
-and operational controls; this local SQLite setup is not that service. No
-deployment was made for these changes.
+GitHub are not connected. `vercel.json` pins the Vite build/output and rewrites
+deep links to the SPA entry point, while `/api/chat` is routed to the
+server-side function in `api/chat.js`. `.vercelignore` excludes local
+environment files, SQLite data, and the internal Express/SQLite admin server;
+only the function under `api/` is deployed as an API. The local admin API is
+not deployed. A production admin service would need a separately reviewed
+hosting design with persistent protected storage, TLS, same-origin routing,
+backups, and operational controls; this local SQLite setup is not that
+service. No deployment was made for these changes.
 
 ## AI assistant development
 
-The assistant calls a Netlify Function, so `npm run dev` serves only the
-frontend. For local function testing, use `npx netlify-cli dev` and configure
-`AI_PROVIDER`, `AI_MODEL`, and `AI_API_KEYS` in the ignored `.env` file. The
+The public app is deployed through Vercel. The assistant calls the Vercel
+server-side function at `/api/chat`, which adapts the existing shared assistant
+handler; Gemini credentials remain on the server. For local frontend-plus-
+function testing, run `npx vercel dev --listen 3000` (plain `npm run dev` does
+not serve this function). Run `npm run ai:diagnose` to check configuration
+presence and model-name format without contacting Gemini or printing secrets.
+That format check does not prove model availability. Configure `AI_PROVIDER`,
+`AI_MODEL`, and `AI_API_KEYS` privately in the ignored `.env` file or Vercel
+server-side project settings. The
 unverified-record override is local-test-only and must never be enabled in a
-deployed context. See [docs/ai-assistant.md](docs/ai-assistant.md) for the
-request flow, safeguards, tests, evaluation, and deployment instructions.
+deployed context. The assistant is also available in an accessible header
+dialog; page context is resolved on the server and is still subject to verified
+record rules. No live provider call is made by automated tests or the default
+evaluation plan. See [docs/ai-assistant.md](docs/ai-assistant.md) for request
+flow, safeguards, tests, evaluation, and deployment instructions.
 
 ## Credits
 

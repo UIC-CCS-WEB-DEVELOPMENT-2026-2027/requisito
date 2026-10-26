@@ -1,71 +1,134 @@
-# BetterMakati parity matrix
+# BetterMakati-to-Requisito feature parity
 
-Part 2 maps the reference project's public pages and operational features to
-Requisito's Davao-specific implementation. Reference paths are identification
-only; no reference code, branding, or Makati content is copied.
+This comparison uses the reference app's route registration in
+`_reference-bettermakati/src/App.tsx`, route navigation in
+`src/data/navigation.ts`, its page/component/data families, and checked-in
+Playwright tests. It compares those behaviors with Requisito's current
+`src/routeManifest.js`, React pages, `src/data` catalogs, tests, and the
+project's static-prototype and source-review constraints. The reference
+repository was inspected read-only; its code, branding, and Makati information
+are not copied.
 
-| BetterMakati feature / reference file | Requisito implementation | Status |
+**Parity statuses describe feature scope, not whether a route renders.**
+
+- **Complete** — a comparable supported Davao user function exists and is
+  covered by local evidence.
+- **Partial** — a narrower substitute exists, or the data, interaction, or
+  route coverage is incomplete.
+- **Missing** — no comparable behavior is present.
+- **N/A** — the specific reference feature is Makati-specific or outside this
+  paperwork-pathfinder's intended scope.
+- **Blocked** — completing it safely needs reviewed Davao data or policy that
+  the repository does not have.
+
+Reference paths below account for all 56 route patterns, redirects, and the
+catch-all registered in `App.tsx`. Multiple paths share a row only when their
+Requisito destination and limitation are the same.
+
+| BetterMakati route / feature evidence | Requisito route, code, data, and tests | Status and evidence-based comparison |
 | --- | --- | --- |
-| Home (`src/pages/Home.tsx`) | `src/pages/Home.jsx` | Done in Part 1 |
-| Services (`src/pages/Services.tsx`) | `src/pages/Services.jsx`, `src/data/services.json` | Done in Part 1 |
-| Service guides (`src/pages/ServiceGuide.tsx`) | `src/pages/Briefs.jsx`, `src/data/briefs.json` | Done in Part 2; only supplied source-based briefs |
-| Hotlines (`src/pages/Hotlines.tsx`) | `src/pages/Services.jsx`, hotline records in `src/data/services.json` | Done in Part 1 |
-| Barangays (`src/pages/Barangays.tsx`) | `src/pages/Barangays.jsx`, `src/data/barangays.json` | Done in Part 1 |
-| Barangay profiles (`src/pages/BarangayProfile.tsx`) | `src/pages/BarangayProfile.jsx` | Done in Part 1 |
-| History (`src/pages/History.tsx`) | `src/pages/History.jsx`, `src/data/history.json` | Done in Part 2; empty until dated sourced entries are supplied |
-| Not found (`src/pages/NotFound.tsx`) | `src/pages/NotFound.jsx` | Done in Part 1 |
-| About (`src/pages/About.tsx`) | `src/pages/AboutDavao.jsx`, `src/data/cityFacts.json` | Done in Part 1 |
-| News and updates (`src/pages/News.tsx`) | `src/pages/Updates.jsx`, `src/data/updates.json` | Done in Part 1 |
-| Today/current city information (`src/pages/Today.tsx`) | `/status` and `/monitor` | Done in Part 2; computed from local records only |
-| Government offices (`src/pages/GovernmentOffices.tsx`) | `src/pages/Officials.jsx` | Done in Part 1 |
-| Official profiles (`src/pages/OfficialProfile.tsx`) | `src/pages/OfficialProfile.jsx` | Done in Part 2; holder and term shown only after verification |
-| Search (`src/pages/Search.tsx`) | `src/pages/Search.jsx`, `searchAll` | Done in Part 1 and extended in Part 2 |
-| Project status (`src/pages/ProjectStatus.tsx`) | `src/pages/Status.jsx` | Done in Part 1 and extended in Part 2 |
-| Civic contribution form (`src/components/civic/CivicContributionForm.tsx`) | `src/pages/Contribute.jsx` | Done in Part 1 |
-| Civic briefs (`src/pages/CivicBriefs.tsx`) | `src/pages/Briefs.jsx`, `src/data/briefs.json` | Done in Part 2; only the three supplied briefs |
-| Source freshness (`scripts/check-sources.mjs`) | `scripts/source-watch.mjs`, `data/watchlist.json` | Done in Part 2; network execution remains a manual step |
-| Source freshness workflow (`.github/workflows/source-freshness.yml`) | `.github/workflows/source-watch.yml` | Done in Part 2; workflow was not run |
-| Budget dashboard (`src/pages/ProjectsBudget.tsx`) | `src/pages/Budget.jsx`, `scripts/import-budget.mjs` | Done in Part 2; empty until official CSV is supplied |
-| City monitor (`src/pages/CityMonitor.tsx`) | `src/pages/Monitor.jsx`, `getCityMonitor` | Done in Part 2; no scraping, feeds, or official scoring |
-| City monitor record detail (`src/pages/CityMonitorRecordPage.tsx`) | Reused status cards and record metadata | Skipped: one-off record drill-down adds no supported data; source and verification are shown inline |
-| Elections (`src/pages/Elections.tsx`) | `src/pages/Elections.jsx`, `src/data/elections.json` | Done in Part 2; COMELEC link only, unverified |
-| Accountability (`src/pages/Accountability.tsx`) | `src/pages/Accountability.jsx`, `src/data/accountability.json` | Done in Part 2; empty until sourced official documents are provided |
-| Participation (`src/pages/Participate.tsx`) | `src/pages/Participate.jsx` | Done in Part 2; unsupported source-dependent actions say source to be added |
-| Integrity (`src/pages/Integrity.tsx`) | `src/pages/Integrity.jsx` | Done in Part 2; coverage counts are live |
-| Public records (`src/pages/PublicRecords.tsx`, `src/pages/PublicRecordDetail.tsx`) | Accountability ledger schema and page | Skipped as a broad public-record archive: no Davao records were supplied; the ledger accepts only the four specified official document kinds |
-| Legislation (`src/pages/Legislation.tsx`) | Accountability ledger schema | Skipped as a separate archive: no sourced Davao ordinances or resolutions were supplied |
-| Civic audit pilot/results (`src/pages/CivicAuditPilot.tsx`, `src/pages/CivicAuditResults.tsx`) | None | Skipped: requires collecting and publishing observations about public bodies, with no approved Davao data or review policy |
-| Civic reports (`src/pages/CivicReports.tsx`, `src/pages/ReportArticle.tsx`, `src/pages/Reports.tsx`) | Correction form only | Skipped: no reports or publishable Davao case records supplied; no allegations or private individuals will be invented |
-| Civic map (`src/pages/CivicMap.tsx`) | None | Skipped: no verified geospatial dataset supplied |
-| Nearby reports (`src/pages/CivicNearbyReport.tsx`) | None | Skipped: location collection and reporting need privacy, moderation, and backend policies outside this prototype |
-| Civic assets (`src/pages/CivicAsset.tsx`) | None | Skipped: no sourced asset inventory supplied |
-| Calendar (`src/pages/Calendar.tsx`) | Time-sensitive announcements remain on `/updates` | Skipped as a separate calendar: no complete, verified Davao event schedule supplied |
-| Community tools (`src/pages/CommunityTools.tsx`) | None | Skipped: no approved Davao tool dataset supplied |
-| Concern finder (`src/pages/ConcernFinder.tsx`) | `/search` | Skipped as a separate guided classifier: no reviewed decision rules supplied |
-| Contact (`src/pages/Contact.tsx`) | Hotline and service directory | Skipped as a duplicate page; source-backed contact records are already available |
-| Document lookup (`src/pages/Document.tsx`) | Existing `/documents` mock tracker | Skipped as a new public lookup: no official public document search source supplied |
-| Get involved (`src/pages/GetInvolved.tsx`) | `/participate` | Done in Part 2 through source-based participation guidance |
-| Government directory (`src/pages/Government.tsx`) | `/officials` and `/services` | Skipped as a duplicate combined directory; the distinct office and service records have dedicated pages |
-| Heritage (`src/pages/Heritage.tsx`) | None | Skipped: no Davao heritage seed records supplied |
-| Mobility (`src/pages/Mobility.tsx`) | None | Skipped: no verified transit or mobility dataset supplied |
-| Open government (`src/pages/OpenGovernment.tsx`) | `/integrity`, `/status`, `/accountability` | Done in Part 2 to the extent supported by the specified local records |
-| Privacy and terms (`src/pages/Privacy.tsx`, `src/pages/Terms.tsx`) | Existing privacy notices and project disclosures | Skipped as standalone legal pages: this prototype has no account or data-submission backend; no legal policy text was supplied |
-| Statistics (`src/pages/Statistics.tsx`) | `/monitor` | Skipped as a separate statistics page; current derived counts are shown in status and monitor |
-| Visit Makati (`src/pages/VisitMakati.tsx`) | None | Skipped: Davao tourism content was not part of the supplied seed data |
-| Cinemas (`src/pages/Cinemas.tsx`) | None | Skipped: no Davao venue dataset supplied |
-| Estates (`src/pages/Estates.tsx`) | None | Skipped: Makati-specific content has no Davao equivalent in the supplied data |
-| Live city feed (`src/pages/LiveMakati.tsx`) | Local `/monitor` only | Skipped: no scraping, live news feed, or social-media source is allowed |
-| BetterMakati editorial guides (`CONTENT-GUIDE.md`, `CONTENT-MANAGEMENT.md`) | `docs/data-contract.md`, `docs/data-refresh.md`, `docs/davao-data-sources.md` | Done in Part 1 and Part 2; adapted as project-specific guidance |
-| Source watch and update workflow (`.github/workflows/*`) | Source-watch script and manual-review PR workflow | Done in Part 2; automation is not run or pushed by this task |
-| API-backed civic reporting (`api/civic*.js`, `api/community-input.js`) | No backend; `/contribute` prepares a GitHub issue | Skipped: project constraint prohibits adding a backend, database, authentication, or contribution endpoint |
-| External news/places APIs (`api/news.js`, `api/places.js`) | Static source-linked catalogs | Skipped: external API calls and unsupported live data are outside this static prototype |
+| `/` Home (`pages/Home.tsx`, home search/services components) | `/`, `src/pages/Home.jsx`, `src/data/helpers.js`; route smoke and data tests | **Partial** — Davao home and catalog search exist, but not the reference's service discovery breadth or verified local guide coverage. |
+| `/about` About (`pages/About.tsx`) | `/about-davao`, `src/pages/AboutDavao.jsx`, `src/data/cityFacts.json` | **Partial** — Davao counterpart exists; source records remain unverified. |
+| `/privacy` | `/privacy`, `FeaturePage` draft | **Partial** — clearly marked draft; no reviewed policy text. |
+| `/terms` | `/terms`, `FeaturePage` draft | **Partial** — clearly marked draft; no reviewed terms. |
+| `/services` | `/services`, `src/pages/Services.jsx`, `ServiceCard`, `services.json`; filter, Maps-rendering, and route tests | **Partial** — search/category/sort and map actions work, but the seven-record catalog is unverified and lacks reviewed transaction guides. |
+| `/services/:category` | `/services` category selector | **Partial** — category filtering exists in-page, not as an equivalent category route/deep-link. |
+| `/services/:category/:documentSlug` | `/services/:slug`, `ServiceDetail.jsx` | **Partial** — service detail pages exist, but no structured category/document transaction route or verified requirements dataset. |
+| `/services/guide/:id` | `/service-guides`, `ServiceGuideFinder`, `GuideCard`, `briefs.json` | **Blocked** — only complete verified guides are shown; there are currently no approved verified briefs, so results are honestly empty. |
+| Government offices (`/government-offices`) | `/officials`, `/services`, `officials.json`, `services.json` | **Partial** — offices and services are separate and source-linked; office holders and service records remain unverified. |
+| `/community-tools` | `/community-tools`, `FeaturePage`, empty `featureCatalogs.json` collection | **Blocked** — no reviewed Davao tools directory or source-backed entries. |
+| `/community-tools/saan-ako-lalapit` guided concern finder | `/concern-finder`, `FeaturePage` | **Blocked** — route is an honest empty state; no reviewed Davao decision rules or referral dataset. General `/search` is not equivalent. |
+| `/contact` | `/contact`, `FeaturePage`, `OfficialSourceLeads` | **Partial** — directory leads are shown as unverified and contact submission is explicitly disabled/unconfigured. |
+| `/hotlines` | `/services`, hotline rows in `services.json` | **Partial** — hotlines are searchable with services but have no dedicated hotline route; numbers require review. |
+| `/search` | `/search`, `src/data/search.js`, `searchAll`; `civicData.test.js`, `route-smoke.test.mjs` | **Complete for local catalog search; partial for reference parity** — searches available Davao records and preserves query/type, but does not include the reference's typo-tolerant guided problem-to-agency flow. |
+| `/get-involved` | `/participate`, `src/pages/Participate.jsx` | **Partial** — source-aware participation guidance exists; no equivalent reviewed Davao activity directory or submissions. |
+| `/participate` | `/participate`, `src/pages/Participate.jsx` | **Partial** — safe guidance exists, while unsupported contact actions remain unavailable. |
+| `/government` | `/government`, `FeaturePage` | **Partial** — links to separate officials/services sources; not a populated combined, verified government directory. |
+| `/barangays` | `/barangays`, `src/pages/Barangays.jsx`, `barangays.json`; barangay tests | **Partial** — searchable directory works, but names and district assignments are an unverified secondary-source compilation and populations are absent. |
+| `/barangays/:slug` | `/barangays/:slug`, `BarangayProfile.jsx` | **Partial** — profiles render with district context; source data is not officially verified and the reference's selected-barangay scope is not carried across journeys. |
+| `/officials/:slug` | `/officials/:slug`, `OfficialProfile.jsx`, `officials.json` | **Partial** — route and profile exist; holder/term remain hidden unless verified, and no current verified officeholder dataset is supplied. |
+| `/elections` | `/elections`, `Elections.jsx`, `elections.json` | **Partial** — source-link page exists; the supplied COMELEC link/summary is not verified election guidance or a current Davao election dataset. |
+| `/legislation` | `/legislation`, `FeaturePage`, empty `publicRecords` collection | **Blocked** — no sourced Davao ordinances/resolutions have been supplied; no laws were fabricated. |
+| `/statistics` | `/statistics`, `FeaturePage`, `/status`, `/monitor` | **Partial** — status/monitor derive counts from local catalogs; this is not the reference's city-indicator/statistics dataset or comparison dashboard. |
+| `/history` | `/history`, `History.jsx`, empty `history.json` | **Blocked** — route is available, but no dated, sourced history entries are supplied. |
+| `/today` | `/status`, `/monitor` (no `/today` route) | **Partial** — local catalog status offers a constrained counterpart; there is no daily current-city feed or dedicated Today experience. |
+| `/news` | `/updates`, `Updates.jsx`, `updates.json` | **Partial** — source-linked updates page exists; it is not a live or comprehensive news product and records are unverified. |
+| `/live` | `/live`, `FeaturePage`, empty `events` collection | **Blocked** — no verified live feed/event source; no scraping or live social feed is claimed. |
+| `/calendar` and `/whats-on` redirect | `/calendar` empty feature page; no `/whats-on` alias | **Blocked** — no complete verified Davao calendar; the reference redirect alias is absent. |
+| `/briefs` | `/briefs`, `Briefs.jsx`, `briefs.json`, verified-guide filter | **Partial** — source-based brief display exists, but supplied records remain unverified and cannot serve as approved process instructions. |
+| `/reports` and `/reports/:slug` | `/reports`, `/reports/:slug`, `FeaturePage`, empty `reports` collection | **Blocked** — list/detail shells render empty/not-published states; no approved Davao editorial reports/cases. |
+| `/reports/makati-overview` redirect | No equivalent Davao report | **N/A** — this is a reference-specific Makati report and is not reproduced. |
+| `/accountability` | `/accountability`, `Accountability.jsx`, empty `accountability.json` | **Blocked** — page and schema exist; no reviewed official documents have been supplied. |
+| `/records` and `/records/:id` | `/public-records`, `/public-records/:slug`, `FeaturePage`, empty `publicRecords` | **Blocked** — route shells exist, but not the reference's searchable public-record archive; no Davao records were supplied. |
+| `/projects-budget` | `/budget`, `Budget.jsx`, `budget.json`, CSV importer | **Blocked** — importer/dashboard structure exists but catalog is empty until official source files are reviewed. |
+| `/status` | `/status`, `Status.jsx`, `getStatusReport`; data and route tests | **Complete for local source/verification status; partial for reference parity** — current verification gaps derive from local catalogs, not a live external monitor. |
+| `/city-monitor` | `/monitor`, `Monitor.jsx`, `getCityMonitor` | **Partial** — local derived monitor exists, with no source scraping, government score, or live feed. |
+| `/city-monitor/:id` | No equivalent route; metadata appears in monitor/status pages | **Missing** — there is no individual monitor-record detail route. |
+| `/open-government` | `/integrity`, `/status`, `/accountability` (no combined route) | **Partial** — methods and source gaps are disclosed across pages; no combined open-government dashboard or full records dataset. |
+| `/integrity` | `/integrity`, `Integrity.jsx` | **Complete for project methods/disclosure; partial for civic-data breadth** — disclosures and derived coverage exist, but the source catalogs remain incomplete/unverified. |
+| `/transparency` redirect | No compatibility alias; related `/budget`, `/integrity`, `/status` routes | **Missing** — no legacy alias route; no Makati data is copied. |
+| `/civic-map` | `/map`, `FeaturePage`, empty `mapLocations` | **Blocked** — no verified Davao location dataset; a blank map or invented pins would mislead. |
+| `/civic-map/reports` | `/nearby-reports`, `FeaturePage`, empty `reports` | **Blocked** — no local report feed, location collection, or moderation system. |
+| `/civic-map/audits/park-accessibility-2026` | `/civic-audit`, empty `civicAuditEntries` | **Blocked** — no approved Davao observation protocol or reviewed evidence; Makati pilot data is not reused. |
+| `/civic-map/audits/park-accessibility-2026/results` | `/civic-audit/results`, empty `civicAuditEntries` | **Blocked** — results are unavailable without approved observations and a publication/review policy. |
+| `/civic-map/report` | `/civic-reports` empty page; `/contribute` only prepares a GitHub correction issue | **Blocked** — no public report intake, moderation, privacy controls, or Davao case data. A correction issue is not a civic report. |
+| `/civic-map/:assetId` | `/assets`, empty `assets` collection; no detail route | **Blocked** — no reviewed asset inventory or asset details. |
+| `/visit` | `/tourism`, `FeaturePage`, empty `tourismPlaces` | **Blocked** — Davao-specific venues/hours/access information require sourced data; Makati places are not copied. |
+| `/mobility` | `/mobility`, `FeaturePage`, empty `transitRoutes` | **Blocked** — no verified Davao route/schedule dataset. |
+| `/cinemas` | `/cinemas`, `FeaturePage`, empty `cinemas` | **Blocked** — no verified venue catalogue. |
+| `/heritage` | `/heritage`, `FeaturePage`, empty `heritageSites` | **Blocked** — no reviewed Davao heritage source set. |
+| `/estates` | `/estates`, `FeaturePage`, empty `estateListings` | **N/A** — real-estate listings are outside the paperwork-pathfinder scope; do not create a Davao market feed. |
+| `/parking` redirect | No equivalent | **N/A** — Makati parking/visit compatibility path has no approved Davao counterpart. |
+| `*` not-found route | `*`, `NotFound.jsx`; route smoke test | **Complete** — unknown routes render the app's not-found page. |
+| Reference compatibility redirects (`/whats-on`, `/reports/makati-overview`, `/transparency`, `/parking`) | Only `/questions` redirects to `/checklist`; no matching legacy aliases | **Partial** — local question-flow compatibility remains; reference-specific aliases are not all carried over. |
+| National-service handoff / external service links (`NationalServiceHandoff.tsx`) | Services/source links, no equivalent shared handoff component | **Partial** — individual source links can be opened, but there is no structured, verified national-agency handoff workflow. |
+| API-backed civic reports, observations, and feedback (`api/civic*.js`, `api/feedback.js`) | No public contribution API; `/contribute` drafts an external GitHub issue | **N/A under current approved architecture** — public backend/submission endpoint is outside the prototype scope; do not add it without a separate privacy/security policy. |
+| Places/news external APIs (`api/places.js`, `api/news.js`) | Static JSON catalogs and intentionally empty feature catalogs | **N/A under current data policy** — no API keys or live feeds; adding one would not establish authoritative Davao claims. |
+| Shared responsive shell, page loading/boundaries, SEO and keyboard support | `Layout`, `App`, `routeManifest`, CSS, link audit; browser-checked Maps at phone/desktop | **Partial** — common shell, loading state, semantic navigation and focus treatments exist; Requisito does not have equivalent broad Playwright/axe regression coverage for every route and viewport. |
+| Language selection and runtime persistence | `LanguageContext`, `en.json`, `fil.json`, `ceb.json`, `i18nCatalog.test.js` | **Partial** — three catalogs and key parity are tested; Filipino/Cebuano translations need native review and there is no equivalent browser persistence E2E suite. |
+| Barangay scope (`useBarangayScope.ts`, scoped links across guide journeys) | Barangay profiles and district links; no selected-scope state | **Missing** — selection is not propagated into services, guides, or civic results. |
 
-## Completion notes
+## Reference interaction and test evidence
 
-- Part 2 pages with missing official datasets intentionally show empty states or
-  unverified source records rather than invented facts.
-- Budget and procurement importer outputs start empty; no sample financial or
-  contract values are fabricated.
-- Source watch is tested using local fixtures and was only run with `--dry-run`.
-- The BetterMakati checkout remains read-only. Requisito reimplements patterns
-  with its existing React, router, CSS, and data conventions.
+The reference has five checked-in E2E suites:
+
+- `tests/e2e/critical-paths.spec.mjs`: route smoke/redirects/deep links; service
+  and search journeys; records, budgets, accountability, monitor, civic map,
+  and barangay-scope paths.
+- `tests/e2e/accessibility.spec.mjs`: axe/semantic and keyboard scenarios.
+- `tests/e2e/responsive-accessibility.spec.mjs`: mobile reflow and responsive
+  accessibility checks.
+- `tests/e2e/runtime-smoke.spec.mjs`: runtime bootstrap.
+- `tests/e2e/language-runtime.spec.mjs`: language selection and persistence.
+
+These are **checked-in test cases, not test results from this sprint**. The
+current Requisito suite provides Node tests for core data, filtering, source
+status, conditional requirement planning, Maps rendering, route manifest,
+route smoke, and static links/accessibility. It does not prove feature
+equivalence with BetterMakati or replace native-speaker and source review.
+
+## Citizen-problem priorities and sprint outcome
+
+| Priority | User problem and evidence | Safe solution / outcome | Success test |
+| --- | --- | --- | --- |
+| 1. Know which documents apply | The January 2026 City Health Office notice distinguishes general health-card items from food-industry and pink-card conditions; the old Requisito list treated all entries as equal. | Added explicit `applicability`, source-backed `when` conditions and localized situational questions. “Not sure” keeps a conditional item visible; only an explicit “No” removes it. Every record remains unverified and the page warns that the source is historical. | `planGenerator.test.js` checks default/yes/no filtering; `checklistRendering.test.mjs` checks rendered questions and uncertainty; `audit-data.mjs` checks that condition keys/values are valid. |
+| 2. Avoid relying on false ordering | The source does not establish document-to-document prerequisites. | Checklist explicitly states that displayed order is not an official sequence. No dependency edge is inferred or added. | Checklist-rendering regression asserts the warning; plan tests continue to validate only explicitly modeled dependency behavior. |
+| 3. Find the responsible office | Applicants need to confirm current details with the responsible Davao office before travel. | The health-card checklist links through the centralized route helper to the City Health Office detail/source page; existing map links remain available only for usable address fields and retain the unverified warning. | SSR checklist and Maps card/detail tests verify the office link and map states. |
+| 4. Avoid dead ends for unsupported goals | Passport, NBI, driver's license, and other placeholder goals have no reviewed requirements; “No requirements found” could imply none are needed. | Empty state now says no sourced checklist is available, warns that this does not mean there are no agency requirements, and links to service/source leads. No requirements were invented. | Checklist-rendering test checks the explicit unavailable message and services link. |
+
+## Data, policy, and human-review boundaries
+
+- The health-card checklist is based on a **January 2026** city announcement.
+  It is historical, time-sensitive, and still unverified. Current requirements,
+  venue, schedule, fee, eligibility, and application procedure need City Health
+  Office/City Treasurer confirmation.
+- The data model has no verified prerequisite relationships for these
+  requirements. The UI must not imply an official sequence.
+- No item has been promoted to `verified`; the independent two-person review
+  process remains mandatory.
+- No Makati content was copied. Davao data gaps remain blocked until local
+  authoritative evidence and review policy exist.
+- Filipino and Cebuano additions are draft translations and need native-speaker
+  review.
+- Public reports, civic-map submissions, location collection, and live feeds
+  remain outside this repository's approved public architecture.

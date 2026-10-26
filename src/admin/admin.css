@@ -46,10 +46,26 @@
   min-width: 0;
   margin: 1rem 0;
   border: 1px solid var(--border, #d0d5dd);
-  border-radius: 12px;
+  border-radius: var(--radius-card, 0.75rem);
   background: var(--surface, #fff);
   padding: clamp(1rem, 3vw, 1.5rem);
   overflow-wrap: anywhere;
+}
+
+.admin-layout h1 {
+  max-width: 22ch;
+  color: var(--text-h, #101828);
+  font-size: clamp(1.8rem, 4vw, 2.75rem);
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+  text-wrap: pretty;
+}
+
+.admin-layout h2,
+.admin-layout h3 {
+  color: var(--text-h, #101828);
+  line-height: 1.35;
+  text-wrap: pretty;
 }
 
 .admin-grid {
@@ -94,9 +110,32 @@
   min-height: 6rem;
 }
 
+.admin-card textarea {
+  display: block;
+  width: 100%;
+  min-height: 6rem;
+  margin-block: 0.4rem;
+  border: 1px solid var(--border, #98a2b3);
+  border-radius: 6px;
+  background: var(--surface, #fff);
+  color: var(--text-h, #101828);
+  font: inherit;
+  padding: 0.55rem 0.7rem;
+}
+
 .admin-form button,
 .admin-card button {
   cursor: pointer;
+  border-radius: var(--radius-control, 0.5rem);
+  background: var(--accent, #175cd3);
+  color: var(--bg, #fff);
+  font-weight: 600;
+  padding-inline: 0.85rem;
+}
+
+.admin-form button:hover:not(:disabled),
+.admin-card button:hover:not(:disabled) {
+  filter: brightness(0.94);
 }
 
 .admin-form button:disabled,
@@ -141,6 +180,7 @@
 :where(.admin-layout a, .admin-layout button, .admin-layout input, .admin-layout select, .admin-layout textarea):focus-visible {
   outline: 2px solid var(--accent, #175cd3);
   outline-offset: 3px;
+  box-shadow: 0 0 0 3px var(--accent-bg, #eff8ff);
 }
 
 @media (max-width: 520px) {

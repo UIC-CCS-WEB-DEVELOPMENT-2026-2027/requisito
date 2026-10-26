@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom'
 import EmptyState from '../components/EmptyState.jsx'
 import { getBarangays, getCityFacts, getOfficials, getRequirementsByGoal, getServices, getUpdates, getGoals } from '../data/helpers.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
+import { href } from '../routeManifest.js'
 
 const repoIssueUrl = 'https://github.com/UIC-CCS-WEB-DEVELOPMENT-2026-2027/requisito/issues/new'
 const groupTranslationKeys = {
@@ -110,7 +111,7 @@ function Contribute() {
       <p className="form-feedback" role="status" aria-live="polite">{feedback}</p>
       {issueUrl && <p><a className="return-link" href={issueUrl} target="_blank" rel="noopener noreferrer">{t('contribute.continueGithub')}</a></p>}
       {records.length === 0 && <EmptyState message={t('contribute.empty')} />}
-      <p><Link to="/status">{t('contribute.reviewStatus')}</Link></p>
+      <p><Link to={href('status')}>{t('contribute.reviewStatus')}</Link></p>
     </section>
   )
 }

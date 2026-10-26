@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import { requireRole, requireSession } from '../auth/middleware.js'
+import { wouldRemoveLastActiveAdmin } from '../auth/policies.js'
 import { hashPassword, validatePassword } from '../auth/passwords.js'
 import { appendAudit } from '../db/audit.js'
 
@@ -136,7 +137,7 @@ export function createAdminRouter({ db, config }) {
         const activeAdmins = db.prepare(`
           SELECT COUNT(*) AS count FROM users WHERE role = 'admin' AND disabled = 0
         `).get().count
-        if (activeAdmins <= 1) {
+        if (wouldRemoveLastActiveAdmin(existing, role, disabled, activeAdmins)) {
           db.exec('ROLLBACK')
           return res.status(409).json({ error: 'The last active admin cannot be disabled or demoted.' })
         }

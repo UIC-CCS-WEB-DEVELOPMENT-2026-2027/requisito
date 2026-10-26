@@ -1,17 +1,22 @@
 # Requisito AI assistant
 
 Built by Caleb with AI assistance. Caleb owns this feature and verifies every
-official source. Last updated: 2026-10-23.
+official source. Last updated: 2026-10-24.
 
 ## Data flow
 
-`ChatAssistant` -> `askAssistant(question)` -> `POST /.netlify/functions/chat`
--> server-owned requirements, service, and hotline JSON -> Gemini -> validated answer and record IDs
+The shared header dialog and the existing Checklist assistant use
+`ChatAssistant` -> `askAssistant(question, context, language)` ->
+`POST /api/chat` -> Vercel adapter in `api/chat.js` -> shared handler in
+`netlify/functions/chat.js` -> server-owned requirements, service, and
+hotline JSON -> Gemini -> validated answer and record IDs
 -> server-built sources and warnings -> React plain-text messages.
 
-Only the latest question is sent; previous chat messages stay in React memory.
-Messages clear when leaving the page or changing goals. They are not saved to
-a database or browser storage. Prompts are processed by the third-party provider.
+Only the latest question, supported interface language, and optional stable
+page context are sent; prior messages are not sent. The header dialog retains
+its transcript in React memory while the public layout is mounted. The separate
+Checklist assistant keeps its own in-memory transcript. Neither is saved to a
+database or browser storage. Prompts are processed by the third-party provider.
 Do not enter IDs, names, addresses, or other personal details.
 
 ## Accuracy rules
@@ -24,6 +29,10 @@ Do not enter IDs, names, addresses, or other personal details.
 2. The provider receives IDs, labels, notes, copy counts, and verification values.
    Source URLs and verification dates are omitted. The model returns JSON with
    `answer`, `used_ids`, and `confidence`. The server builds the source list itself.
+   Each record is serialized inside an explicit untrusted-record delimiter, and
+   the system instruction tells the model not to follow instructions inside
+   record or question text. The selected `en`, `fil`, or `ceb` reply language is
+   validated by the function and included in the system instruction.
 3. `STALE_DAYS = 90` is defined in `netlify/lib/assistant-records.js`. The server
    calculates stale warnings from verification dates using the Manila calendar day.
    Progress `status` stays independent of source `verification`.
@@ -37,28 +46,69 @@ Do not enter IDs, names, addresses, or other personal details.
 6. Requests use JSON output, temperature 0.2, and at most 700 output tokens.
    A provider 400 stops immediately; parameters are not silently changed.
 
-The server also rejects common model-written URL/date patterns and personal-data
-patterns. These are defense-in-depth checks, not a proof that arbitrary text is
-accurate or contains no dates. A plausible but unsupported claim may still pass
-structural validation. Caleb must review factual meaning and source relevance.
+7. A service detail route may send its service `type` and `slug` as page
+   context. The function resolves that pair against its own eligible records;
+   client-supplied record text is ignored. A context record is prioritized in
+   retrieval only after the same verified-only checks pass.
+8. Before returning an answer, the server rejects common model-written
+   URL/date/personal-data patterns and refuses any numeric token not found in
+   the cited record's label, notes, or copy count. These checks are
+   defense-in-depth, not semantic proof that every claim is accurate.
+   Non-numeric unsupported claims can still pass structural validation, so
+   Caleb must review factual meaning and source relevance.
 
 ## Environment and secrets
 
 | Variable | Purpose |
 | --- | --- |
 | `AI_PROVIDER` | `gemini`; this implementation supports the selected provider only |
-| `AI_MODEL` | `gemini-3.5-flash-lite`, chosen and configured by Caleb; no source-code default |
+| `AI_MODEL` | A supported stable `gemini-3.x-flash` or `gemini-3.x-flash-lite` model; no source-code default |
 | `AI_API_KEYS` | Comma-separated private API keys; server only |
+| `DAILY_LIMIT_PER_IP` | Optional positive integer from 1 to 10000; defaults to 100 requests per IP per Manila calendar day |
 
 Copy `.env.example` to `.env` only when creating a new environment. Do not overwrite
 an existing `.env`. The ignored file is never committed, printed, or included in
-React source. No secret has a `VITE_` prefix. Set keys in the Netlify dashboard by
-hand when deploying; never put them in command-line arguments.
+React source. No secret has a `VITE_` prefix. Set keys in Vercel's server-side
+project environment settings by hand when deploying; never put them in
+command-line arguments.
 
 The handler reads `process.env`. Empty keys/model, a different provider, or a
-disallowed model name returns a generic 503. Stable `gemini-3.x-flash` and
-`gemini-3.x-flash-lite` names are accepted; preview/latest aliases and other model
-families are rejected. Acceptance by this name check does not prove availability.
+disallowed model name returns a generic 503 when verified records are eligible
+for answering. When no verified record is available, the handler returns the
+safe no-verified-information refusal without requiring provider configuration
+or making a provider request. The shared model-name check accepts stable
+`gemini-3.x-flash` and `gemini-3.x-flash-lite` names; preview/latest aliases and
+other model families are rejected. This syntax check does not establish that
+Google currently offers the model to your API key or project, that the project
+has quota, or that a generation request will succeed.
+
+### Safe local configuration diagnostic
+
+Run:
+
+```sh
+npm run ai:diagnose
+```
+
+It loads the existing ignored `.env` without printing its contents and reports
+only booleans for the expected provider, model presence, accepted model-name
+format, presence of a nonempty key entry, and existence of an eligible verified
+record, plus the local Vercel command. It does not contact Google, print model
+or key values, or change local or deployment settings. A `true` model-format
+result is only a syntax check; it is not a live availability check.
+
+To separately check actual model access, sign in to the intended Google AI
+Studio project and compare the exact model API ID with Google's current
+[Models API list](https://ai.google.dev/api/models#method:-models.list). Using
+the same project's API key, inspect that model's `supportedGenerationMethods`
+for `generateContent`. If using the Models API directly, use a trusted local
+API client that reads the key from a secret store or ignored environment file
+and sends it in the `x-goog-api-key` header; do not paste it into a URL,
+terminal command, source file, browser, or diagnostic output. Confirm project
+limits separately in [AI Studio usage](https://aistudio.google.com/usage?tab=rate-limit).
+Model listing does not guarantee quota or a successful generation; only an
+explicit provider request can establish that, and this repository's assistant
+must not make that request until eligible verified civic records exist.
 
 For every commit run:
 
@@ -78,13 +128,20 @@ No commit proceeds on a failure.
 
 ## Local development and test mode
 
+Use Vercel CLI for the complete local path (including `.env` configuration):
+
 ```sh
-npx netlify-cli dev
+npx vercel dev --listen 3000
 ```
 
-Use the printed URL, usually `http://localhost:8888`. The configuration runs Vite
-on port 5173 and functions through Netlify. Plain `npm run dev` cannot run the
-function. No Netlify CLI dependency is kept in this project.
+This runs the Vite frontend and discovers the Vercel Node function in `api/`;
+the app is usually available at `http://localhost:3000`. Plain `npm run dev`
+does not run the function and its `/api` proxy targets the separate local admin
+API, so the chat route will not work through plain Vite alone. `api/chat.js` is
+a thin request/response adapter; all eligibility, input validation, provider,
+rate-limit, timeout, and response-validation logic stays in the shared handler
+in `netlify/functions/chat.js`. The legacy Netlify function entry also delegates to that handler, but the
+documented public host and browser endpoint are Vercel and `/api/chat`.
 
 **Local-only override:** `ALLOW_UNVERIFIED_FOR_TESTING=true` in ignored `.env`
 includes fictional records only when `NETLIFY_DEV === "true"`, with no deploy ID
@@ -94,12 +151,11 @@ The override logs one credential-free line per server instance, caps confidence
 at `partial`, and adds "TEST MODE: unverified placeholder data". Remove it after
 testing. This mode cannot establish factual accuracy and must never be hosted.
 
-Caleb ran the temporary model probes locally and reported successful text and
-JSON responses for all four candidates. He selected `gemini-3.5-flash-lite` and
-configured it himself. `gemini-3.1-flash-lite` is his manual backup; the server
-never silently changes models. The probe scripts were deleted and are not committed.
-A successful probe does not prove free-tier entitlement; check the project's
-model rate limits in [AI Studio](https://aistudio.google.com/usage?tab=rate-limit).
+Past local probes are historical and do not establish current configuration or
+provider availability. Use `npm run ai:diagnose` to inspect current local
+configuration safely. Keep `AI_API_KEYS` exclusively in ignored `.env` or
+Vercel's server-side settings. Do not put the key in a `VITE_` variable,
+frontend code, a command argument, or committed files.
 
 ## Request protection and failover
 
@@ -110,8 +166,12 @@ personal information. The UI privacy notice is still necessary.
 
 After input guards, `RATE_LIMIT_PER_MIN = 10` applies per IP in memory. Context IP
 is preferred over the forwarded header. Serverless instances do not share state,
-and memory resets, so this is only a speed bump. The UI also prevents overlapping
-requests and enforces two seconds between sends.
+and memory resets, so this is only a speed bump. The configurable
+`DAILY_LIMIT_PER_IP` cap (default 100) is also per-IP in process memory and uses
+the Asia/Manila calendar day; it is not a shared billing quota. Invalid values
+outside 1-10000 return a configuration error. The UI also prevents overlapping
+requests and enforces two seconds between sends. The handler does not log
+questions or page context; provider logs contain status and attempt index only.
 
 Keys are trimmed and deduplicated. Each request starts with the last successful
 key in the current instance. Rotation occurs only on 401, 403, 429, 5xx, timeout,
@@ -150,7 +210,7 @@ node --test scripts/chat.test.mjs scripts/eval-assistant.test.mjs src/tests/plan
 npm run build
 ```
 
-After choosing a working model, run `npx netlify-cli dev`, sign in with made-up
+After choosing a model that your Google project exposes, run `npx vercel dev --listen 3000`, sign in with made-up
 input, open Goals -> First Job, and scroll to the assistant:
 
 1. Ask "What do the records say about Birth certificate?" Normal mode currently
@@ -164,22 +224,31 @@ input, open Goals -> First Job, and scroll to the assistant:
    and source links; check visible focus and new-message announcements.
 6. At 360px width, verify no horizontal scroll and an easy-to-tap Send button.
    Check the browser Console for errors. Inspect Network payloads: no credentials.
-7. For a real failover check, temporarily replace one key in `.env` with an
-   intentionally invalid value using an editor, restart the local server, and
-   exercise eligible data or local test mode. Confirm a status-only failure log
-   followed by success from another key. Restore the key locally afterwards.
-   Shared project quota failures may affect every key; do not claim success then.
+7. Do not use local test mode or placeholder records as proof of a real
+   grounded civic response. A real grounded test requires a current eligible
+   record approved through the existing workflow by a genuinely different
+   human reviewer. Never deliberately place an invalid key in the active
+   configuration; use mocks for failover tests.
 
-Run the live evaluation from a second terminal:
+The default evaluation command is plan-only and makes no request. Run:
 
 ```sh
 node scripts/eval-assistant.mjs
 ```
 
-The 32 definitions cover eight original requirement cases, four Davao service,
+To explicitly send requests to the local function and configured provider,
+append `--live`:
+
+```sh
+node scripts/eval-assistant.mjs --live
+```
+
+The 34 definitions cover eight original requirement cases, four Davao service,
 hotline, and requirement cases, four history/brief/budget cases, four
-out-of-scope cases, three injections, four PII cases, two warning cases, and
-three validation edges. Answerable questions are generated at runtime only from
+out-of-scope cases, three injection cases, two Filipino/Bisaya questions, four
+PII cases, two warning cases, and three validation edges. Provider failure,
+malformed response, unsupported citations, and unsupported numeric claims are
+also covered by offline fake-provider tests. Answerable questions are generated at runtime only from
 verified records and are skipped when a matching verified record is
 unavailable. Warning cases use conflicting or stale records, or unverified
 records when none are eligible. Missing fixtures are reported as skipped;
@@ -191,16 +260,33 @@ delay. Failures produce a nonzero exit; skipped coverage is prominently reported
 but is not a factual accuracy pass. A no-eligible-data run tests the refusal path,
 not the model's resistance to prompt injection. Read answers manually as well.
 
-## Manual deployment (Caleb only; not executed)
+## Vercel deployment (Caleb only; not executed)
 
-1. After local verification and approval, import the repository into Netlify.
-2. Use build command `npm run build`, publish directory `dist`, and the committed
-   `netlify.toml` for functions and SPA routing.
-3. In the dashboard, enter `AI_PROVIDER`, `AI_MODEL`, and `AI_API_KEYS` manually,
-   with access available to Functions. Never paste keys into a CLI command.
-4. Verify the function timeout and trigger deployment only when ready.
-5. Check a direct `/checklist` refresh, demo sign-in, and the assistant's refusal
-   or verified response. Review server logs without logging credentials or text.
+1. The documented public host is Vercel: the README identifies the existing
+   live app as `requisito.vercel.app`, says deployment is through Vercel CLI,
+   and the repository includes `vercel.json`. The Vercel function in `api/chat.js`
+   serves the browser endpoint `/api/chat`; Vercel's Vite framework handling
+   serves client-side routes, without a catch-all rewrite that would intercept
+   function or development asset requests.
+2. Configure `AI_PROVIDER=gemini`, an `AI_MODEL` API ID confirmed for the same
+   Google project using the Models API check above, and `AI_API_KEYS` in
+   Vercel's server-side project environment settings, with access available to
+   the function. Ensure the model name also passes the application's syntax
+   check. Never place a key in frontend variables, source, a CLI argument, or
+   committed files.
+3. Verify the function timeout for the deployed plan. The provider handler has
+   a 9-second total deadline; function/platform overhead must also fit the host
+   limit.
+4. Check a direct `/checklist` refresh, then check `/api/chat` via the assistant
+   and review server logs without logging credentials or question text.
+
+On 2026-10-24, the Vercel CLI local runtime served a nested service route and
+the chat endpoint's no-verified-record refusal in a browser. This confirms the
+local route and safe no-data path, not a deployed function or Gemini call.
+Adapter tests use mocked provider responses. No live provider request or
+grounded civic answer should be attempted until configuration is checked and
+at least one current eligible record is approved through the two-person review
+workflow by a genuinely different human reviewer.
 
 ## Ownership and AI disclosure
 

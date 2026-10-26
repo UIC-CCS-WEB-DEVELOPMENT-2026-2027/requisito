@@ -1,16 +1,18 @@
-import { Link, Navigate } from 'react-router-dom'
+import { Link, Navigate, useLocation } from 'react-router-dom'
 import LoginForm from '../components/LoginForm.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
 import { getSignInDestination } from '../utils/authRedirect.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
+import { href } from '../routeManifest.js'
 
 // Props: none. Signed-in users are sent to the home dashboard.
 function Login() {
   const { isSignedIn } = useAuth()
   const { t } = useLanguage()
+  const location = useLocation()
 
   if (isSignedIn) {
-    return <Navigate to={getSignInDestination()} replace />
+    return <Navigate to={getSignInDestination(location.state)} replace />
   }
 
   return (
@@ -24,7 +26,7 @@ function Login() {
         </div>
         <LoginForm />
         <p className="login-notice"><span className="login-demo-label">{t('login.demoLabel')}</span> {t('login.demoNotice')}</p>
-        <Link className="login-back-link" to="/"><span aria-hidden="true">&larr;</span> {t('login.backHome')}</Link>
+        <Link className="login-back-link" to={href('home')}><span aria-hidden="true">&larr;</span> {t('login.backHome')}</Link>
       </div>
     </section>
   )

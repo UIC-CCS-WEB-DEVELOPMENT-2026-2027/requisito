@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS verification_requests (
   status TEXT NOT NULL CHECK (status IN ('pending', 'approved', 'rejected', 'cancelled')),
   decided_by INTEGER REFERENCES users(id),
   decided_at TEXT,
+  decision_note TEXT NOT NULL DEFAULT '',
   created_at TEXT NOT NULL,
   FOREIGN KEY (record_type, record_id) REFERENCES records(type, id)
 );

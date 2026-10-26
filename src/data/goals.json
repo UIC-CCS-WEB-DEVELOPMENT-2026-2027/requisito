@@ -1,44 +1,116 @@
 [
   {
     "id": 1,
+    "slug": "first-job",
     "title": "First Job",
-    "description": "Get the documents needed to start your first job.",
-    "stepsCount": 6
+    "description": "Prepare for employer onboarding and understand which registration steps depend on your employment status.",
+    "category": "Employment and career",
+    "audience": "Students, fresh graduates, and first-time employees. Employer requests and government registration steps depend on the role and employment arrangement.",
+    "agency": "Employers and relevant government agencies",
+    "requirementIds": [1, 2, 3, 4, 5, 6],
+    "verification": "unverified"
   },
   {
     "id": 2,
+    "slug": "philippine-passport",
     "title": "Passport",
     "description": "Get the documents needed to apply for a passport.",
-    "stepsCount": 0
+    "category": "Identity and travel",
+    "audience": "Passport applicants; first-time and renewal requirements need separate official research.",
+    "agency": "Department of Foreign Affairs",
+    "requirementIds": [15, 16, 17, 18, 19],
+    "titleKey": "demo.goal.passport.title",
+    "descriptionKey": "demo.goal.passport.description",
+    "audienceKey": "demo.goal.passport.audience",
+    "categoryKey": "demo.category.passport",
+    "demoPreparationKey": "demo.preparation.passport",
+    "demoMistakesKey": "demo.mistakes.passport",
+    "demoNoteKey": "demo.notes.passport",
+    "demoGuideKey": "demo.guide.passport",
+    "demoContent": true,
+    "verification": "unverified"
   },
   {
     "id": 3,
+    "slug": "nbi-clearance",
     "title": "NBI Clearance",
     "description": "Get the documents needed to apply for NBI clearance.",
-    "stepsCount": 0
+    "category": "Clearances and government transactions",
+    "audience": "Applicants for a national NBI clearance.",
+    "agency": "National Bureau of Investigation",
+    "requirementIds": [20, 21, 22, 23, 24],
+    "titleKey": "demo.goal.nbi.title",
+    "descriptionKey": "demo.goal.nbi.description",
+    "audienceKey": "demo.goal.nbi.audience",
+    "categoryKey": "demo.category.nbi",
+    "demoPreparationKey": "demo.preparation.nbi",
+    "demoMistakesKey": "demo.mistakes.nbi",
+    "demoNoteKey": "demo.notes.nbi",
+    "demoGuideKey": "demo.guide.nbi",
+    "demoContent": true,
+    "verification": "unverified"
   },
   {
     "id": 4,
+    "slug": "drivers-license",
     "title": "Driver's License",
     "description": "Get the documents needed to apply for a driver's license.",
-    "stepsCount": 0
+    "category": "Driving and transportation",
+    "audience": "Permit and license applicants; student, non-professional, professional, and renewal flows need separate research.",
+    "agency": "Land Transportation Office",
+    "requirementIds": [25, 26, 27, 28, 29, 30],
+    "titleKey": "demo.goal.driversLicense.title",
+    "descriptionKey": "demo.goal.driversLicense.description",
+    "audienceKey": "demo.goal.driversLicense.audience",
+    "categoryKey": "demo.category.driversLicense",
+    "demoPreparationKey": "demo.preparation.driversLicense",
+    "demoMistakesKey": "demo.mistakes.driversLicense",
+    "demoNoteKey": "demo.notes.driversLicense",
+    "demoGuideKey": "demo.guide.driversLicense",
+    "demoContent": true,
+    "verification": "unverified"
   },
   {
     "id": 5,
+    "slug": "sss-philhealth",
     "title": "SSS and PhilHealth",
     "description": "Get the documents needed to register with SSS and PhilHealth.",
-    "stepsCount": 0
+    "category": "Government registrations",
+    "audience": "People checking the appropriate social insurance and health insurance registration route.",
+    "agency": "Social Security System and Philippine Health Insurance Corporation",
+    "requirementIds": [31, 32, 33, 34, 35, 36],
+    "titleKey": "demo.goal.sssPhilhealth.title",
+    "descriptionKey": "demo.goal.sssPhilhealth.description",
+    "audienceKey": "demo.goal.sssPhilhealth.audience",
+    "categoryKey": "demo.category.sssPhilhealth",
+    "demoPreparationKey": "demo.preparation.sssPhilhealth",
+    "demoMistakesKey": "demo.mistakes.sssPhilhealth",
+    "demoNoteKey": "demo.notes.sssPhilhealth",
+    "demoGuideKey": "demo.guide.sssPhilhealth",
+    "demoContent": true,
+    "verification": "unverified"
   },
   {
     "id": 6,
+    "slug": "sample-goal",
     "title": "Sample goal (no requirements)",
     "description": "Fictional goal for testing the checklist empty state.",
-    "stepsCount": 0
+    "category": "Sample",
+    "audience": "Test fixture only.",
+    "agency": "",
+    "requirementIds": [],
+    "verification": "unverified",
+    "isSample": true
   },
   {
     "id": 7,
-    "title": "First Job in Davao City",
-    "description": "Review the illustrative health card documents mentioned in a City Health Office announcement.",
-    "stepsCount": 7
+    "slug": "davao-city-health-card",
+    "title": "Davao City Health Card",
+    "description": "Review the health-card requirements reported in a City Health Office announcement and confirm the current process.",
+    "category": "Employment and career",
+    "audience": "Workers in Davao City, subject to confirmation of the current health-card rules and occupational category.",
+    "agency": "Davao City City Health Office",
+    "requirementIds": [7, 8, 9, 10, 11, 12, 13, 14],
+    "verification": "unverified"
   }
 ]

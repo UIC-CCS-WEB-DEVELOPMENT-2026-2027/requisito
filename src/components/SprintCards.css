@@ -85,6 +85,23 @@
   overflow-wrap: anywhere;
 }
 
+.requirement-toggle select {
+  min-width: 0;
+  min-height: 44px;
+  flex: 1 1 12rem;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--surface);
+  color: var(--text-h);
+  font: inherit;
+  padding: 0.55rem 0.7rem;
+}
+
+.requirement-toggle select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
 .requirement-status {
   flex: 0 0 auto;
   border-radius: 6px;
@@ -248,24 +265,23 @@
   grid-template-columns: minmax(0, 1fr);
 }
 
-.document-grid {
-  padding: 0;
-  list-style: none;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-}
-
-.document-grid > li {
-  min-width: 0;
-}
-
-.document-card {
-  min-height: 100%;
-}
-
 .plan-step-number {
   margin: 0 0 0.5rem;
   color: var(--accent);
   font-weight: 700;
+}
+
+.requirement-kind,
+.goal-card-category {
+  width: fit-content;
+  max-width: 100%;
+  border-radius: 999px;
+  background: var(--accent-bg);
+  color: var(--text-h);
+  padding: 0.25rem 0.65rem;
+  font-size: 0.9rem;
+  font-weight: 650;
+  overflow-wrap: anywhere;
 }
 
 @media (min-width: 521px) {

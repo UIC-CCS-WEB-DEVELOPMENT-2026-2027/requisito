@@ -17,6 +17,8 @@ const EDITABLE_FIELDS = new Set([
   'amountPHP', 'referenceNo', 'agency', 'awardDate', 'status', 'kind',
   'officialBody', 'goalId', 'label', 'copies', 'validityMonths',
   'adminDistrict', 'legislativeDistrict', 'population2020', 'holderName', 'term',
+  'url', 'publishedDate', 'statementDate', 'effectiveDate', 'evidenceType',
+  'supports', 'limitations', 'relatedSources',
 ])
 
 function filterEditableData(data) {
@@ -34,6 +36,28 @@ function isHttpsUrlOrEmpty(value) {
   } catch {
     return false
   }
+}
+
+function isValidRequirementSource(data) {
+  for (const field of ['agency', 'title', 'evidenceType', 'limitations']) {
+    if (typeof data[field] !== 'string' || !data[field].trim()) return false
+  }
+  if (typeof data.url !== 'string' || !data.url || !isHttpsUrlOrEmpty(data.url)) return false
+  if (!Array.isArray(data.supports) ||
+      data.supports.length === 0 ||
+      data.supports.some((claim) => typeof claim !== 'string' || !claim.trim())) return false
+  if (data.relatedSources !== undefined &&
+      (!Array.isArray(data.relatedSources) ||
+       data.relatedSources.some((url) => typeof url !== 'string' || !isHttpsUrlOrEmpty(url) || !url))) {
+    return false
+  }
+  for (const field of ['publishedDate', 'statementDate', 'effectiveDate']) {
+    if (data[field] !== null &&
+        (typeof data[field] !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(data[field]))) {
+      return false
+    }
+  }
+  return true
 }
 
 function nowIso(config) {
@@ -77,6 +101,10 @@ export function createRecordsRouter({ db, config }) {
         (typeof data.sourceUrl !== 'string' || !isHttpsUrlOrEmpty(data.sourceUrl))) {
       return res.status(400).json({ error: 'sourceUrl must be empty or a valid HTTPS URL without credentials.' })
     }
+    if (Object.hasOwn(data, 'url') &&
+        (typeof data.url !== 'string' || !isHttpsUrlOrEmpty(data.url))) {
+      return res.status(400).json({ error: 'url must be a valid HTTPS URL without credentials.' })
+    }
     const sourceUrl = req.body?.source_url
     const note = req.body?.note
     if (sourceUrl !== undefined && typeof sourceUrl !== 'string') {
@@ -88,6 +116,10 @@ export function createRecordsRouter({ db, config }) {
     try {
       const existing = types.map((type) => getRecord(db, type, req.params.id)).find(Boolean)
       if (!existing) return res.status(404).json({ error: 'Record not found.' })
+      if (existing.type === 'requirementSource' &&
+          !isValidRequirementSource({ ...existing, ...data })) {
+        return res.status(400).json({ error: 'Requirement source data is incomplete or contains an invalid URL or date.' })
+      }
       const record = editRecord(db, {
         type: existing.type,
         id: req.params.id,
