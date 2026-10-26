@@ -1,5 +1,10 @@
 # Release checklist
 
+Latest execution results: [26 October completion report](completion-validation-2026-10-26.md).
+The historical snapshots below retain earlier limitations; PDF extraction, HTTP
+tests, browser execution and chunk splitting were subsequently completed. The
+strict government publication gate remains BLOCKED.
+
 Status checked: 2026-10-26. This checklist records evidence and blockers; a
 green build alone does not establish release readiness.
 

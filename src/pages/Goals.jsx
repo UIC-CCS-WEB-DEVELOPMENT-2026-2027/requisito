@@ -32,12 +32,14 @@ function Goals() {
   const [category, setCategory] = useState('')
   const query = searchText.trim().toLowerCase()
   const filteredGoals = useMemo(() => goals.filter((goal) =>
-    (!category || (goal.categoryKey ? t(goal.categoryKey) : goal.category) === category) &&
-    `${goal.title} ${goal.description} ${goal.category} ${goal.audience} ${goal.agency}`
+    (!category || goal.category === category) &&
+    `${goal.title} ${goal.description} ${goal.category} ${goal.audience} ${goal.agency} ${goal.titleKey ? t(goal.titleKey) : ''} ${goal.descriptionKey ? t(goal.descriptionKey) : ''}`
       .toLowerCase()
       .includes(query),
   ), [category, goals, query, t])
-  const categories = [...new Set(goals.map((goal) => goal.categoryKey ? t(goal.categoryKey) : goal.category))]
+  const categories = [...new Map(goals.map((goal) => [goal.category,
+    goal.categoryKey ? t(goal.categoryKey) : goal.category,
+  ])).entries()]
 
   return (
     <section className="page-content flow-content" aria-labelledby="goals-title">
@@ -61,7 +63,7 @@ function Goals() {
         <label htmlFor="goal-category">{t('label.category')}</label>
         <select id="goal-category" value={category} onChange={(event) => setCategory(event.target.value)}>
           <option value="">{t('goals.allCategories')}</option>
-          {categories.map((item) => <option key={item} value={item}>{item}</option>)}
+          {categories.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
         </select>
       </div>
       {filteredGoals.length > 0 ? (

@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import './SprintCards.css'
 
 // Props: title, description, stepsCount, checklistAvailable, category, verification, countLabel, verificationLabel, unavailableLabel, actionLabel.
 function GoalCard({

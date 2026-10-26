@@ -19,7 +19,8 @@ test('first-job checklist personalizes, persists, and links to guidance', async 
   await page.locator('#checklist-needsClearance').selectOption('yes')
 
   await expect(page.getByText(/Some details may need confirmation/)).toBeVisible()
-  await expect(page.locator('.requirement-card')).not.toContainText('Never verified')
+  await page.locator('#checklist-item-3 .requirement-source-details > summary').click()
+  await expect(page.locator('#checklist-item-3')).toContainText('Never verified')
   await expect(page.locator('#checklist-item-1')).toHaveCount(0)
   await expect(page.locator('#checklist-item-2')).toBeVisible()
   await expect(page.locator('.checklist-readiness')).toContainText('Needs verification')
@@ -51,14 +52,15 @@ test('first-job checklist personalizes, persists, and links to guidance', async 
   await expect(resumedCard.locator('.goal-progress-value')).toHaveText('In progress')
 })
 
-test('unsupported goals do not expose a generated readiness assessment', async ({ page }) => {
+test('demo goals keep their checklist and disclose uncertainty', async ({ page }) => {
   await page.goto('/goals')
   const passportCard = page.locator('.goal-card').filter({ hasText: 'Passport' }).first()
   await passportCard.getByRole('link', { name: /view requirements/i }).click()
-  await page.getByRole('link', { name: /view checklist availability/i }).click()
+  await page.getByRole('link', { name: /start this goal.s checklist/i }).click()
 
+  await expect(page.locator('.requirement-card')).not.toHaveCount(0)
   await expect(page.locator('.checklist-readiness')).toHaveCount(0)
-  await expect(page.getByRole('link', { name: /browse goals/i })).toBeVisible()
+  await expect(page.locator('.disclaimer-banner')).toContainText('MVP')
 })
 
 test('keyboard skip link works and the layout fits the selected viewport', async ({ page }) => {
@@ -121,4 +123,25 @@ test('browser storage failures are explained while current edits remain visible'
   await page.locator('#checklist-item-3').getByLabel('Your progress').selectOption('in-progress')
   await expect(page.locator('#checklist-item-3').getByLabel('Your progress')).toHaveValue('in-progress')
   await expect(page.getByText(/Browser storage could not be read or updated/i)).toBeVisible()
+})
+
+test('goal categories survive language changes and official links stay safe', async ({ page }) => {
+  await page.goto('/goals')
+  await page.locator('#goal-category').selectOption('Identity and travel')
+  for (const language of ['fil', 'ceb', 'en']) {
+    await page.locator('#language-select').selectOption(language)
+    await expect(page.locator('html')).toHaveAttribute('lang', language)
+    await expect(page.locator('.goal-card')).toHaveCount(1)
+    await expect(page.locator('#goal-category')).toHaveValue('Identity and travel')
+  }
+  await page.goto('/checklist?goal=1')
+  await page.locator('#checklist-item-3 .requirement-source-details > summary').click()
+  const source = page.locator('#checklist-item-3 a[href="https://www.sss.gov.ph/employees/"]')
+  await expect(source).toBeVisible()
+  await expect(source).toHaveAttribute('target', '_blank')
+  await expect(source).toHaveAttribute('rel', 'noopener noreferrer')
+  await page.locator('#checklist-item-3').getByLabel('Your progress').selectOption('not-applicable')
+  await expect(page.locator('.checklist-progress')).toContainText('1 marked not applicable')
+  await page.reload()
+  await expect(page.locator('#checklist-item-3').getByLabel('Your progress')).toHaveValue('not-applicable')
 })
