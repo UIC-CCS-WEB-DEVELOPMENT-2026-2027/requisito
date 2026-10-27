@@ -51,6 +51,28 @@ export function getServices() {
   return services.map(copyService)
 }
 
+export function getVerifiedHotlines(today = new Date()) {
+  return filterVerifiedHotlines(services, today)
+}
+
+export function filterVerifiedHotlines(records, today = new Date()) {
+  const staleBefore = today.getTime() - STALE_DAYS * 86400000
+  return records
+    .filter((record) => {
+      const verifiedAt = validDate(record.lastVerified)
+      return record.type === 'hotline' &&
+        record.verification === 'verified' &&
+        verifiedAt &&
+        verifiedAt.getTime() >= staleBefore &&
+        verifiedAt.getTime() <= today.getTime() &&
+        Boolean(record.title?.trim()) &&
+        hasHttpsSource(record.sourceUrl) &&
+        Array.isArray(record.contact?.phone) &&
+        record.contact.phone.some((phone) => typeof phone === 'string' && phone.trim())
+    })
+    .map(copyService)
+}
+
 // Find a service by its stable URL slug.
 export function getServiceBySlug(slug) {
   const service = services.find((item) => item.slug === slug)
@@ -390,6 +412,10 @@ function copyService(service) {
     ...service,
     contact: { ...service.contact, phone: [...service.contact.phone] },
     ...(service.steps ? { steps: [...service.steps] } : {}),
+    ...(service.keywords ? { keywords: [...service.keywords] } : {}),
+    ...(service.feeDetails ? { feeDetails: service.feeDetails.map((fee) => ({ ...fee })) } : {}),
+    ...(service.requirements ? { requirements: [...service.requirements] } : {}),
+    ...(service.relatedSources ? { relatedSources: [...service.relatedSources] } : {}),
   }
 }
 

@@ -1,6 +1,8 @@
 import { Link, useParams } from 'react-router-dom'
 import EmptyState from '../components/EmptyState.jsx'
+import LiveCityInfo from '../components/LiveCityInfo.jsx'
 import OfficialSourceLeads from '../components/OfficialSourceLeads.jsx'
+import OfficialSourceDirectory from '../components/OfficialSourceDirectory.jsx'
 import RecordMeta from '../components/RecordMeta.jsx'
 import { getFeatureRecords, getServices } from '../data/helpers.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
@@ -45,7 +47,7 @@ function FeaturePage({ feature }) {
     : details.catalog ? getFeatureRecords(details.catalog) : []
   const record = slug ? items.find((item) => item.slug === slug) : null
   const serviceSources = details.contact
-    ? getServices().filter((service) => service.sourceUrl.startsWith('https://'))
+    ? []
     : getServices().filter((service) => details.sourceSlugs?.includes(service.slug))
 
   return (
@@ -53,7 +55,7 @@ function FeaturePage({ feature }) {
       <p className="eyebrow">{t('feature.eyebrow')}</p>
       <h1 id={`${feature}-title`}>{t(details.title)}</h1>
       <p className="page-description">{t(details.description)}</p>
-      {record ? (
+      {details.contact ? null : feature === 'live' ? <LiveCityInfo /> : record ? (
         <>
           <h2>{record.title}</h2>
           {record.description && <p>{record.description}</p>}
@@ -64,13 +66,14 @@ function FeaturePage({ feature }) {
       )}
       {details.contact && (
         <div className="feature-contact-placeholder" role="note">
-          <p>{t('feature.contact.placeholder')}</p>
-          <button type="button" disabled aria-describedby="contact-action-status">
+          <p>{t('feature.contact.destination')}</p>
+          <a href="https://davaocity.gov.ph/contact-us/" target="_blank" rel="noopener noreferrer">
             {t('feature.contact.action')}
-          </button>
-          <p id="contact-action-status" role="status">{t('feature.contact.disabled')}</p>
+          </a>
+          <p>{t('feature.contact.externalNotice')}</p>
         </div>
       )}
+      <OfficialSourceDirectory feature={feature} />
       <OfficialSourceLeads sources={serviceSources} />
       <nav aria-label={t('feature.alternatives')}>
         <h2>{t('feature.alternatives')}</h2>

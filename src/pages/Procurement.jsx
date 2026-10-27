@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import CatalogEmptyState from '../components/CatalogEmptyState.jsx'
+import OfficialSourceDirectory from '../components/OfficialSourceDirectory.jsx'
 import RecordMeta from '../components/RecordMeta.jsx'
 import { getProcurement } from '../data/helpers.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
@@ -45,6 +46,7 @@ function Procurement() {
         how={t('emptyState.dataHow')}
         action={t('emptyState.procurementAction')}
       />}
+      <OfficialSourceDirectory feature="procurement" />
     </section>
   )
 }

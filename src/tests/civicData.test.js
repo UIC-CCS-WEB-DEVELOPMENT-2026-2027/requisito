@@ -14,6 +14,8 @@ import {
   getAccountability,
   getGoals,
   getOfficials,
+  getVerifiedHotlines,
+  filterVerifiedHotlines,
   getServiceBySlug,
   getServices,
   getServicesByCategory,
@@ -28,11 +30,87 @@ import {
 test('service helpers return isolated records and category-filtered results', () => {
   const service = getServiceBySlug('central-911')
   assert.equal(service.title, 'Central 911')
-  assert.equal(getServices().length, 7)
+  assert.equal(getServices().length, 17)
   service.contact.phone.push('not persisted')
   assert.equal(getServiceBySlug('central-911').contact.phone.includes('not persisted'), false)
   assert.ok(getServicesByCategory('Health').every(item => item.category === 'Health'))
   assert.equal(getServiceBySlug('missing'), null)
+})
+
+test('Davao online service handoffs retain directory provenance and pending review status', () => {
+  const onlineServices = getServices().filter((service) =>
+    service.sourceUrl === 'https://davaocity.gov.ph/more-services/',
+  )
+  assert.equal(onlineServices.length, 8)
+  assert.ok(onlineServices.every((service) =>
+    service.sourceUrl === 'https://davaocity.gov.ph/more-services/' &&
+    service.relatedSources?.length === 1 &&
+    service.lastVerified === null &&
+    service.verification === 'unverified' &&
+    new URL(service.onlineUrl).protocol === 'https:',
+  ))
+  assert.equal(
+    getServiceBySlug('occupational-permit').availabilityNote.includes('office-maintenance notice'),
+    true,
+  )
+  assert.equal(getServiceBySlug('special-permit').lastVerified, null)
+  const copied = getServiceBySlug('online-business-permit-and-licensing-system')
+  copied.keywords.push('local mutation')
+  assert.equal(
+    getServiceBySlug('online-business-permit-and-licensing-system').keywords.includes('local mutation'),
+    false,
+  )
+})
+
+test('service fees and requirements stay source-linked, isolated, and unverified pending review', () => {
+  const services = getServices()
+  assert.ok(services.every((service) =>
+    Array.isArray(service.feeDetails) &&
+    typeof service.feesNote === 'string' &&
+    service.feesNote.trim() &&
+    service.lastVerified === null &&
+    service.verification === 'unverified',
+  ))
+
+  const birthCertificate = getServiceBySlug('psa-birth-certificate-copy')
+  assert.deepEqual(birthCertificate.feeDetails.map(({ amount }) => amount), ['₱365', '₱255'])
+  assert.ok(birthCertificate.feeDetails.every((fee) => fee.sourceUrl.startsWith('https://')))
+  birthCertificate.feeDetails[0].description = 'local mutation'
+  birthCertificate.requirements.push('local mutation')
+  assert.notEqual(getServiceBySlug('psa-birth-certificate-copy').feeDetails[0].description, 'local mutation')
+  assert.equal(getServiceBySlug('psa-birth-certificate-copy').requirements.includes('local mutation'), false)
+
+  const marriageLicense = getServiceBySlug('marriage-license')
+  assert.deepEqual(marriageLicense.feeDetails.map(({ amount }) => amount), ['₱300', '₱200', '₱250'])
+  assert.match(marriageLicense.notes, /inconsistent about the upper age/)
+  assert.equal(marriageLicense.verification, 'unverified')
+})
+
+test('only current, approved hotline records with official sources can be featured', () => {
+  const today = new Date('2026-10-23T00:00:00Z')
+  const record = {
+    id: 1,
+    type: 'hotline',
+    title: 'Emergency line',
+    sourceUrl: 'https://city.gov.ph/hotline',
+    lastVerified: '2026-10-01',
+    verification: 'verified',
+    contact: { phone: ['911'] },
+  }
+  const records = filterVerifiedHotlines([
+    record,
+    { ...record, id: 2, verification: 'unverified' },
+    { ...record, id: 3, lastVerified: '2026-06-01' },
+    { ...record, id: 4, sourceUrl: 'http://city.gov.ph/hotline' },
+    { ...record, id: 5, type: 'service' },
+    { ...record, id: 6, contact: { phone: [] } },
+    { ...record, id: 7, lastVerified: '2026-10-24' },
+  ], today)
+
+  assert.deepEqual(records.map(({ id }) => id), [1])
+  records[0].contact.phone.push('mutated')
+  assert.deepEqual(record.contact.phone, ['911'])
+  assert.deepEqual(getVerifiedHotlines(today), [])
 })
 
 test('barangay helpers return the sourced-name list with blank populations and unverified status', () => {

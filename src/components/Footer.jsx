@@ -10,6 +10,14 @@ function Footer() {
     { id: 'civic', labelKey: 'group.civic' },
     { id: 'about', labelKey: 'group.about' },
   ]
+  const linkedRouteIds = new Set(
+    routeManifest.filter((route) => route.nav === 'header' || route.footer).map((route) => route.id),
+  )
+  const additionalRoutes = routeManifest.filter((route) =>
+    route.feature &&
+    !linkedRouteIds.has(route.id) &&
+    !['reportDetail', 'publicRecordDetail', 'notFound'].includes(route.id),
+  )
   return (
     <footer className="site-footer">
       <p>Requisito</p>
@@ -24,6 +32,18 @@ function Footer() {
           </section>
         ))}
       </nav>
+      {additionalRoutes.length > 0 && (
+        <details className="footer-feature-index">
+          <summary>{t('group.portal')}</summary>
+          <nav aria-label={t('group.portal')}>
+            {additionalRoutes.map((route) => (
+              <Link key={route.id} to={href(route.id)}>
+                {t(route.labelKey ?? `feature.${route.feature}.title`)}
+              </Link>
+            ))}
+          </nav>
+        </details>
+      )}
     </footer>
   )
 }

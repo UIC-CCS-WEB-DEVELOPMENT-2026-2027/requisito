@@ -108,6 +108,102 @@ test('language selection updates the page language and survives reload', async (
   await expect(page.locator('html')).toHaveAttribute('lang', 'fil')
 })
 
+test('Davao home search and civic directory cards navigate to working routes', async ({ page }) => {
+  await expect(page.getByRole('heading', { name: 'Explore Davao City' })).toBeVisible()
+  await expect(page.locator('.home-resource-card')).toHaveCount(7)
+  await expect(page.locator('.home-hero')).toHaveCSS('background-image', /linear-gradient/)
+
+  await page.getByLabel('Search Davao City information')
+    .fill('passport')
+  await page.getByRole('button', { name: 'Search', exact: true }).click()
+  await expect(page).toHaveURL(/\/search\?q=passport$/)
+  await expect(page.getByRole('heading', { name: 'Search' })).toBeVisible()
+})
+
+test('service directory filters official Davao links by category and search terms', async ({ page }) => {
+  await page.goto('/services')
+  await expect(page.getByRole('heading', { name: 'Browse services by category' })).toBeVisible()
+
+  await page.locator('.service-category-card').filter({ hasText: 'Taxes and Payments' }).click()
+  await expect(page.locator('#services-category')).toHaveValue('Taxes and Payments')
+  await page.locator('#services-search').fill('buwis')
+
+  const cedulaCard = page.locator('.portal-card').filter({ hasText: 'Online Cedula Application' })
+  await expect(cedulaCard).toBeVisible()
+  await expect(cedulaCard.getByRole('link', { name: 'Open listed service' }))
+    .toHaveAttribute('href', 'https://cedula.davaocity.gov.ph/')
+  await expect(cedulaCard).toContainText('Unverified')
+  await expect(page.locator('.portal-card').filter({ hasText: 'Online Professional Tax Receipt System' })).toHaveCount(0)
+  await expect(page.getByRole('link', { name: /passport/i }).first()).toBeVisible()
+})
+
+test('help, quiz, accessibility, contact, and sitemap features work without claiming government actions', async ({ page }) => {
+  await page.goto('/help')
+  const approvalQuestion = page.getByText('Does marking a requirement done mean the government approved it?', { exact: true })
+  await approvalQuestion.click()
+  await expect(page.locator('.help-faq details').filter({ hasText: 'Does marking a requirement done mean the government approved it?' }))
+    .toContainText('It records only your preparation progress')
+
+  await page.goto('/quiz')
+  await page.getByLabel('Choose a predefined goal in Requisito.').check()
+  await page.getByLabel('To tailor requirements to relevant circumstances.').check()
+  await page.getByLabel('You are tracking your own preparation progress.').check()
+  await page.getByLabel('Open the source and confirm its current instructions for your situation.').check()
+  await page.getByRole('button', { name: 'Check my answers' }).click()
+  await expect(page.getByRole('heading', { name: 'Score: 4 of 4' })).toBeVisible()
+  await page.getByRole('button', { name: 'Try again' }).click()
+  await expect(page.getByRole('button', { name: 'Check my answers' })).toBeVisible()
+
+  await page.goto('/accessibility')
+  await expect(page.getByText(/has not been independently certified against WCAG/i)).toBeVisible()
+  await page.getByRole('link', { name: 'Report an accessibility barrier' }).click()
+  await expect(page).toHaveURL(/\/contribute/)
+
+  await page.goto('/contact')
+  await expect(page.getByRole('link', { name: 'Send a message' }))
+    .toHaveAttribute('href', 'https://davaocity.gov.ph/contact-us/')
+  await expect(page.getByText('Requisito does not receive or forward your message.')).toBeVisible()
+
+  await page.goto('/sitemap')
+  await page.getByRole('link', { name: 'Requisito readiness quiz' }).click()
+  await expect(page).toHaveURL(/\/quiz$/)
+})
+
+test('live Davao information attributes third-party weather and indicative exchange rates', async ({ page }) => {
+  await page.route('https://api.open-meteo.com/**', (route) => route.fulfill({
+    status: 200,
+    contentType: 'application/json',
+    body: JSON.stringify({
+      current: {
+        temperature_2m: 30.1,
+        apparent_temperature: 35,
+        relative_humidity_2m: 70,
+        weather_code: 2,
+        wind_speed_10m: 8.5,
+        time: '2026-10-27T15:30',
+      },
+    }),
+  }))
+  await page.route('https://open.er-api.com/**', (route) => route.fulfill({
+    status: 200,
+    contentType: 'application/json',
+    body: JSON.stringify({
+      result: 'success',
+      base_code: 'USD',
+      rates: { PHP: 63.96 },
+      time_last_update_utc: 'Tue, 27 Oct 2026 00:02:31 +0000',
+    }),
+  }))
+  await page.goto('/live')
+
+  await expect(page.getByText('Partly cloudy')).toBeVisible()
+  await expect(page.getByText('70%')).toBeVisible()
+  await expect(page.getByText(/63\.96/)).toBeVisible()
+  await expect(page.getByRole('link', { name: 'Open-Meteo' })).toHaveAttribute('rel', 'noopener noreferrer')
+  await expect(page.getByRole('link', { name: 'ExchangeRate-API' })).toHaveAttribute('rel', 'noopener noreferrer')
+  await expect(page.getByText(/third-party model information/i)).toBeVisible()
+})
+
 test('browser storage failures are explained while current edits remain visible', async ({ page }) => {
   await page.addInitScript(() => {
     Storage.prototype.getItem = () => {

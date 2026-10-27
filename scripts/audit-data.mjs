@@ -79,10 +79,24 @@ function auditRecord(record, type, index, seenIds, seenSlugs) {
     recordErrors.push('invalid administrative district')
   }
   if (record.type === 'service' || record.type === 'hotline') {
-    if (!['Emergency', 'Health', 'Business and Permits', 'Information'].includes(record.category)) {
+    if (![
+      'Emergency', 'Health', 'Business and Permits', 'Information',
+      'Building and Construction', 'Taxes and Payments', 'Public Concerns',
+      'Civil Registry',
+    ].includes(record.category)) {
       recordErrors.push('invalid service category')
     }
     if (!record.contact || !Array.isArray(record.contact.phone)) recordErrors.push('invalid contact')
+    if (record.onlineUrl !== undefined) {
+      try {
+        const onlineUrl = new URL(record.onlineUrl)
+        if (onlineUrl.protocol !== 'https:' || onlineUrl.username || onlineUrl.password) {
+          recordErrors.push('invalid online service URL')
+        }
+      } catch {
+        recordErrors.push('invalid online service URL')
+      }
+    }
   }
   if (record.type === 'requirement') {
     if (record.demoOnly !== undefined && typeof record.demoOnly !== 'boolean') {

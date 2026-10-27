@@ -1,4 +1,5 @@
 import EmptyState from '../components/EmptyState.jsx'
+import OfficialSourceDirectory from '../components/OfficialSourceDirectory.jsx'
 import RecordMeta from '../components/RecordMeta.jsx'
 import { getUpdates } from '../data/helpers.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
@@ -32,6 +33,7 @@ function Updates() {
           ))}
         </ul>
       ) : <EmptyState message={t('updates.empty')} />}
+      <OfficialSourceDirectory feature="updates" />
     </section>
   )
 }

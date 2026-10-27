@@ -38,6 +38,11 @@ const Districts = lazy(() => import('./pages/Districts.jsx'))
 const DistrictProfile = lazy(() => import('./pages/DistrictProfile.jsx'))
 const ServiceGuides = lazy(() => import('./pages/ServiceGuides.jsx'))
 const WhereToGo = lazy(() => import('./pages/WhereToGo.jsx'))
+const Help = lazy(() => import('./pages/Help.jsx'))
+const Quiz = lazy(() => import('./pages/Quiz.jsx'))
+const AccessibilityPage = lazy(() => import('./pages/AccessibilityPage.jsx'))
+const Sitemap = lazy(() => import('./pages/Sitemap.jsx'))
+const GovernmentLocations = lazy(() => import('./components/GovernmentLocations.jsx'))
 const FeaturePage = lazy(() => import('./pages/FeaturePage.jsx'))
 const AdminApp = lazy(() => import('./admin/AdminApp.jsx'))
 import { routeManifest } from './routeManifest.js'
@@ -46,7 +51,9 @@ const pages = {
   Home, Goals, GoalDetail, Checklist, Documents, DocumentGuide, QuestionFlow, NotFound, Login, Services, ServiceDetail,
   Barangays, BarangayProfile, AboutDavao, Updates, Officials, Search, Status, Contribute, Credits,
   History, Budget, Procurement, Briefs, Monitor, OfficialProfile, Elections, Accountability,
-  Participate, Integrity, Districts, DistrictProfile, ServiceGuides, WhereToGo, FeaturePage,
+  Participate, Integrity, Districts, DistrictProfile, ServiceGuides, WhereToGo,
+  Help, Quiz, AccessibilityPage, Sitemap, FeaturePage,
+  GovernmentLocations,
 }
 
 function RouteLoading() {
