@@ -1,0 +1,981 @@
+/*
+  Requisito UI layer. Loaded by Layout.jsx after App.css.
+
+  Every rule is scoped under .app-shell so it wins over the older, layered
+  rules in App.css by specificity (not by order). Colors come from the tokens
+  in index.css. The older header/main rules in App.css are now superseded and
+  can be deleted later without changing how the app looks.
+
+  Type scale: 0.875 / 0.95 / 1 / 1.2 / 1.5 / clamp(1.9 to 2.75) rem.
+  Pages are left-aligned and share one content edge (breadcrumb, h1, content).
+*/
+
+/* ---------- Shell ---------- */
+
+.app-shell {
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* ---------- Project notice (kept, but quiet) ---------- */
+
+.app-shell .disclaimer-banner {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--warn-border);
+  background: var(--warn-bg);
+  color: var(--warn);
+  text-align: left;
+}
+
+.app-shell .disclaimer-banner p {
+  max-width: 74rem;
+  margin: 0 auto;
+  padding-inline: clamp(1rem, 4vw, 2rem);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+/* ---------- Header ---------- */
+
+.app-shell .site-header {
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.app-shell .header-content {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.25rem;
+  width: 100%;
+  max-width: 74rem;
+  min-height: 0;
+  margin: 0 auto;
+  padding: 0.5rem clamp(1rem, 4vw, 2rem) 0;
+}
+
+.app-shell .header-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+}
+
+.app-shell .brand {
+  color: var(--accent);
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.app-shell .header-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Language: three visible choices instead of a dropdown */
+.app-shell .language-switcher {
+  display: inline-flex;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  background: var(--surface);
+}
+
+.app-shell .language-switcher button {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0.35rem 0.85rem;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.app-shell .language-switcher button + button {
+  border-left: 1px solid var(--border);
+}
+
+.app-shell .language-switcher button:hover {
+  background: var(--accent-bg);
+  color: var(--accent-strong);
+}
+
+.app-shell .language-switcher button[aria-pressed='true'] {
+  background: var(--accent);
+  color: #fff;
+}
+
+.app-shell .language-switcher button:focus-visible {
+  outline-offset: -4px;
+}
+
+.app-shell .assistant-open-button {
+  min-height: 44px;
+  padding: 0.4rem 1rem;
+  border: 1px solid var(--accent-border);
+  border-radius: var(--radius-control);
+  background: var(--accent-bg);
+  color: var(--accent-strong);
+  font-weight: 700;
+}
+
+.app-shell .assistant-open-button:hover {
+  background: var(--accent-border);
+}
+
+/* Navigation */
+.app-shell .site-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 0.25rem;
+  min-height: 0;
+  overflow: visible;
+}
+
+.app-shell .site-nav > a,
+.app-shell .site-nav > .nav-sign-out,
+.app-shell .nav-explore > summary {
+  display: inline-flex;
+  min-width: 0;
+  min-height: 48px;
+  align-items: center;
+  padding: 0 0.9rem;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  color: var(--text);
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.app-shell .site-nav > a:hover,
+.app-shell .site-nav > .nav-sign-out:hover,
+.app-shell .nav-explore > summary:hover {
+  background: var(--accent-bg);
+  color: var(--accent-strong);
+}
+
+.app-shell .site-nav > a.active,
+.app-shell .nav-explore.is-current > summary {
+  border-bottom-color: var(--accent);
+  background: transparent;
+  color: var(--accent);
+}
+
+/* Sign in sits at the far end and is quieter than the flow links */
+.app-shell .site-nav > .nav-sign-in,
+.app-shell .site-nav > .nav-sign-out {
+  margin-left: auto;
+  color: var(--muted);
+}
+
+.app-shell .nav-explore {
+  position: relative;
+}
+
+.app-shell .nav-explore > summary {
+  gap: 0.45rem;
+  list-style: none;
+}
+
+.app-shell .nav-explore > summary::-webkit-details-marker {
+  display: none;
+}
+
+.app-shell .nav-explore > summary::after {
+  content: '';
+  width: 0.45rem;
+  height: 0.45rem;
+  margin-top: -0.2rem;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+}
+
+.app-shell .nav-explore[open] > summary::after {
+  margin-top: 0.2rem;
+  transform: rotate(-135deg);
+}
+
+.app-shell .nav-explore-menu {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 0.25rem);
+  left: 0;
+  display: grid;
+  min-width: 15rem;
+  padding: 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  box-shadow: var(--shadow-md);
+}
+
+.app-shell .site-nav .nav-explore-menu a {
+  display: flex;
+  min-width: 0;
+  min-height: 44px;
+  align-items: center;
+  padding: 0 0.75rem;
+  border-radius: 8px;
+  color: var(--text-h);
+  font-weight: 600;
+  text-decoration: none;
+  white-space: normal;
+}
+
+.app-shell .site-nav .nav-explore-menu a:hover {
+  background: var(--accent-bg);
+}
+
+.app-shell .site-nav .nav-explore-menu a.active {
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+/* ---------- Page frame: one shared left edge ---------- */
+
+.app-shell .main-content {
+  display: block;
+  width: 100%;
+  max-width: 74rem;
+  margin: 0 auto;
+  padding: clamp(1.25rem, 3vw, 2.25rem) clamp(1rem, 4vw, 2rem) clamp(2.5rem, 6vw, 4.5rem);
+}
+
+.app-shell .main-content-inner {
+  display: block;
+}
+
+.app-shell .breadcrumbs {
+  margin: 0 0 1.5rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.app-shell .breadcrumbs li + li::before {
+  color: var(--muted);
+}
+
+.app-shell .breadcrumbs a {
+  color: var(--accent);
+}
+
+.app-shell .page-content,
+.app-shell .flow-content {
+  max-width: 60rem;
+}
+
+/* ---------- Text hierarchy ---------- */
+
+.app-shell .eyebrow {
+  margin: 0 0 0.4rem;
+  color: var(--accent);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.app-shell .page-content h1 {
+  margin: 0 0 0.75rem;
+  color: var(--text-h);
+  font-size: clamp(1.9rem, 1.4rem + 2.2vw, 2.75rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.12;
+}
+
+/* The heading takes focus after navigation for screen readers; it is not a control. */
+.app-shell #main-content h1:focus,
+.app-shell #main-content h1:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+.app-shell .page-description {
+  max-width: 42rem;
+  margin: 0 0 1.25rem;
+  color: var(--text);
+  font-size: 1.125rem;
+  line-height: 1.6;
+}
+
+.app-shell .page-content > h2,
+.app-shell .page-content > section > h2 {
+  margin: 2.5rem 0 0.75rem;
+  color: var(--text-h);
+  font-size: 1.5rem;
+  font-weight: 750;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+.app-shell .page-content > p {
+  max-width: 44rem;
+}
+
+.app-shell .page-content a:not([class]) {
+  color: var(--accent);
+  text-underline-offset: 0.2em;
+}
+
+/* ---------- Buttons ---------- */
+
+.app-shell .cta-button,
+.app-shell .goal-card-actions .goal-card-action:first-child {
+  display: inline-flex;
+  min-height: 52px;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0 1.5rem;
+  border-radius: 12px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: var(--shadow-sm);
+  transition: background-color 150ms ease;
+}
+
+.app-shell .cta-button:hover,
+.app-shell .goal-card-actions .goal-card-action:first-child:hover {
+  background: var(--accent-strong);
+}
+
+.app-shell .secondary-cta {
+  display: inline-flex;
+  min-height: 48px;
+  align-items: center;
+  padding: 0 1.25rem;
+  border: 2px solid var(--accent);
+  border-radius: 12px;
+  color: var(--accent);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.app-shell .secondary-cta:hover {
+  background: var(--accent-bg);
+}
+
+.app-shell .return-link {
+  margin-top: 0;
+  border: 1px solid var(--accent-border);
+  background: var(--surface);
+  color: var(--accent);
+}
+
+.app-shell .return-link:hover {
+  background: var(--accent-bg);
+}
+
+/* ---------- Cards ---------- */
+
+.app-shell .sprint-card,
+.app-shell .summary-card,
+.app-shell .goal-card,
+.app-shell .portal-card,
+.app-shell .guidance-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ---------- Home ---------- */
+
+.app-shell .home-hero {
+  padding: 0.5rem 0 0.5rem;
+}
+
+.app-shell .home-hero h1 {
+  max-width: 24ch;
+  text-wrap: balance;
+  font-size: clamp(2.1rem, 1.5rem + 3vw, 3.25rem);
+}
+
+.app-shell .home-hero .cta-button {
+  margin-top: 0.5rem;
+}
+
+.app-shell .featured-goal {
+  max-width: 44rem;
+  margin-top: 2.5rem;
+  padding: 1.5rem;
+  border-color: var(--accent-border);
+  background: var(--accent-bg);
+}
+
+.app-shell .page-content > .featured-goal > h2 {
+  margin: 0 0 0.5rem;
+  color: var(--text-h);
+  font-size: 1.35rem;
+}
+
+.app-shell .featured-goal p {
+  margin: 0 0 1rem;
+}
+
+.app-shell .featured-goal .secondary-cta {
+  background: var(--surface);
+}
+
+.app-shell .home-explore p {
+  max-width: 44rem;
+  margin: 0 0 1rem;
+}
+
+.app-shell .home-portal-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.app-shell .home-explore .return-link {
+  margin: 0;
+}
+
+.app-shell .overview-section h2 {
+  font-size: 1.2rem;
+}
+
+.app-shell .summary-card-grid {
+  gap: 1rem;
+}
+
+.app-shell .summary-card {
+  padding: 1.1rem 1.25rem;
+}
+
+.app-shell .summary-card h3 {
+  color: var(--muted);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.app-shell .summary-card-value {
+  margin: 0.35rem 0;
+  color: var(--text-h);
+  font-size: clamp(1.75rem, 1.4rem + 1.5vw, 2.25rem);
+  font-weight: 800;
+}
+
+.app-shell .summary-card-description {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+/* ---------- Goals ---------- */
+
+/* Search and category sit side by side on wider screens */
+.app-shell .flow-content:has(> .goal-search) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 16rem);
+  column-gap: 1rem;
+}
+
+.app-shell .flow-content:has(> .goal-search) > * {
+  grid-column: 1 / -1;
+}
+
+.app-shell .flow-content:has(> .goal-search) > .goal-search {
+  grid-column: 1;
+  max-width: none;
+  margin-top: 0.5rem;
+}
+
+.app-shell .flow-content:has(> .goal-search) > .goal-category-filter {
+  grid-column: 2;
+  margin-top: 0.5rem;
+}
+
+.app-shell .goal-search label,
+.app-shell .goal-category-filter label {
+  display: block;
+  margin-bottom: 0.4rem;
+  color: var(--text-h);
+  font-weight: 650;
+}
+
+.app-shell .goal-search input,
+.app-shell .goal-category-filter select,
+.app-shell select {
+  width: 100%;
+  min-height: 48px;
+  padding: 0.5rem 0.85rem;
+  border: 1px solid #c9bfd8;
+  border-radius: var(--radius-control);
+  background: #fff;
+  color: var(--text-h);
+}
+
+.app-shell .goal-category-filter {
+  margin: 0;
+}
+
+/* The filter is a grid with its own gap, so its label needs no extra margin */
+.app-shell .goal-category-filter label {
+  margin-bottom: 0;
+}
+
+.app-shell .goal-grid {
+  grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+  gap: 1.25rem;
+  margin-top: 2rem;
+}
+
+.app-shell .goal-card {
+  min-height: 0;
+  padding: 1.25rem;
+  gap: 0;
+}
+
+.app-shell .goal-card:hover {
+  border-color: var(--accent-border);
+  background: var(--surface);
+}
+
+.app-shell .goal-card-title {
+  font-size: 1.25rem;
+  font-weight: 750;
+  line-height: 1.3;
+}
+
+.app-shell .goal-card-category {
+  width: fit-content;
+  margin: 0.5rem 0 0;
+  padding: 0.2rem 0.65rem;
+  border-radius: 8px;
+  background: var(--accent-bg);
+  color: var(--accent-strong);
+  font-size: 0.85rem;
+  font-weight: 650;
+}
+
+.app-shell .goal-card-description {
+  margin: 0.75rem 0 0;
+  color: var(--text);
+}
+
+.app-shell .goal-card-steps-count {
+  margin: auto 0 0;
+  padding-top: 1rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.app-shell .goal-progress-wrap {
+  display: grid;
+  gap: 0.35rem;
+  margin-top: 0.5rem;
+}
+
+.app-shell .goal-progress-bar {
+  height: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--border);
+}
+
+.app-shell .goal-progress-bar span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--ok);
+}
+
+.app-shell .goal-progress-value {
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* One main action per card, one quiet link underneath */
+.app-shell .goal-card-actions {
+  display: grid;
+  gap: 0.25rem;
+  margin-top: 1rem;
+}
+
+.app-shell .goal-card-actions .goal-card-action:first-child {
+  min-height: 48px;
+  font-size: 1rem;
+}
+
+.app-shell .goal-card-actions .goal-card-action:not(:first-child) {
+  justify-content: center;
+  color: var(--accent);
+  font-weight: 650;
+}
+
+/* ---------- Notices: calm, consistent, easy to skim ---------- */
+
+.app-shell .verification-notice,
+.app-shell .browser-storage-note,
+.app-shell .sample-notice {
+  margin: 1rem 0;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--accent-border);
+  border-left: 4px solid var(--accent);
+  border-radius: 10px;
+  background: var(--accent-bg);
+  color: var(--text-h);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.app-shell .checklist-readiness {
+  background: var(--surface);
+}
+
+.app-shell .page-content > .checklist-readiness > h2 {
+  margin: 0 0 0.25rem;
+  font-size: 1.1rem;
+}
+
+.app-shell .page-content > p.verification-notice,
+.app-shell .page-content > p.browser-storage-note,
+.app-shell .page-content > p.sample-notice {
+  max-width: none;
+}
+
+.app-shell .checklist-readiness-status {
+  margin: 0;
+  font-weight: 700;
+}
+
+/* ---------- Checklist ---------- */
+
+.app-shell .checklist-questions {
+  display: grid;
+  max-width: none;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+  gap: 1rem 1.5rem;
+  margin: 1.5rem 0;
+  padding: 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+}
+
+.app-shell .checklist-questions > h2,
+.app-shell .checklist-questions > p {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+
+.app-shell .page-content > .checklist-questions > h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.app-shell .checklist-question {
+  display: grid;
+  align-content: start;
+  gap: 0.4rem;
+  margin: 0;
+}
+
+.app-shell .checklist-question label {
+  color: var(--text-h);
+  font-weight: 600;
+}
+
+.app-shell .checklist-progress {
+  margin: 1.5rem 0;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+}
+
+.app-shell .checklist-progress-label {
+  margin: 0 0 0.6rem;
+  color: var(--text-h);
+  font-size: 1.1rem;
+  font-weight: 750;
+}
+
+.app-shell .checklist-progress progress {
+  display: block;
+  width: 100%;
+  height: 12px;
+  appearance: none;
+  border: 0;
+  border-radius: 999px;
+  background: var(--border);
+  overflow: hidden;
+}
+
+.app-shell .checklist-progress progress::-webkit-progress-bar {
+  background: var(--border);
+}
+
+.app-shell .checklist-progress progress::-webkit-progress-value {
+  border-radius: 999px;
+  background: var(--ok);
+}
+
+.app-shell .checklist-progress progress::-moz-progress-bar {
+  border-radius: 999px;
+  background: var(--ok);
+}
+
+.app-shell .generated-plan {
+  gap: 1.25rem;
+  margin-top: 1.25rem;
+}
+
+.app-shell .plan-step-number {
+  margin: 0 0 0.35rem;
+  color: var(--accent);
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.app-shell .generated-plan > li > p:not(.plan-step-number):not(.verification-notice) {
+  margin: 0 0 0.5rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.app-shell .requirement-card {
+  gap: 0.6rem;
+  padding: 1.25rem;
+}
+
+.app-shell .requirement-card-title {
+  font-size: 1.25rem;
+  font-weight: 750;
+}
+
+/* Small label (e.g. "Conditional"); also used on Documents and goal detail */
+.app-shell .requirement-kind {
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 0 0.5rem;
+  padding: 0.2rem 0.65rem;
+  border-radius: 8px;
+  background: var(--accent-bg);
+  color: var(--accent-strong);
+  font-size: 0.85rem;
+  font-weight: 650;
+}
+
+.app-shell .sprint-card .requirement-kind {
+  margin: 0;
+}
+
+/* Card titles: browsers add a large default top margin to h2 */
+.app-shell .guidance-card > h2,
+.app-shell .portal-card > h2 {
+  margin: 0 0 0.5rem;
+  color: var(--text-h);
+  font-size: 1.25rem;
+  font-weight: 750;
+  line-height: 1.3;
+}
+
+.app-shell .guidance-card > p {
+  margin: 0 0 0.5rem;
+}
+
+.app-shell .card-detail {
+  color: var(--muted);
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.app-shell .requirement-toggle {
+  margin-top: 0.25rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+}
+
+.app-shell .requirement-status {
+  background: var(--accent-bg);
+  color: var(--accent-strong);
+}
+
+.app-shell .requirement-card.is-done {
+  border-color: var(--ok-border);
+  background: var(--ok-bg);
+}
+
+.app-shell .requirement-card.is-done .requirement-card-title {
+  text-decoration: none;
+}
+
+.app-shell .requirement-card.is-done .requirement-status {
+  background: var(--ok);
+  color: #fff;
+}
+
+.app-shell .status-badge {
+  padding: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.app-shell .source-link,
+.app-shell .requirement-card > a:not([class]),
+.app-shell .requirement-source-details > summary {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* ---------- Empty states ---------- */
+
+.app-shell .empty-state {
+  border: 1px dashed #c9bfd8;
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  color: var(--text-h);
+}
+
+/* ---------- Footer ---------- */
+
+.app-shell .site-footer {
+  align-items: stretch;
+  gap: 0.5rem;
+  margin-top: auto;
+  padding: 2rem clamp(1rem, 4vw, 2rem) 2.5rem;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  text-align: left;
+}
+
+.app-shell .site-footer > * {
+  width: 100%;
+  max-width: 74rem;
+  margin-inline: auto;
+}
+
+.app-shell .site-footer > p:first-child {
+  color: var(--accent);
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.app-shell .site-footer .footer-description {
+  max-width: 74rem;
+  font-size: 0.95rem;
+}
+
+.app-shell .footer-nav-groups {
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: 1.25rem 1.5rem;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.app-shell .footer-nav-groups h2 {
+  margin: 0 0 0.25rem;
+  color: var(--text-h);
+  font-size: 0.95rem;
+}
+
+.app-shell .footer-nav a {
+  color: var(--text);
+  padding-inline: 0;
+  text-decoration-color: var(--accent-border);
+  text-underline-offset: 0.2em;
+}
+
+.app-shell .footer-nav a:hover {
+  color: var(--accent);
+}
+
+/* ---------- Small screens ---------- */
+
+@media (max-width: 640px) {
+  .app-shell .header-top {
+    gap: 0.25rem 0.75rem;
+  }
+
+  .app-shell .header-tools {
+    display: contents;
+  }
+
+  .app-shell .brand {
+    order: 1;
+  }
+
+  .app-shell .assistant-open-button {
+    order: 2;
+  }
+
+  .app-shell .language-switcher {
+    order: 3;
+    width: 100%;
+  }
+
+  .app-shell .language-switcher button {
+    flex: 1 1 0;
+    padding-inline: 0.5rem;
+  }
+
+  .app-shell .site-nav > a,
+  .app-shell .site-nav > .nav-sign-out,
+  .app-shell .nav-explore > summary {
+    padding: 0 0.7rem;
+    font-size: 0.95rem;
+  }
+
+  /* The menu opens inline under the nav instead of floating */
+  .app-shell .nav-explore {
+    position: static;
+    flex-basis: auto;
+  }
+
+  .app-shell .nav-explore-menu {
+    right: 0;
+    left: 0;
+    min-width: 0;
+  }
+
+  .app-shell .site-nav {
+    position: relative;
+  }
+
+  .app-shell .site-nav > .nav-sign-in,
+  .app-shell .site-nav > .nav-sign-out {
+    margin-left: 0;
+  }
+
+  .app-shell .flow-content:has(> .goal-search) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .app-shell .flow-content:has(> .goal-search) > .goal-search,
+  .app-shell .flow-content:has(> .goal-search) > .goal-category-filter {
+    grid-column: 1;
+  }
+
+  .app-shell .flow-content:has(> .goal-search) > .goal-category-filter {
+    margin-top: 1rem;
+  }
+
+  .app-shell .goal-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .app-shell .home-hero .cta-button {
+    width: 100%;
+  }
+}

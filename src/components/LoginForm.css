@@ -208,11 +208,6 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-@media (prefers-color-scheme: dark) {
-  .login-card .login-error { color: #ffb4ab; }
-  .login-field input[aria-invalid='true'] { border-color: #ffb4ab; }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .login-card { animation: none; }
   .login-page *,

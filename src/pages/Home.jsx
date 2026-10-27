@@ -15,27 +15,35 @@ function Home() {
     { title: t('home.unverifiedRecords'), value: counts.unverified, description: t('home.unverifiedRecordsDescription') },
   ]
   return (
-    <section className="page-content" aria-labelledby="home-title">
-      <p className="eyebrow">{t('home.welcome')}</p>
-      <h1 id="home-title">{t('page.home')}</h1>
-      <p className="page-description">
-        {t('home.description')}
-      </p>
-      <div className="home-portal-links">
-        <Link className="return-link" to={href('services')}>{t('nav.services')}</Link>
-        <Link className="return-link" to={href('barangays')}>{t('nav.barangays')}</Link>
-        <Link className="return-link" to={href('search')}>{t('nav.search')}</Link>
+    <section className="page-content home-page" aria-labelledby="home-title">
+      <div className="home-hero">
+        <p className="eyebrow">{t('home.welcome')}</p>
+        <h1 id="home-title">{t('home.headline')}</h1>
+        <p className="page-description">{t('home.lead')}</p>
+        <Link className="cta-button" to={href('goals')}>
+          {t('home.chooseGoal')} <span aria-hidden="true">→</span>
+        </Link>
       </div>
-      <Link className="return-link" to={href('goals')}>
-        {t('home.chooseGoal')} <span aria-hidden="true">→</span>
-      </Link>
+
       {firstJobGoal && (
         <section className="featured-goal guidance-card" aria-labelledby="featured-first-job">
           <h2 id="featured-first-job">{t('home.firstJobTitle')}</h2>
           <p>{t('home.firstJobDescription')}</p>
-          <Link to={href('goalDetail', { slug: firstJobGoal.slug })}>{t('goals.viewRequirements')}</Link>
+          <Link className="secondary-cta" to={href('goalDetail', { slug: firstJobGoal.slug })}>
+            {t('goals.viewRequirements')}
+          </Link>
         </section>
       )}
+
+      <section className="home-explore" aria-labelledby="home-explore-title">
+        <h2 id="home-explore-title">{t('group.explore')}</h2>
+        <p>{t('home.description')}</p>
+        <div className="home-portal-links">
+          <Link className="return-link" to={href('services')}>{t('nav.services')}</Link>
+          <Link className="return-link" to={href('barangays')}>{t('nav.barangays')}</Link>
+          <Link className="return-link" to={href('search')}>{t('nav.search')}</Link>
+        </div>
+      </section>
 
       <section className="overview-section" aria-labelledby="overview-title">
         <h2 id="overview-title">{t('home.overview')}</h2>

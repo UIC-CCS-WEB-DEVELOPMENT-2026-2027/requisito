@@ -47,7 +47,6 @@
   outline-offset: 3px;
 }
 .assistant-error { padding: 0.75rem; border: 1px solid currentColor; color: #b42318; }
-@media (prefers-color-scheme: dark) { .assistant-error { color: #ffb4ab; } }
 
 .assistant-dialog {
   width: min(100% - 2rem, 680px);
