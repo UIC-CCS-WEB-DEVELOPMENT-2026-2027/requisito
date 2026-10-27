@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import SummaryCard from '../components/SummaryCard.jsx'
-import { getGoalBySlug, getSummaryCounts } from '../data/helpers.js'
+import { getGoalBySlug, getGoals, getServices, getSummaryCounts } from '../data/helpers.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
 import { href } from '../routeManifest.js'
 
@@ -12,6 +12,10 @@ function Home() {
   const [query, setQuery] = useState('')
   const counts = getSummaryCounts()
   const firstJobGoal = getGoalBySlug('first-job')
+  const searchSuggestions = [...new Set([
+    ...getServices().map((service) => service.title),
+    ...getGoals().map((goal) => goal.title),
+  ])].slice(0, 16)
   const overviewCards = [
     { title: t('home.totalRecords'), value: counts.total, description: t('home.totalRecordsDescription') },
     { title: t('home.barangayRecords'), value: counts.collections.barangays, description: t('home.barangayRecordsDescription') },
@@ -45,11 +49,15 @@ function Home() {
           <input
             id="home-search"
             type="search"
+            list="home-search-suggestions"
             maxLength={100}
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder={t('home.searchPlaceholder')}
           />
+          <datalist id="home-search-suggestions">
+            {searchSuggestions.map((suggestion) => <option key={suggestion} value={suggestion} />)}
+          </datalist>
           <button type="submit">{t('button.search')}</button>
         </form>
         <div className="home-hero-actions">

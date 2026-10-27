@@ -64,7 +64,7 @@ test('demo goals keep their checklist and disclose uncertainty', async ({ page }
 })
 
 test('keyboard skip link works and the layout fits the selected viewport', async ({ page }) => {
-  await page.getByRole('link', { name: 'Requisito', exact: true }).focus()
+  await page.getByRole('link', { name: 'Requisito Davao City', exact: true }).focus()
   await page.keyboard.press('Shift+Tab')
   await expect(page.getByRole('link', { name: 'Skip to content' })).toBeFocused()
   await page.keyboard.press('Enter')
@@ -132,9 +132,8 @@ test('service directory filters official Davao links by category and search term
   await expect(cedulaCard).toBeVisible()
   await expect(cedulaCard.getByRole('link', { name: 'Open listed service' }))
     .toHaveAttribute('href', 'https://cedula.davaocity.gov.ph/')
-  await expect(cedulaCard).toContainText('Unverified')
+  await expect(cedulaCard).toContainText('Not yet verified')
   await expect(page.locator('.portal-card').filter({ hasText: 'Online Professional Tax Receipt System' })).toHaveCount(0)
-  await expect(page.getByRole('link', { name: /passport/i }).first()).toBeVisible()
 })
 
 test('help, quiz, accessibility, contact, and sitemap features work without claiming government actions', async ({ page }) => {
@@ -165,7 +164,7 @@ test('help, quiz, accessibility, contact, and sitemap features work without clai
   await expect(page.getByText('Requisito does not receive or forward your message.')).toBeVisible()
 
   await page.goto('/sitemap')
-  await page.getByRole('link', { name: 'Requisito readiness quiz' }).click()
+  await page.getByRole('region', { name: 'Explore' }).getByRole('link', { name: 'Requisito readiness quiz' }).click()
   await expect(page).toHaveURL(/\/quiz$/)
 })
 

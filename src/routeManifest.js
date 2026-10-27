@@ -1,6 +1,8 @@
 export const routeManifest = [
   { id: 'home', path: '/', component: 'Home', access: 'public', nav: 'header', labelKey: 'nav.home', smokePath: '/' },
   { id: 'login', path: '/login', component: 'Login', access: 'public', labelKey: 'layout.signIn', smokePath: '/login' },
+  { id: 'forbidden', path: '/403', component: 'ErrorStatus', access: 'public', feature: 'forbidden', smokePath: '/403' },
+  { id: 'serverError', path: '/500', component: 'ErrorStatus', access: 'public', feature: 'serverError', smokePath: '/500' },
   { id: 'goals', path: '/goals', component: 'Goals', access: 'public', nav: 'header', labelKey: 'nav.goals', smokePath: '/goals' },
   { id: 'goalDetail', path: '/goals/:slug', component: 'GoalDetail', access: 'public', smokePath: '/goals/first-job' },
   { id: 'checklist', path: '/checklist', component: 'Checklist', access: 'public', nav: 'header', labelKey: 'nav.checklist', smokePath: '/checklist?goal=1' },

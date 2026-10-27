@@ -1,1 +1,53 @@
-[]
+[
+  {
+    "id": "budget-2026-general-fund",
+    "slug": "2026-general-fund",
+    "type": "budget",
+    "title": "General Fund",
+    "description": "Budget amount listed for General Fund.",
+    "category": "Budget",
+    "fiscalYear": 2026,
+    "sector": "General Fund",
+    "amountPHP": 13652181390,
+    "sourceUrl": "https://davaocity.gov.ph/local-government/sp-oks-davao-citys-15-8-b-2026-budget/",
+    "lastVerified": null,
+    "verification": "unverified",
+    "timeSensitive": true,
+    "notes": "Imported from supplied CSV; requires review against an official source.",
+    "isSample": false
+  },
+  {
+    "id": "budget-2026-development-fund",
+    "slug": "2026-development-fund",
+    "type": "budget",
+    "title": "Development Fund",
+    "description": "Budget amount listed for Development Fund.",
+    "category": "Budget",
+    "fiscalYear": 2026,
+    "sector": "Development Fund",
+    "amountPHP": 2028075660,
+    "sourceUrl": "https://davaocity.gov.ph/local-government/sp-oks-davao-citys-15-8-b-2026-budget/",
+    "lastVerified": null,
+    "verification": "unverified",
+    "timeSensitive": true,
+    "notes": "Imported from supplied CSV; requires review against an official source.",
+    "isSample": false
+  },
+  {
+    "id": "budget-2026-economic-enterprises",
+    "slug": "2026-economic-enterprises",
+    "type": "budget",
+    "title": "Economic Enterprises",
+    "description": "Budget amount listed for Economic Enterprises.",
+    "category": "Budget",
+    "fiscalYear": 2026,
+    "sector": "Economic Enterprises",
+    "amountPHP": 165807385,
+    "sourceUrl": "https://davaocity.gov.ph/local-government/sp-oks-davao-citys-15-8-b-2026-budget/",
+    "lastVerified": null,
+    "verification": "unverified",
+    "timeSensitive": true,
+    "notes": "Imported from supplied CSV; requires review against an official source.",
+    "isSample": false
+  }
+]

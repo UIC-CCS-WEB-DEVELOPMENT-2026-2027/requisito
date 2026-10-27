@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import EmptyState from '../components/EmptyState.jsx'
 import LiveCityInfo from '../components/LiveCityInfo.jsx'
@@ -17,7 +18,7 @@ const features = {
   legislation: { title: 'feature.legislation.title', description: 'feature.legislation.description', empty: 'feature.legislation.empty', catalog: 'publicRecords', alternatives: ['accountability', 'officials'], sourceSlugs: ['city-information-office'] },
   civicAudit: { title: 'feature.civicAudit.title', description: 'feature.civicAudit.description', empty: 'feature.civicAudit.empty', catalog: 'civicAuditEntries', alternatives: ['status'] },
   civicAuditResults: { title: 'feature.civicAuditResults.title', description: 'feature.civicAuditResults.description', empty: 'feature.civicAuditResults.empty', catalog: 'civicAuditEntries', alternatives: ['status'] },
-  civicReports: { title: 'feature.civicReports.title', description: 'feature.civicReports.description', empty: 'feature.civicReports.empty', catalog: 'reports', alternatives: ['contribute'], sourceSlugs: ['davao-city-contact-center'] },
+  civicReports: { title: 'feature.civicReports.title', description: 'feature.civicReports.description', empty: 'feature.civicReports.empty', catalog: 'reports', alternatives: ['contribute'], externalPortal: 'https://reports.davaocity.gov.ph/' },
   nearbyReports: { title: 'feature.nearbyReports.title', description: 'feature.nearbyReports.description', empty: 'feature.nearbyReports.empty', catalog: 'reports', alternatives: ['services'], sourceSlugs: ['central-911'] },
   assets: { title: 'feature.assets.title', description: 'feature.assets.description', empty: 'feature.assets.empty', catalog: 'assets', alternatives: ['services'], sourceSlugs: ['city-information-office'] },
   calendar: { title: 'feature.calendar.title', description: 'feature.calendar.description', empty: 'feature.calendar.empty', catalog: 'events', alternatives: ['updates'], sourceSlugs: ['city-information-office'] },
@@ -41,10 +42,16 @@ const features = {
 function FeaturePage({ feature }) {
   const { t } = useLanguage()
   const { slug } = useParams()
+  const [legislationQuery, setLegislationQuery] = useState('')
   const details = features[feature]
   const items = details.catalog === 'services'
     ? getServices()
     : details.catalog ? getFeatureRecords(details.catalog) : []
+  const visibleItems = feature === 'legislation' && legislationQuery.trim()
+    ? items.filter((item) => `${item.title} ${item.description} ${item.category}`
+      .toLocaleLowerCase()
+      .includes(legislationQuery.trim().toLocaleLowerCase()))
+    : items
   const record = slug ? items.find((item) => item.slug === slug) : null
   const serviceSources = details.contact
     ? []
@@ -55,14 +62,52 @@ function FeaturePage({ feature }) {
       <p className="eyebrow">{t('feature.eyebrow')}</p>
       <h1 id={`${feature}-title`}>{t(details.title)}</h1>
       <p className="page-description">{t(details.description)}</p>
-      {details.contact ? null : feature === 'live' ? <LiveCityInfo /> : record ? (
+      {feature === 'legislation' && (
+        <div>
+          <label htmlFor="legislation-search">{t('feature.legislation.searchLabel')}</label>
+          <input
+            id="legislation-search"
+            type="search"
+            value={legislationQuery}
+            onChange={(event) => setLegislationQuery(event.target.value)}
+          />
+          <p role="status">{t('feature.legislation.searchCount').replace('{count}', String(visibleItems.length))}</p>
+        </div>
+      )}
+      {details.contact || details.externalPortal ? null : feature === 'live' ? <LiveCityInfo /> : record ? (
         <>
           <h2>{record.title}</h2>
           {record.description && <p>{record.description}</p>}
           {record.sourceUrl && <RecordMeta record={record} />}
         </>
+      ) : items.length > 0 && visibleItems.length > 0 ? (
+        <ul className="portal-grid">
+          {visibleItems.map((item) => (
+            <li className="portal-card" key={item.id}>
+              <p className="eyebrow">{item.category}</p>
+              <h2>{item.title}</h2>
+              <p>{item.description}</p>
+              {item.notes && <p className="sample-notice">{item.notes}</p>}
+              {feature === 'publicRecords' && (
+                <Link to={href('publicRecordDetail', { slug: item.slug })}>{t('feature.publicRecord.openDetails')}</Link>
+              )}
+              <RecordMeta record={item} />
+            </li>
+          ))}
+        </ul>
+      ) : feature === 'legislation' && items.length > 0 ? (
+        <EmptyState message={t('feature.legislation.noMatches')} />
       ) : (
         <EmptyState message={t(details.empty)} />
+      )}
+      {details.externalPortal && (
+        <div className="feature-contact-placeholder" role="note">
+          <p>{t('feature.civicReports.portalNotice')}</p>
+          <a href={details.externalPortal} target="_blank" rel="noopener noreferrer">
+            {t('feature.civicReports.portalAction')}
+          </a>
+          <p>{t('feature.civicReports.privacyNotice')}</p>
+        </div>
       )}
       {details.contact && (
         <div className="feature-contact-placeholder" role="note">

@@ -12,6 +12,7 @@ const Documents = lazy(() => import('./pages/Documents.jsx'))
 const DocumentGuide = lazy(() => import('./pages/DocumentGuide.jsx'))
 const QuestionFlow = lazy(() => import('./pages/QuestionFlow.jsx'))
 const NotFound = lazy(() => import('./pages/NotFound.jsx'))
+const ErrorStatus = lazy(() => import('./pages/ErrorStatus.jsx'))
 const Login = lazy(() => import('./pages/Login.jsx'))
 const Services = lazy(() => import('./pages/Services.jsx'))
 const ServiceDetail = lazy(() => import('./pages/ServiceDetail.jsx'))
@@ -48,7 +49,7 @@ const AdminApp = lazy(() => import('./admin/AdminApp.jsx'))
 import { routeManifest } from './routeManifest.js'
 
 const pages = {
-  Home, Goals, GoalDetail, Checklist, Documents, DocumentGuide, QuestionFlow, NotFound, Login, Services, ServiceDetail,
+  Home, Goals, GoalDetail, Checklist, Documents, DocumentGuide, QuestionFlow, NotFound, ErrorStatus, Login, Services, ServiceDetail,
   Barangays, BarangayProfile, AboutDavao, Updates, Officials, Search, Status, Contribute, Credits,
   History, Budget, Procurement, Briefs, Monitor, OfficialProfile, Elections, Accountability,
   Participate, Integrity, Districts, DistrictProfile, ServiceGuides, WhereToGo,

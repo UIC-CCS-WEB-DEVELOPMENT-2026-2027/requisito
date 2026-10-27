@@ -26,5 +26,48 @@
     "timeSensitive": true,
     "notes": "Past announcement. Confirm the current schedule and venue with the City Health Office.",
     "date": null
+  },
+  {
+    "id": "pasko-fiesta-all-over-city-2026",
+    "slug": "pasko-fiesta-all-over-the-city-2026",
+    "type": "update",
+    "title": "Pasko Fiesta All Over the City 2026 application opens",
+    "description": "The City Tourism Operations Office invited Davao City barangays and private establishments to register for the Christmas displays and activities competition. The City announcement lists a November 30, 2026 registration deadline and judging dates in December.",
+    "category": "Tourism and events",
+    "sourceUrl": "https://davaocity.gov.ph/pasko-fiesta-2026/pasko-fiesta-all-over-the-city-2026-application-opens/",
+    "lastVerified": null,
+    "verification": "unverified",
+    "timeSensitive": true,
+    "notes": "Dates come from the City announcement and have not received Requisito's independent review.",
+    "date": null
+  },
+  {
+    "id": "davao-city-tourism-distinctions-2026",
+    "slug": "davao-city-tourism-distinctions-2026",
+    "type": "update",
+    "title": "Davao City tourism projects receive 2026 ATOP Pearl Awards distinctions",
+    "description": "A City Information Office report dated October 21, 2026 says the Kadayawan Festival 2025 official video was named second runner-up in a tourism-promotion category and KAGIKAN: The Kadayawan Cultural Village was a finalist in a sustainable-tourism category.",
+    "category": "Tourism",
+    "sourceUrl": "https://davaocity.gov.ph/tourism/davao-city-secures-two-tourism-distinctions/",
+    "lastVerified": null,
+    "verification": "unverified",
+    "timeSensitive": false,
+    "notes": "Award claims are summarized from the linked City article; the article and award details have not been independently reviewed.",
+    "date": "2026-10-21"
+  },
+  {
+    "id": "executive-order-36-2026",
+    "slug": "davao-city-reconstitutes-lupong-tagapamayapa-incentives-committee",
+    "type": "update",
+    "title": "Davao City reconstitutes Lupong Tagapamayapa Incentives committee",
+    "description": "A City Information Office report says Executive Order No. 36, series of 2026, reconstituted the Lupong Tagapamayapa Incentives Awards-City Awards Committee. The report links to the City executive-orders archive.",
+    "category": "Executive order",
+    "sourceUrl": "https://davaocity.gov.ph/executive-order/davao-city-reconstitutes-lupong-tagapamayapa-incentives-committee/",
+    "relatedSources": ["https://davaocity.gov.ph/transparency/executive-orders/executive-orders-2026/"],
+    "lastVerified": null,
+    "verification": "unverified",
+    "timeSensitive": false,
+    "notes": "The summary is not legal advice; consult the original order in the City archive.",
+    "date": null
   }
 ]

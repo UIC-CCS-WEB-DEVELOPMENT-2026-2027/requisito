@@ -1,6 +1,29 @@
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 import { createHash } from 'node:crypto'
+import { routeManifest } from './src/routeManifest.js'
+
+const publicSiteUrl = 'https://requisito.vercel.app'
+
+function publicSeoFiles() {
+  const sitemapEntries = routeManifest
+    .filter((route) => route.access === 'public' && route.path !== '*' && !route.path.includes(':'))
+    .filter((route) => !['login', 'questions', 'forbidden', 'serverError'].includes(route.id))
+    .map((route) => `  <url><loc>${publicSiteUrl}${route.path}</loc></url>`)
+    .join('\n')
+
+  return {
+    name: 'requisito-public-seo-files',
+    apply: 'build',
+    generateBundle() {
+      this.emitFile({
+        type: 'asset',
+        fileName: 'sitemap.xml',
+        source: `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${sitemapEntries}\n</urlset>\n`,
+      })
+    },
+  }
+}
 
 function pwaServiceWorker() {
   return {
@@ -93,7 +116,7 @@ self.addEventListener('fetch', (event) => {
 }
 
 export default defineConfig({
-  plugins: [react(), pwaServiceWorker()],
+  plugins: [react(), pwaServiceWorker(), publicSeoFiles()],
   build: {
     rolldownOptions: {
       output: {

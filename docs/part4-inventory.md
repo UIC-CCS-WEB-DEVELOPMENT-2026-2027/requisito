@@ -32,7 +32,7 @@ planning-question utilities.
 | `/contribute` | `src/pages/Contribute.jsx` | Existing catalog records | Local correction form prepares a public GitHub issue. |
 | `/credits` | `src/pages/Credits.jsx` | Static project documentation | Static credits page. |
 | `/history` | `src/pages/History.jsx` | `history.json` | Empty state; no history entries supplied. |
-| `/budget` | `src/pages/Budget.jsx` | `budget.json` | Empty state; no budget rows supplied. |
+| `/budget` | `src/pages/Budget.jsx` | `budget.json` | Three unverified 2026 fund allocations transcribed from the linked City budget article; the page filters by fiscal year and displays each fund's share of the listed allocations. |
 | `/procurement` | `src/pages/Procurement.jsx` | `procurement.json` | Empty state; no procurement rows supplied. |
 | `/briefs` | `src/pages/Briefs.jsx` | `briefs.json` | Three unverified, source-linked guides. |
 | `/monitor` | `src/pages/Monitor.jsx` | Derived catalog and source-watch state | Local catalog status; source watch has not run. |

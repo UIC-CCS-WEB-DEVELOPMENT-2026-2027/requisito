@@ -22,6 +22,14 @@ function Footer() {
     <footer className="site-footer">
       <p>Requisito</p>
       <p className="footer-description">{t('footer.disclaimer')}</p>
+      <p className="footer-credit">
+        {t('footer.referenceCreditPrefix')}{' '}
+        <a href="https://bettersolano.org/" target="_blank" rel="noopener noreferrer">BetterSolano.org</a>
+        {' '}{t('footer.referenceCreditSuffix')}{' '}
+        <a href="https://github.com/BetterSolano/bettersolano/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">
+          {t('footer.referenceLicense')}
+        </a>
+      </p>
       <nav className="footer-nav footer-nav-groups" aria-label={t('a11y.secondaryNavigation')}>
         {footerGroups.map((group) => (
           <section aria-label={t(group.labelKey)} key={group.id}>

@@ -1,5 +1,6 @@
 export const externalHosts = new Set([
   'github.com',
+  'bettersolano.org',
   'comelec.gov.ph',
   'davaocity.gov.ph',
   'open-meteo.com',

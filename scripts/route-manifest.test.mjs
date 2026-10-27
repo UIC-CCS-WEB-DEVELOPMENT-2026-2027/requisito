@@ -40,12 +40,25 @@ test('route lookup resolves public static, dynamic and not-found paths', () => {
   assert.equal(routeMatches('/admin'), null)
 })
 
-test('new feature catalogs are explicit and finder only returns complete verified briefs', () => {
+test('feature catalogs contain only sourced unverified entries and finder only returns complete verified briefs', () => {
   for (const name of [
     'reports', 'events', 'assets', 'publicRecords', 'mapLocations', 'transitRoutes',
     'heritageSites', 'tourismPlaces', 'cinemas', 'communityTools', 'estateListings',
     'civicAuditEntries',
-  ]) assert.deepEqual(getFeatureRecords(name), [])
+  ]) {
+    const records = getFeatureRecords(name)
+    for (const record of records) {
+      assert.equal(record.verification, 'unverified')
+      assert.equal(record.lastVerified, null)
+      assert.match(record.sourceUrl, /^https:\/\//)
+      for (const field of ['id', 'slug', 'type', 'title', 'description', 'category', 'timeSensitive', 'notes']) {
+        assert.ok(Object.hasOwn(record, field), `${name}.${record.slug} is missing ${field}`)
+      }
+    }
+  }
+  assert.ok(getFeatureRecords('publicRecords').length > 0)
+  assert.ok(getFeatureRecords('communityTools').length > 0)
+  assert.ok(getFeatureRecords('events').length > 0)
   assert.deepEqual(getVerifiedGuides(), [])
   assert.throws(() => getFeatureRecords('unknown-catalog'), /Unknown feature catalog/)
 })

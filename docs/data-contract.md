@@ -45,15 +45,20 @@ Accountability records use `kind` = `audit-report`, `ordinance`, `resolution`,
 or `public-statement`, plus `officialBody`, `referenceNo`, and `date`; the
 catalog starts empty.
 
-`featureCatalogs.json` is a separate, explicitly empty collection for the
-Part 6 route families: `reports`, `events`, `assets`, `publicRecords`,
-`mapLocations`, `transitRoutes`, `heritageSites`, `tourismPlaces`, `cinemas`,
-`communityTools`, `estateListings`, and `civicAuditEntries`. Each collection
-must remain an array. A future row must have the shared civic fields above and
-its feature-specific fields documented and audited before use. The current
-arrays are all empty because no reviewed source records were supplied; do not
-fill them with plausible examples. `scripts/audit-data.mjs` checks the twelve
-arrays and requires the shared fields on any later rows.
+`featureCatalogs.json` contains the Part 6 route families: `reports`, `events`,
+`assets`, `publicRecords`, `mapLocations`, `transitRoutes`, `heritageSites`,
+`tourismPlaces`, `cinemas`, `communityTools`, `estateListings`, and
+`civicAuditEntries`. Each collection remains an array. Entries require the
+shared civic fields and an HTTPS source URL. The current City archive indexes,
+official online-service links, dated event notice, transport-planning reference,
+and heritage/tourism leads are all marked `unverified` with
+`lastVerified: null`; these are source leads, not independently reviewed
+guidance. Citizen reports, civic-audit scores, a city asset inventory, live
+transit schedules, cinema listings, and property listings remain empty because
+the app must not fabricate user reports, official findings, routes, or market
+data. The map page uses the existing service-address catalog instead of
+`mapLocations`. `scripts/audit-data.mjs` checks the twelve arrays and requires
+their shared fields.
 
 Budget and procurement JSON catalogs start empty and are generated from
 maintainer-provided CSVs. Imported rows are unverified, never sample-filled.
@@ -179,9 +184,12 @@ and slugs, expected district totals, and legislative-district assignments.
 
 Any future sample budget or procurement rows must be clearly named and marked
 `isSample: true`; sample records are excluded from search, status counts, and
-City Monitor. The current budget, procurement, history, and accountability
-catalogs are empty. The elections catalog contains only the unverified COMELEC
-official-site link. History entries must be supplied with dates and sources.
+City Monitor. The 2026 budget catalog contains the three fund allocations
+reported in the City article linked from each row. These are source leads, not
+independently reviewed or audited budget records, and remain unverified. The
+procurement, history, and accountability catalogs are empty. The elections
+catalog contains only the unverified COMELEC official-site link. History
+entries must be supplied with dates and sources.
 
 The six general first-job preparation entries have no supporting official
 source in the catalog and remain unverified. Their guidance asks users to

@@ -1845,7 +1845,8 @@ fieldset.portal-card {
   display: flex;
   align-items: center;
   gap: 1rem;
-  overflow-x: auto;
+  overflow: hidden;
+  min-width: 0;
   padding: 0.7rem max(1rem, calc((100% - var(--content-width, 72rem)) / 2));
   border-bottom: 1px solid var(--border);
   border-inline-start: 4px solid var(--brand-red);
@@ -1965,6 +1966,7 @@ fieldset.portal-card {
 .hotline-ticker ul {
   display: flex;
   gap: 1.25rem;
+  min-width: 0;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -1980,6 +1982,29 @@ fieldset.portal-card {
 .hotline-ticker a {
   color: var(--accent);
   font-weight: 700;
+}
+
+@media (max-width: 48rem) {
+  .hotline-ticker ul {
+    width: max-content;
+    animation: hotline-marquee 28s linear infinite;
+  }
+
+  .hotline-ticker:hover ul,
+  .hotline-ticker:focus-within ul {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes hotline-marquee {
+  from { transform: translateX(100%); }
+  to { transform: translateX(-100%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hotline-ticker ul {
+    animation: none;
+  }
 }
 
 .live-city-section {

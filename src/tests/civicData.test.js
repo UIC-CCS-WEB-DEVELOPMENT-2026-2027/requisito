@@ -131,7 +131,7 @@ test('facts, offices, and dated updates remain unverified source records', () =>
   assert.equal(getCityFacts().length, 7)
   assert.equal(getOfficials().length, 3)
   assert.ok(getOfficials().every(item => item.holderName === null && item.lastVerified === null))
-  assert.equal(getUpdates().length, 2)
+  assert.equal(getUpdates().length, 5)
   assert.ok(getUpdates().every(item => item.verification === 'unverified'))
 })
 
@@ -182,10 +182,14 @@ test('search discovers goals, canonical guides, agencies, and their official sou
   assert.doesNotThrow(() => searchAll('<script>alert(1)</script>'))
 })
 
-test('Part 2 catalogs preserve empty data states and exclude samples from monitor counts', () => {
+test('civic catalogs preserve source boundaries and exclude samples from monitor counts', () => {
   assert.deepEqual(getHistory(), [])
   assert.equal(getBriefs().length, 3)
-  assert.deepEqual(getBudget(), [])
+  const budget = getBudget()
+  assert.equal(budget.length, 3)
+  assert.ok(budget.every(item => item.fiscalYear === 2026 && item.verification === 'unverified' && item.lastVerified === null))
+  assert.equal(budget.reduce((sum, item) => sum + item.amountPHP, 0), 15846064435)
+  assert.ok(budget.every(item => item.sourceUrl === 'https://davaocity.gov.ph/local-government/sp-oks-davao-citys-15-8-b-2026-budget/'))
   assert.deepEqual(getProcurement(), [])
   assert.deepEqual(getAccountability(), [])
   assert.equal(getElections()[0].verification, 'unverified')
