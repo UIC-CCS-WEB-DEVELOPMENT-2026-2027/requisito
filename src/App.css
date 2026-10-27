@@ -383,10 +383,36 @@
   padding: 1.2rem;
   text-align: center;
   overflow-wrap: anywhere;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.65rem;
 }
 
-.empty-state p {
+.empty-state__icon {
+  width: 3rem;
+  height: 3rem;
+  color: var(--accent);
+  flex: 0 0 auto;
+}
+
+.empty-state__message,
+.empty-state__description {
   margin: 0;
+}
+
+.empty-state__message {
+  color: var(--text-h);
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.empty-state__description {
+  color: var(--text);
+  font-size: 1rem;
+  line-height: 1.5;
 }
 
 .goal-grid li {
