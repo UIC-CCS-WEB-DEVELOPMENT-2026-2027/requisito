@@ -25,6 +25,10 @@ function Services() {
   const resultCount = t('services.showingCount')
     .replace('{shown}', String(visibleServices.length))
     .replace('{total}', String(services.length))
+  const serviceCountLabel = (count) => {
+    const countKey = count === 1 ? 'services.singleServiceCountLabel' : 'services.serviceCountLabel'
+    return `${count} ${t(countKey)}`
+  }
   const categoryCounts = categories.map((item) => ({
     name: item,
     count: services.filter((service) => service.category === item).length,
@@ -63,35 +67,37 @@ function Services() {
       </p>
       <section className="service-category-section" aria-labelledby="service-categories-title">
         <h2 id="service-categories-title">{t('services.browseCategories')}</h2>
-        <nav className="service-category-grid" aria-label={t('services.categoryNavigation')}>
+        <div className="service-category-grid" role="group" aria-label={t('services.categoryNavigation')}>
           <button
             className={`service-category-card${category === '' ? ' is-selected' : ''}`}
             type="button"
-            aria-label={t('services.allCategories')}
+            aria-label={`${t('services.allCategories')}, ${serviceCountLabel(services.length)}`}
             aria-pressed={category === ''}
             onClick={() => setCategory('')}
           >
             <span>{t('services.allCategories')}</span>
             <span className="service-category-count">
-              {services.length} {t('services.serviceCountLabel')}
+              {serviceCountLabel(services.length)}
             </span>
           </button>
-          {categoryCounts.map(({ name, count }) => (
-            <button
-              className={`service-category-card${category === name ? ' is-selected' : ''}`}
-              key={name}
-              type="button"
-              aria-label={categoryLabel(name)}
-              aria-pressed={category === name}
-              onClick={() => setCategory(name)}
-            >
-              <span>{categoryLabel(name)}</span>
-              <span className="service-category-count">
-                {count} {t('services.serviceCountLabel')}
-              </span>
-            </button>
-          ))}
-        </nav>
+          {categoryCounts.map(({ name, count }) => {
+            const label = categoryLabel(name)
+            const countLabel = serviceCountLabel(count)
+            return (
+              <button
+                className={`service-category-card${category === name ? ' is-selected' : ''}`}
+                key={name}
+                type="button"
+                aria-label={`${label}, ${countLabel}`}
+                aria-pressed={category === name}
+                onClick={() => setCategory(name)}
+              >
+                <span>{label}</span>
+                <span className="service-category-count">{countLabel}</span>
+              </button>
+            )
+          })}
+        </div>
       </section>
       <div className="portal-filters">
         <div>

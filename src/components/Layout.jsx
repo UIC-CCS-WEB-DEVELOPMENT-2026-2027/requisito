@@ -25,11 +25,13 @@ function Layout() {
   useEffect(() => {
     const heading = document.querySelector('#main-content h1')
     if (!heading) return
-    const title = heading.textContent.trim()
-    document.title = title ? `${title} | Requisito` : 'Requisito'
     heading.tabIndex = -1
     heading.focus({ preventScroll: true })
   }, [location.pathname])
+  useEffect(() => {
+    const title = document.querySelector('#main-content h1')?.textContent.trim()
+    document.title = title ? `${title} | Requisito` : 'Requisito'
+  }, [location.pathname, language])
   return (
     <div className="app-shell">
       <a className="skip-link" href="#main-content">{t('a11y.skip')}</a>
@@ -54,24 +56,26 @@ function Layout() {
               !isLoginPage && <NavLink to={href('login')}>{t('layout.signIn')}</NavLink>
             )}
           </nav>
-          <div className="language-switcher">
-            <label className="visually-hidden" htmlFor="language-select">{t('language.label')}</label>
-            <select id="language-select" value={language} onChange={(event) => setLanguage(event.target.value)}>
-              <option value="en">{t('layout.english')}</option>
-              <option value="fil">{t('layout.filipino')}</option>
-              <option value="ceb">{t('layout.bisaya')}</option>
-            </select>
+          <div className="header-tools">
+            <div className="language-switcher">
+              <label className="visually-hidden" htmlFor="language-select">{t('language.label')}</label>
+              <select id="language-select" value={language} onChange={(event) => setLanguage(event.target.value)}>
+                <option value="en">{t('layout.english')}</option>
+                <option value="fil">{t('layout.filipino')}</option>
+                <option value="ceb">{t('layout.bisaya')}</option>
+              </select>
+            </div>
+            <InstallAppButton />
+            <button
+              className="assistant-open-button"
+              type="button"
+              aria-haspopup="dialog"
+              aria-expanded={assistantOpen}
+              onClick={() => setAssistantOpen(true)}
+            >
+              {t('assistant.open')}
+            </button>
           </div>
-          <InstallAppButton />
-          <button
-            className="assistant-open-button"
-            type="button"
-            aria-haspopup="dialog"
-            aria-expanded={assistantOpen}
-            onClick={() => setAssistantOpen(true)}
-          >
-            {t('assistant.open')}
-          </button>
         </div>
       </header>
 

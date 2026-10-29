@@ -25,6 +25,18 @@ validation remain partial or blocked; see [FEATURE_GAP.md](./FEATURE_GAP.md).
   `robots.txt` file, and a build-generated XML sitemap from the public route
   manifest. Error/status routes are excluded from crawler listings.
 - Added localized `/403` and `/500` React pages.
+- Added a Leaflet map to the existing `/live` route, centered on the existing
+  approximate Davao weather model point. It uses OpenStreetMap tiles and the
+  existing Open-Meteo fetch, credits both providers, and retains link-based
+  fallbacks if weather, map code, or map tiles cannot load.
+- Added two accessible SVG charts on `/statistics`, derived only from existing
+  `cityFacts.json` and `barangays.json` values. Every plotted figure is marked
+  unverified and has an official PSA source link. Barangay bars are explicitly
+  described as Requisito catalog-entry counts, not official population or
+  district totals.
+- Added official directory links to the City resolutions archive / 21st City
+  Council page and the DPWH projects portal. No new ordinance, resolution, or
+  DPWH project records were added.
 - Retained the existing versioned service worker, offline page, update checks,
   Requisito flows, and BetterSolano attribution/license notice.
 - Added tests for the feature contracts and updated the feature inventory,
@@ -37,14 +49,14 @@ validation remain partial or blocked; see [FEATURE_GAP.md](./FEATURE_GAP.md).
 | Services and details | Partial: existing directory and 17 records; details and applicability need official review; no claim of the source's full catalog. |
 | Officials/departments | Partial: existing directory; officeholders and full roster not established. |
 | Budget/fiscal transparency | Partial: three unverified allocations; not an audited or project-spending dataset. |
-| DPWH projects | Blocked: no Davao-specific sourced project dataset loaded. |
-| Legislation | Partial: searchable source/archive leads only, not a full ordinance/resolution corpus. |
-| Statistics/charts | Partial: facts exist but remain unverified; no validated data series suitable for charts. |
+| DPWH projects | Partial: added official DPWH projects portal and City transparency links; the DPWH page reviewed did not expose a Davao-specific project listing, so no project records were added. |
+| Legislation | Partial: linked the official City Council page and resolutions archive; no new record was added because the fetched resolution entry had a malformed document URL and the council page is not a legislative corpus. |
+| Statistics/charts | Partial: charts now use existing city facts and barangay data; every value is unverified, PSA-cited, and qualified. Economic/competitiveness datasets remain unavailable. |
 | Search | Implemented for the local catalog; suggestions are not a full-site source index. |
 | News/editor/social feed | Partial: public updates and admin update-record management exist; no distinct editor or authorized Davao social feed. |
-| Weather, currency, time | Partial: live info surface exists; no weather map, and browser network behavior was not verified. |
+| Weather, currency, time | Partial: live information now includes the Leaflet/OpenStreetMap map at the existing Open-Meteo point, attribution, and failure fallbacks. Browser network/tile behavior remains unverified. |
 | Hotline ticker | Partial: behavior implemented; verified-only policy means it may be hidden until eligible hotline records are reviewed. |
-| Appointment integration | Blocked: no verified appointment service/destination established. |
+| Appointment integration | **Blocked:** `https://davaocity.gov.ph/appointments/` and `/appointment/` returned 404. City-site appointment search returned news articles, not a booking system. No appointment link/integration was added. |
 | Quiz | Existing Requisito quiz retained; not a port of Solano quiz content. |
 | History timeline | Partial: route exists; no source-backed Davao history records loaded. |
 | Localization | English, Filipino, and Cebuano catalogs have key parity; native-speaker review remains. |
@@ -88,27 +100,31 @@ Record-level source/retrieval limitations are documented in
   the vanilla-JS source or migrating frameworks.
 - Retain English, Filipino, and Cebuano; translation review remains necessary.
 - Preserve the unofficial-information and non-government-approval notices.
-- Add no dependencies, Git branch, or commit.
+- Added Leaflet for the requested OpenStreetMap map. No other dependency, Git
+  branch, or commit was added.
 - Treat the BetterSolano source data as Solano reference material, not Davao
   evidence. The source clone is documented in [DECISIONS.md](./DECISIONS.md).
 
 ## Verification
 
-**Passed:** `npm run check:mvp` completed with exit code 0 after the latest
-error-page changes. It includes the data audit (257 records pass structural
-checks; all 257 unverified), link/accessibility audit, lint, 198 passing
-network-independent tests, production build, and MVP readiness audit
-(`MVP_READY`). The same audit reports `PRODUCTION_VERIFICATION_PENDING` and
+**Passed:** `npm run check:mvp` completed with exit code 0 after these additions:
+201 network-independent tests passed, with 0 failures; lint, link/accessibility
+audit, build, and the MVP readiness audit passed. Data audit reports 257
+structurally valid records, 257 unverified, and 0 validation errors. The audit
+reports `MVP_READY`, alongside `PRODUCTION_VERIFICATION_PENDING` and
 `governmentVerificationGate: BLOCKED`; MVP readiness is for demonstration and
 controlled testing only, not government verification or public-release
-approval. Built output includes `robots.txt`, `sitemap.xml`, and versioned
-`sw.js`; the sitemap excludes `/403` and `/500`.
+approval. The build-generated sitemap includes the existing `/live` and
+`/statistics` routes, and the production bundle includes Leaflet assets.
 
-**Not run in this pass:** Playwright end-to-end/browser checks. A prior local
-server attempt failed with `listen EPERM` binding `127.0.0.1:4173`; do not
-bypass the sandbox. Browser testing therefore remains pending, including
-onboarding, desktop/mobile layouts, keyboard navigation, locale switching,
-search, checklist persistence, offline/updates, and error-page behavior.
+**Playwright blocked:** The desktop and mobile projects have new E2E tests for
+weather failure fallback/provider attribution, statistics figures/sources,
+City Council and DPWH source links, and the appointment limitation. The
+requested commands were not rerun because this sandbox previously denied the
+Playwright web server's bind to `127.0.0.1:4173` with `listen EPERM`. The same
+path is blocked, and I did not retry or bypass that sandbox restriction. Thus
+there are no browser E2E pass counts; the new tests still need execution in an
+environment that permits the configured local server.
 
 ## Manual checks for a permitted environment
 
@@ -116,7 +132,8 @@ search, checklist persistence, offline/updates, and error-page behavior.
 npm install
 npm run dev
 npm run check:mvp
-npm run test:e2e
+npx playwright test --project=desktop-chromium
+npx playwright test --project=mobile-chromium
 ```
 
 In the browser, check the routes listed in the app sitemap; test search and

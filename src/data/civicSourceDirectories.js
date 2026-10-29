@@ -22,10 +22,12 @@ export const civicSourceDirectories = Object.freeze({
     { id: 'philgeps-awards', titleKey: 'civicSource.philgepsAwards.title', descriptionKey: 'civicSource.philgepsAwards.description', url: 'https://notices.philgeps.gov.ph/GEPSNONPILOT/Tender/RecentAwardNoticeUI.aspx?menuIndex=3', checkedOn: '2026-10-27' },
     { id: 'philgeps', titleKey: 'civicSource.philgeps.title', descriptionKey: 'civicSource.philgeps.description', url: 'https://philgeps.gov.ph/', checkedOn: '2026-10-27' },
     { id: 'city-procurement-records', titleKey: 'civicSource.cityReports.title', descriptionKey: 'civicSource.cityReports.description', url: `${CITY}/transparency/forms-and-reports/`, checkedOn: '2026-10-27' },
+    { id: 'dpwh-projects', titleKey: 'civicSource.dpwhProjects.title', descriptionKey: 'civicSource.dpwhProjects.description', url: 'https://www.dpwh.gov.ph/dpwh/projects', checkedOn: '2026-10-27' },
   ],
   legislation: [
     { id: 'city-transparency', titleKey: 'civicSource.transparency.title', descriptionKey: 'civicSource.transparency.description', url: `${CITY}/transparency/`, checkedOn: '2026-10-27' },
     { id: 'city-resolutions', titleKey: 'civicSource.resolutions.title', descriptionKey: 'civicSource.resolutions.description', url: `${CITY}/transparency/resolution/`, checkedOn: '2026-10-27' },
+    { id: 'city-council', titleKey: 'civicSource.cityCouncil.title', descriptionKey: 'civicSource.cityCouncil.description', url: `${CITY}/know-davao-city/21st-city-council/`, checkedOn: '2026-10-27' },
     { id: 'city-executive-orders', titleKey: 'civicSource.executiveOrders.title', descriptionKey: 'civicSource.executiveOrders.description', url: `${CITY}/transparency/executive-orders/`, checkedOn: '2026-10-27' },
     { id: 'city-charter', titleKey: 'civicSource.charter.title', descriptionKey: 'civicSource.charter.description', url: `${CITY}/transparency/citizens-charter-handbook/`, checkedOn: '2026-10-27' },
     { id: 'city-certificates', titleKey: 'civicSource.compliance.title', descriptionKey: 'civicSource.compliance.description', url: `${CITY}/transparency/certificate-of-compliance/`, checkedOn: '2026-10-27' },

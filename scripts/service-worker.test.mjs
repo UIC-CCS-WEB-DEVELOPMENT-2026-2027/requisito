@@ -1,6 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { readFile } from 'node:fs/promises'
+import { routeManifest } from '../src/routeManifest.js'
 
 const viteConfig = await readFile(new URL('../vite.config.js', import.meta.url), 'utf8')
 const appEntry = await readFile(new URL('../src/main.jsx', import.meta.url), 'utf8')
@@ -51,4 +52,6 @@ test('public SEO metadata and build-generated sitemap use the public route manif
   assert.match(viteConfig, /\.filter\(\(route\)/)
   assert.match(viteConfig, /'forbidden', 'serverError'/)
   assert.match(viteConfig, /fileName: 'sitemap\.xml'/)
+  assert.equal(routeManifest.find((route) => route.id === 'live')?.path, '/live')
+  assert.equal(routeManifest.find((route) => route.id === 'statistics')?.path, '/statistics')
 })

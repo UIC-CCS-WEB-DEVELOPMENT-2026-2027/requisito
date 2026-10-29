@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
 import { getDavaoWeather, getUsdPhpRate } from '../utils/liveCityData.js'
+import DavaoWeatherMap from './DavaoWeatherMap.jsx'
 
 const localeByLanguage = { en: 'en-PH', fil: 'fil-PH', ceb: 'ceb-PH' }
 const WEATHER_REFRESH_MS = 15 * 60 * 1000
@@ -118,6 +119,7 @@ function LiveCityInfo() {
           <p className="live-data-source">
             {t('live.approximateLocation')} <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a>
           </p>
+          <DavaoWeatherMap weather={weather.data} weatherStatus={weather.status} />
         </article>
 
         <article className="live-data-card">

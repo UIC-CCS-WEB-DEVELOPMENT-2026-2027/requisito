@@ -24,11 +24,24 @@
   Leave features that require a verified Davao corpus, an authorized external
   integration, or browser confirmation explicitly partial or blocked rather
   than create empty imitations or misleading data.
-- **Dependencies:** No dependencies were added. Avoid Leaflet/charting or
-  third-party integrations until accurate data, need, and privacy/security
-  requirements are established.
+- **Dependencies:** Leaflet was added only for the specifically
+  requested OpenStreetMap display. The OSM attribution/copyright host is
+  allowlisted for this map use; it is not used as a civic-data record source.
+  No other dependency was added.
+- **Statistics:** Build charts only from existing city facts and barangay
+  records. Keep all figures marked unverified, exclude facts without official
+  HTTPS source links, and clearly label grouped barangay bars as catalog-entry
+  counts rather than official population or district totals.
+- **Legislation and projects:** Add official-source directory links when pages
+  were fetched successfully. Do not add a legislative document record from a
+  malformed archive link, and do not invent Davao DPWH projects from a generic
+  national projects portal.
+- **Appointments:** Mark as blocked because the two checked City appointment
+  URL patterns returned 404 and the City-site search yielded news, not an
+  appointment service.
 - **Git:** No branch or commit was created. Workspace instructions prohibit
   Git operations for this project.
 - **Browser testing:** A previous local-server bind attempt was denied with
   `listen EPERM` on `127.0.0.1:4173`; do not bypass the sandbox. Report
-  browser-only checks as pending.
+  browser-only checks as pending. The new Playwright cases were authored but
+  not run because the same loopback bind is already known to be blocked.

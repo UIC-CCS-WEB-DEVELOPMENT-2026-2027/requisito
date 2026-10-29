@@ -28,6 +28,30 @@ source.
 | Demographics, economy, competitiveness | `src/data/barangays.json`, `src/data/cityFacts.json`, `src/data/featureCatalogs.json` | No verified, complete statistics datasets were established. Population values in the barangay list remain null. |
 | History | `src/data/history.json` | Empty pending dated, source-backed Davao history records. |
 
+Additional official directories fetched on 2026-10-27:
+
+- Sangguniang Panlungsod / City Council context: https://davaocity.gov.ph/know-davao-city/21st-city-council/ .
+  The fetched City page provides the 21st City Council heading and a standing
+  committee PDF link. It is included as a source directory only; it is not a
+  complete legislative collection.
+- City resolutions archive: https://davaocity.gov.ph/transparency/resolution/ .
+  The page displayed a resolution entry, but its linked document target was a
+  malformed non-HTTPS URL. No individual resolution record was added from
+  that listing.
+- DPWH projects portal: https://www.dpwh.gov.ph/dpwh/projects . This is an
+  official DPWH page, but the fetched content did not provide a Davao-specific
+  project list. It is a directory/source lead only; no project values were
+  added.
+- City appointment URL checks: https://davaocity.gov.ph/appointments/ and
+  https://davaocity.gov.ph/appointment/ returned 404 on 2026-10-27. The City
+  site search for “appointment” returned news items rather than a booking
+  service. An appointment integration remains blocked pending an official,
+  active service page.
+
+The `/live` map uses OpenStreetMap tiles and Open-Meteo's existing forecast
+fetch. These are map/live-service providers, not Davao civic records and not
+sources for any static catalog facts.
+
 Retrieval-date limitation: most existing record schemas do not store a retrieval
 date separate from `lastVerified`. Historical retrieval dates therefore cannot
 be asserted from the local data. Record a retrieval date when source review is

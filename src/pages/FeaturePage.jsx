@@ -4,6 +4,7 @@ import EmptyState from '../components/EmptyState.jsx'
 import LiveCityInfo from '../components/LiveCityInfo.jsx'
 import OfficialSourceLeads from '../components/OfficialSourceLeads.jsx'
 import OfficialSourceDirectory from '../components/OfficialSourceDirectory.jsx'
+import CityStatistics from '../components/CityStatistics.jsx'
 import RecordMeta from '../components/RecordMeta.jsx'
 import { getFeatureRecords, getServices } from '../data/helpers.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
@@ -74,7 +75,7 @@ function FeaturePage({ feature }) {
           <p role="status">{t('feature.legislation.searchCount').replace('{count}', String(visibleItems.length))}</p>
         </div>
       )}
-      {details.contact || details.externalPortal ? null : feature === 'live' ? <LiveCityInfo /> : record ? (
+      {details.contact || details.externalPortal ? null : feature === 'live' ? <LiveCityInfo /> : feature === 'statistics' ? <CityStatistics /> : record ? (
         <>
           <h2>{record.title}</h2>
           {record.description && <p>{record.description}</p>}

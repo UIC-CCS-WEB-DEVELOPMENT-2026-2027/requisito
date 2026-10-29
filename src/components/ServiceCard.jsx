@@ -19,6 +19,7 @@ function ServiceCard({ service }) {
         <>
           <a
             className="service-online-link"
+            aria-label={`${t('services.openOnlineService')}: ${service.title} (${t('services.opensNewTab')})`}
             href={service.onlineUrl}
             target="_blank"
             rel="noopener noreferrer"

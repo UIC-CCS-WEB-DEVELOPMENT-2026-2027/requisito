@@ -40,7 +40,7 @@
   font-size: 16px;
 }
 .assistant-form textarea { resize: vertical; background: var(--surface); color: var(--text-h); }
-.assistant-form button { background: var(--accent); color: var(--bg); font-weight: 650; cursor: pointer; }
+.assistant-form button { background: var(--accent); color: var(--accent-contrast); font-weight: 650; cursor: pointer; }
 .assistant-form button:disabled { opacity: 0.6; cursor: wait; }
 .assistant-form textarea:focus-visible, .assistant-form button:focus-visible, .assistant-sources a:focus-visible {
   outline: 2px solid var(--accent);
