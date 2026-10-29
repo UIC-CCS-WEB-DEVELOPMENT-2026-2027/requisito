@@ -4,12 +4,29 @@ const VERIFICATION_ORDER = Object.freeze({
   conflicting: 2,
 })
 
+export const SERVICE_CATEGORY_TRANSLATION_KEYS = Object.freeze({
+  Emergency: 'services.category.emergency',
+  Health: 'services.category.health',
+  'Business and Permits': 'services.category.business',
+  Information: 'services.category.information',
+  'Building and Construction': 'services.category.building',
+  'Taxes and Payments': 'services.category.taxes',
+  'Public Concerns': 'services.category.concerns',
+  'Civil Registry': 'services.category.civilRegistry',
+})
+
 export function filterServices(services, { query = '', category = '' } = {}) {
   const normalizedQuery = String(query).trim().toLowerCase()
 
   return services.filter((service) => {
     const matchesCategory = !category || service.category === category
-    const searchableText = `${service.title} ${service.description}`.toLowerCase()
+    const searchableText = [
+      service.title,
+      service.description,
+      service.category,
+      service.notes,
+      ...(service.keywords ?? []),
+    ].join(' ').toLowerCase()
     return matchesCategory && (!normalizedQuery || searchableText.includes(normalizedQuery))
   })
 }

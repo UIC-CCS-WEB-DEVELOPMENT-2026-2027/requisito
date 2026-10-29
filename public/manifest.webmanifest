@@ -1,0 +1,19 @@
+{
+  "name": "Requisito — Davao Civic Guide",
+  "short_name": "Requisito",
+  "description": "Davao City civic information and source-linked document checklists.",
+  "lang": "en",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f4f7fb",
+  "theme_color": "#123d70",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

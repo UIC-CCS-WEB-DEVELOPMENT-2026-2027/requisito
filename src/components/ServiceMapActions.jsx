@@ -12,8 +12,22 @@ function ServiceMapActions({ service }) {
 
   return (
     <div className="service-map-actions" role="group" aria-label={t('service.mapActions')}>
-      <a href={searchUrl} target="_blank" rel="noopener noreferrer">{t('service.mapView')}</a>
-      <a href={directionsUrl} target="_blank" rel="noopener noreferrer">{t('service.mapDirections')}</a>
+      <a
+        href={searchUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`${t('service.mapView')} (${t('services.opensNewTab')})`}
+      >
+        {t('service.mapView')}
+      </a>
+      <a
+        href={directionsUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`${t('service.mapDirections')} (${t('services.opensNewTab')})`}
+      >
+        {t('service.mapDirections')}
+      </a>
       {service.verification !== 'verified' && (
         <p className="service-map-note" role="note">{t('service.mapUnverified')}</p>
       )}

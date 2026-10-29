@@ -12,6 +12,8 @@
     "verification": "unverified",
     "timeSensitive": true,
     "notes": "News reports in 2026 mention misrouted calls from some networks; check the city's current advisory.",
+    "feeDetails": [],
+    "feesNote": "No call charge or service fee is specified on the linked City source. Check with your phone provider; do not assume calls are free.",
     "contact": {
       "phone": ["911", "(082) 296-1433"],
       "email": "",
@@ -32,6 +34,8 @@
     "verification": "unverified",
     "timeSensitive": false,
     "notes": "Confirm the number is still current.",
+    "feeDetails": [],
+    "feesNote": "The linked launch notice does not specify a fee; confirm the current contact-center service.",
     "contact": {
       "phone": ["235-9999"],
       "email": "",
@@ -51,6 +55,8 @@
     "verification": "unverified",
     "timeSensitive": false,
     "notes": "",
+    "feeDetails": [],
+    "feesNote": "No fee is listed on the linked office page.",
     "contact": {
       "phone": ["(082) 241-1000 local 219"],
       "email": "cio@davaocity.gov.ph",
@@ -70,6 +76,8 @@
     "verification": "unverified",
     "timeSensitive": true,
     "notes": "Deadlines and systems change yearly. Confirm current deadlines and application systems.",
+    "feeDetails": [],
+    "feesNote": "The tax and permit charges depend on the business and assessment. The portal does not publish one fixed amount; review the assessment before payment.",
     "contact": {
       "phone": ["(082) 241-1000 local 377", "(082) 241-1000 local 378"],
       "email": "busbureau@davaocity.gov.ph",
@@ -94,6 +102,8 @@
     "verification": "unverified",
     "timeSensitive": true,
     "notes": "The cited announcement is from 2023; confirm current payment arrangements.",
+    "feeDetails": [],
+    "feesNote": "The cited 2023 announcement does not provide a current fee schedule.",
     "contact": {
       "phone": ["(082) 241-1000 local 386"],
       "email": "",
@@ -113,6 +123,8 @@
     "verification": "unverified",
     "timeSensitive": false,
     "notes": "",
+    "feeDetails": [],
+    "feesNote": "No fee is listed on the linked City Health Office page.",
     "contact": {
       "phone": ["09266861531", "09999380540"],
       "email": "cho@davaocity.gov.ph",
@@ -133,6 +145,24 @@
     "verification": "unverified",
     "timeSensitive": true,
     "notes": "A January 6, 2026 City Government announcement said issuance would begin January 7 at the 5th floor of Gaisano Ilustre. The current venue and schedule are not confirmed.",
+    "feeDetails": [
+      {
+        "amount": "₱50",
+        "description": "Health-card fee payable to the City Treasurer's Office, as stated in the City Government notice published 6 January 2026. This excludes the cost of required laboratory tests.",
+        "sourceUrl": "https://davaocity.gov.ph/health/health-card-issuance-starts-january-7/",
+        "sourceDate": "2026-01-06"
+      }
+    ],
+    "feesNote": "The fee is from a January 2026 City notice. Confirm it and the current application venue before paying.",
+    "requirements": [
+      "Chest X-ray valid for six months",
+      "Urinalysis and fecalysis valid for three months",
+      "Cedula",
+      "Valid photo ID",
+      "Food-industry employees: food-safety seminar and certificate of attendance",
+      "Jobs involving exchange of body fluids: Hepatitis B antibody test for the pink card"
+    ],
+    "processingInfo": "The City notice said the in-person processing takes minutes after submitting requirements; food-safety orientation takes about 30 minutes. Confirm current procedure and location.",
     "contact": {
       "phone": [],
       "email": "",
@@ -143,5 +173,272 @@
       "Confirm the current venue and schedule with the City Health Office.",
       "Prepare the listed requirements; the checklist is illustrative and unverified."
     ]
+  },
+  {
+    "id": 108,
+    "slug": "online-business-permit-and-licensing-system",
+    "type": "service",
+    "title": "Online Business Permit and Licensing System",
+    "description": "Davao City's online system supports new and renewal business permit applications, online payments, and online issuance of approved permits.",
+    "category": "Business and Permits",
+    "sourceUrl": "https://davaocity.gov.ph/more-services/",
+    "onlineUrl": "https://appbts.davaocity.gov.ph/",
+    "keywords": ["business permit", "mayor's permit", "renewal", "license", "application", "permiso sa negosyo", "lisensya"],
+    "lastVerified": null,
+    "verification": "unverified",
+    "timeSensitive": false,
+    "relatedSources": ["https://appbts.davaocity.gov.ph/"],
+    "notes": "The City Government's official Online Services directory lists this system. Portal instructions were checked on 27 October 2026. Other transactions are marked as under development on the portal; application details and fees can change.",
+    "feeDetails": [],
+    "feesNote": "The portal assesses business tax by application; no single amount is published. Review the portal's assessment before payment.",
+    "requirements": [
+      "New permit: government-issued ID for sole proprietors; business barangay clearance; business location map; DTI certificate and tax-exemption certificate, if applicable; tax declaration/land title or affidavit of undertaking where the premises are not rented; lease contract or affidavit of no rental as applicable; certified employee list; and cedula.",
+      "Corporations or CDA entities: SEC or CDA registration and, for corporations, articles of incorporation and bylaws.",
+      "Renewal: BIR Form 2551Q quarterly percentage-tax return; financial statement; special power of attorney, secretary's certificate, or board resolution; IDs for owners and authorized representative; certification; Fire Safety Inspection Certificate; previous Mayor's Permit; barangay certification if blocked; and certified employee list.",
+      "The portal directs applicants missing the stated renewal documents to their respective district offices."
+    ],
+    "steps": [
+      "Select the new or renewal permit route in the online system.",
+      "Follow the route-specific instructions and attach the requested documents.",
+      "Track the application and follow the current payment and permit-release instructions shown by the portal."
+    ],
+    "contact": { "phone": [], "email": "", "address": "", "hours": "" }
+  },
+  {
+    "id": 109,
+    "slug": "online-building-permit-system",
+    "type": "service",
+    "title": "Online Building Permit System",
+    "description": "Davao City's online system supports building permit applications, assessment, payment, release of approved permits, status tracking, and optional pre-evaluation of documents.",
+    "category": "Building and Construction",
+    "sourceUrl": "https://davaocity.gov.ph/more-services/",
+    "onlineUrl": "https://obps.davaocity.gov.ph/",
+    "keywords": ["building permit", "construction", "permit tracking", "pre-evaluation", "pagtukod", "permiso sa pagtukod"],
+    "lastVerified": null,
+    "verification": "unverified",
+    "timeSensitive": false,
+    "relatedSources": ["https://obps.davaocity.gov.ph/"],
+    "notes": "Listed in the City Government's official Online Services directory. The online portal describes applications, assessment, payment, release, tracking, and optional pre-evaluation. Requirements vary by permit type; fees and processing times are not established here.",
+    "feeDetails": [],
+    "feesNote": "The City directory and portal do not state a fixed fee. The application-specific assessment determines payment.",
+    "requirements": ["Use the portal's optional pre-evaluation for a permit-specific document list; the City portal says requirements depend on the building or occupancy permit requested."],
+    "contact": { "phone": [], "email": "", "address": "", "hours": "" }
+  },
+  {
+    "id": 110,
+    "slug": "occupational-permit",
+    "type": "service",
+    "title": "Occupational Permit",
+    "description": "Davao City's listed web-based system supports Occupational Permit applications through the Business Bureau, online submission of requirements, and printing of approved permits.",
+    "category": "Business and Permits",
+    "sourceUrl": "https://davaocity.gov.ph/more-services/",
+    "onlineUrl": "https://occupationalpermit.davaocity.gov.ph/",
+    "keywords": ["occupational permit", "work permit", "business bureau", "employment", "permiso sa trabaho", "pahintulot sa trabaho"],
+    "lastVerified": null,
+    "verification": "unverified",
+    "timeSensitive": true,
+    "availabilityNote": "Observed 27 October 2026: the linked official site displayed an office-maintenance notice and directed users to contact the LGU via 241-1000. Confirm current availability before proceeding.",
+    "relatedSources": ["https://occupationalpermit.davaocity.gov.ph/"],
+    "notes": "Listed in the City Government's official Online Services directory. The linked site displayed an office-maintenance notice on 27 October 2026; verify whether the online permit service is available.",
+    "feeDetails": [],
+    "feesNote": "No fee is published in the reviewed source. The application website displayed a maintenance notice on 27 October 2026.",
+    "contact": { "phone": [], "email": "", "address": "", "hours": "" }
+  },
+  {
+    "id": 111,
+    "slug": "special-permit",
+    "type": "service",
+    "title": "Special Permit",
+    "description": "Davao City's listed web-based system supports Special Permit applications through the Business Bureau, online submission of requirements, and printing of approved permits.",
+    "category": "Business and Permits",
+    "sourceUrl": "https://davaocity.gov.ph/more-services/",
+    "onlineUrl": "https://specialpermit.davaocity.gov.ph/",
+    "keywords": ["special permit", "business bureau", "permit application", "espesyal nga permiso"],
+    "lastVerified": null,
+    "verification": "unverified",
+    "timeSensitive": true,
+    "availabilityNote": "Observed 27 October 2026: the linked official site displayed an office-maintenance notice and directed users to contact the LGU via 241-1000. Confirm current availability before proceeding.",
+    "relatedSources": ["https://specialpermit.davaocity.gov.ph/"],
+    "notes": "Listed in the City Government's official Online Services directory. The linked site displayed an office-maintenance notice on 27 October 2026; verify whether the online permit service is available.",
+    "feeDetails": [],
+    "feesNote": "No fee is published in the reviewed source. The application website displayed a maintenance notice on 27 October 2026.",
+    "contact": { "phone": [], "email": "", "address": "", "hours": "" }
+  },
+  {
+    "id": 112,
+    "slug": "online-cedula-application",
+    "type": "service",
+    "title": "Online Cedula Application",
+    "description": "Davao City's listed online system allows individuals to apply for a Community Tax Certificate, with an online payment option.",
+    "category": "Taxes and Payments",
+    "sourceUrl": "https://davaocity.gov.ph/more-services/",
+    "onlineUrl": "https://cedula.davaocity.gov.ph/",
+    "keywords": ["cedula", "community tax certificate", "CTC", "community tax", "buwis", "buhis", "buwis pangkomunidad"],
+    "lastVerified": null,
+    "verification": "unverified",
+    "timeSensitive": false,
+    "relatedSources": ["https://cedula.davaocity.gov.ph/"],
+    "notes": "Listed in the City Government's official Online Services directory. The online destination opens the system's individual-applicant entry point. The directory does not establish all eligibility, document, fee, or processing details.",
+    "feeDetails": [],
+    "feesNote": "The City directory says online payment is available but does not state a fee or tax amount. The online system calculates the applicable amount.",
+    "contact": { "phone": [], "email": "", "address": "", "hours": "" }
+  },
+  {
+    "id": 113,
+    "slug": "online-professional-tax-receipt",
+    "type": "service",
+    "title": "Online Professional Tax Receipt System",
+    "description": "Davao City's listed online system allows professionals to register, pay, and request issuance of a Professional Tax Receipt.",
+    "category": "Taxes and Payments",
+    "sourceUrl": "https://davaocity.gov.ph/more-services/",
+    "onlineUrl": "https://ptr.davaocity.gov.ph/app_ptr/Home/index.aspx",
+    "keywords": ["PTR", "professional tax receipt", "professional tax", "professional registration", "resibo sa buhis sa propesyon"],
+    "lastVerified": null,
+    "verification": "unverified",
+    "timeSensitive": false,
+    "relatedSources": ["https://ptr.davaocity.gov.ph/app_ptr/Home/index.aspx"],
+    "notes": "Listed in the City Government's official Online Services directory. The directory describes registration, payment, and requests for issuance but does not state eligibility, required documents, fees, or processing times.",
+    "feeDetails": [],
+    "feesNote": "The City directory does not state the Professional Tax Receipt amount. Confirm the amount and applicable rules in the official portal before payment.",
+    "contact": { "phone": [], "email": "", "address": "", "hours": "" }
+  },
+  {
+    "id": 114,
+    "slug": "city-online-payment",
+    "type": "service",
+    "title": "City Online Payment",
+    "description": "Davao City's listed online payment platform accepts city tax payments facilitated by authorized government depository banks.",
+    "category": "Taxes and Payments",
+    "sourceUrl": "https://davaocity.gov.ph/more-services/",
+    "onlineUrl": "https://davaocity.gov.ph/services/online-payments/",
+    "keywords": ["city tax", "online payment", "tax payment", "bank payment", "buwis", "buhis", "pagbayad"],
+    "lastVerified": null,
+    "verification": "unverified",
+    "timeSensitive": false,
+    "relatedSources": ["https://davaocity.gov.ph/services/online-payments/"],
+    "notes": "Listed in the City Government's official Online Services directory. The linked City page says businesses need one-time email registration to activate online orders of payment and that other transactions should be handled at the designated office. Confirm transaction applicability and current instructions.",
+    "feeDetails": [],
+    "feesNote": "This platform processes city-tax payments; the amount depends on the underlying tax or order of payment. Bank or payment-channel charges are not specified on the linked page.",
+    "contact": { "phone": [], "email": "", "address": "", "hours": "" }
+  },
+  {
+    "id": 115,
+    "slug": "davao-city-reports",
+    "type": "service",
+    "title": "Davao City Reports",
+    "description": "Davao City's listed app lets people report local concerns, including traffic, waste, and safety issues, and track updates from city departments.",
+    "category": "Public Concerns",
+    "sourceUrl": "https://davaocity.gov.ph/more-services/",
+    "onlineUrl": "https://reports.davaocity.gov.ph/",
+    "keywords": ["report concern", "traffic", "waste", "safety", "complaint", "follow-up", "reklamo", "basura", "trapiko", "kaluwasan", "sumbong"],
+    "lastVerified": null,
+    "verification": "unverified",
+    "timeSensitive": false,
+    "availabilityNote": "The app's opening notice says it may request contact details including name, address, email, and active phone number. Review its privacy notice before submitting personal information.",
+    "relatedSources": ["https://reports.davaocity.gov.ph/"],
+    "notes": "Listed in the City Government's official Online Services directory. The app's opening notice describes personal information that may be collected during registration and use; review its privacy policy before submitting information.",
+    "feeDetails": [],
+    "feesNote": "The City directory does not list a charge for submitting or tracking a report.",
+    "contact": { "phone": [], "email": "", "address": "", "hours": "" }
+  },
+  {
+    "id": 116,
+    "slug": "psa-birth-certificate-copy",
+    "type": "service",
+    "title": "PSA Birth Certificate Copy",
+    "description": "Request a QR-coded PSA copy online, or ask about PSA-copy requests at Davao City Civil Registrar district offices.",
+    "category": "Civil Registry",
+    "sourceUrl": "https://davaocity.gov.ph/social-services/district-registrar-offices-offer-full-service/",
+    "onlineUrl": "https://psahelpline.ph/psa-birth-certificate",
+    "onlineServiceNote": "This order is handled by PSAHelpline, a third-party provider that describes itself as an authorized PSA online channel. Confirm current eligibility and total charges with the provider; Requisito is not a government service.",
+    "keywords": ["PSA birth certificate", "birth record", "certificate of live birth", "PSA copy", "birth certificate price", "presyo", "presyo sa birth certificate"],
+    "lastVerified": null,
+    "verification": "unverified",
+    "timeSensitive": true,
+    "feeDetails": [
+      {
+        "amount": "₱365",
+        "description": "PSAHelpline online order: provider FAQ says this includes its service fee and nationwide courier fee. This is the provider's listed price, not a PSA-government fee schedule.",
+        "sourceUrl": "https://psahelpline.ph/faq",
+        "sourceDate": null,
+        "observedOn": "2026-10-27"
+      },
+      {
+        "amount": "₱255",
+        "description": "PSA copy requested through the CCRO Tugbok District Office: the City reported ₱155 for the PSA copy plus ₱100 service fee, with official receipts. The City report was published 1 March 2023; confirm this older amount before visiting.",
+        "sourceUrl": "https://davaocity.gov.ph/social-services/district-registrar-offices-offer-full-service/",
+        "sourceDate": "2023-03-01"
+      }
+    ],
+    "feesNote": "Prices are for different request channels and come from sources with different dates. Confirm the current total, delivery or pickup, and eligibility before ordering or paying.",
+    "requirements": [
+      "PSAHelpline says the requester must be of legal age and authorized to request the certificate; parents may request a minor child's certificate.",
+      "The City report says PSA copies could be requested at the CCRO Tugbok District Office; it does not state the complete eligibility or document checklist."
+    ],
+    "processingInfo": "PSAHelpline FAQ states 3–8 working days for delivery outside Metro Manila after PSA releases the document; exceptional manual verification may add seven working days. Check the provider's current estimate at checkout.",
+    "steps": [
+      "Request the PSA certificate through the online provider.",
+      "Pay online or through an available over-the-counter option shown by the provider.",
+      "Wait for delivery or check the provider's current pickup options."
+    ],
+    "relatedSources": [
+      "https://psahelpline.ph/faq",
+      "https://davaocity.gov.ph/city-civil-registrars-office/"
+    ],
+    "notes": "PSA.gov.ph could not be reached during this check. The ₱365 amount is from PSAHelpline's own FAQ, which describes itself as an authorized online channel; this was not independently confirmed on PSA.gov.ph. The ₱255 Davao district-office amount is dated 2023 and may be outdated.",
+    "contact": { "phone": [], "email": "", "address": "", "hours": "" }
+  },
+  {
+    "id": 117,
+    "slug": "marriage-license",
+    "type": "service",
+    "title": "Davao City Marriage License",
+    "description": "Apply for a marriage license through the City Civil Registrar's Office. The City's page lists general documents and age- or applicant-specific requirements.",
+    "category": "Civil Registry",
+    "sourceUrl": "https://davaocity.gov.ph/services/civil-registry-services/marriage-licenses/",
+    "keywords": ["marriage license", "wedding", "civil registrar", "bayad", "bayad sa marriage license"],
+    "lastVerified": null,
+    "verification": "unverified",
+    "timeSensitive": true,
+    "feeDetails": [
+      {
+        "amount": "₱300",
+        "description": "Marriage license application fee, payable at the City Treasurer's Office, as listed on the City page (last modified 8 October 2026).",
+        "sourceUrl": "https://davaocity.gov.ph/services/civil-registry-services/marriage-licenses/",
+        "sourceDate": "2026-10-08"
+      },
+      {
+        "amount": "₱200",
+        "description": "Marriage license fee, payable at the City Treasurer's Office, as listed on the City page (last modified 8 October 2026).",
+        "sourceUrl": "https://davaocity.gov.ph/services/civil-registry-services/marriage-licenses/",
+        "sourceDate": "2026-10-08"
+      },
+      {
+        "amount": "₱250",
+        "description": "Marriage registration fee listed for foreign-national applicants; confirm that this applies to your case with the City Civil Registrar.",
+        "sourceUrl": "https://davaocity.gov.ph/services/civil-registry-services/marriage-licenses/",
+        "sourceDate": "2026-10-08"
+      }
+    ],
+    "feesNote": "The City's listed application and license fees total ₱500 (₱300 + ₱200). It separately lists a ₱250 fee for foreign-national applicants. Confirm the fees and any additional charges with CCRO before payment.",
+    "requirements": [
+      "Both applicants must appear in person.",
+      "PSA or locally issued birth certificate and CENOMAR, each one original and two photocopies.",
+      "Pre-marriage counseling certificate/certificate of compliance and one supporting record (baptismal certificate, voter's affidavit, or school record/TOR), each one original and two photocopies.",
+      "Valid IDs for both applicants, two photocopies each; the City page also specifies a Davao City address. Non-residents must provide barangay certification as proof of residency, one original and two photocopies.",
+      "The City page lists cedula for the applying couple and their parents as required before notarization and filing.",
+      "Applicants aged 18–20 need notarized parental consent and parent appearance. Parental advice is listed for younger adult applicants, but the page gives inconsistent upper ages (25 in the body and 24 in its checklist); confirm the applicable age threshold with CCRO.",
+      "Foreign applicants need a Certificate of Legal Capacity to Marry (one original, five photocopies), passport bio and arrival-stamp pages (two photocopies each), and divorce papers where applicable.",
+      "Additional records apply to widowed, annulled, or divorced applicants and to certain parental-consent cases; consult the complete City requirements page."
+    ],
+    "processingInfo": "The City page does not specify processing time.",
+    "steps": [
+      "Review the complete City requirements page for age, residency, foreign-national, and prior-marriage conditions.",
+      "Both applicants appear in person and submit the required originals and photocopies.",
+      "Pay the applicable listed fees at the City Treasurer's Office."
+    ],
+    "notes": "City source page published 7 February 2019 and last modified 8 October 2026. It is internally inconsistent about the upper age for parental advice (25 in the body, 24 in the checklist); confirm this point with CCRO. Requirements include additional exceptions for age, foreign-national status, and prior marriages; review the full page.",
+    "relatedSources": ["https://davaocity.gov.ph/city-civil-registrars-office/"],
+    "contact": { "phone": [], "email": "", "address": "", "hours": "" }
   }
 ]

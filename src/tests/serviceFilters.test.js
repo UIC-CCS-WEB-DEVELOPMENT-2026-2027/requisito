@@ -14,6 +14,16 @@ test('service search matches title and description without case sensitivity', ()
   assert.deepEqual(filterServices(services, { query: 'call service' }).map((service) => service.id), [2])
 })
 
+test('service search also matches category and translated search keywords', () => {
+  const listedServices = [
+    { id: 8, title: 'Online Cedula', description: 'Apply online', category: 'Taxes and Payments', keywords: ['community tax certificate', 'buwis'] },
+    { id: 9, title: 'Occupational Permit', description: 'Online service', category: 'Business and Permits', keywords: ['permiso sa trabaho'] },
+  ]
+
+  assert.deepEqual(filterServices(listedServices, { query: 'buwis' }).map(({ id }) => id), [8])
+  assert.deepEqual(filterServices(listedServices, { query: 'permit', category: 'Business and Permits' }).map(({ id }) => id), [9])
+})
+
 test('service search returns no results when nothing matches', () => {
   assert.deepEqual(filterServices(services, { query: 'not in the catalog' }), [])
 })

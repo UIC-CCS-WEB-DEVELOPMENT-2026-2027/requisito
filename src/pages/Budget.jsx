@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import CatalogEmptyState from '../components/CatalogEmptyState.jsx'
+import OfficialSourceDirectory from '../components/OfficialSourceDirectory.jsx'
 import RecordMeta from '../components/RecordMeta.jsx'
 import { getBudget } from '../data/helpers.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
@@ -44,6 +45,7 @@ function Budget() {
         how={t('emptyState.dataHow')}
         action={t('emptyState.budgetAction')}
       />}
+      <OfficialSourceDirectory feature="budget" />
     </section>
   )
 }

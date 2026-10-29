@@ -5,6 +5,13 @@ information in a paperwork-pathfinder interface. It is **not an official
 website of the City Government of Davao** and is not affiliated with BetterGov
 or BetterLGU.
 
+The feature reference for this project is [BetterSolano.org](https://bettersolano.org/),
+by Ramon Logan Jr. Requisito is independent and is not affiliated with or
+endorsed by the BetterSolano authors. See the upstream
+[MIT and CC BY 4.0 license](https://github.com/BetterSolano/bettersolano/blob/main/LICENSE).
+No source code or Davao civic dataset from BetterSolano has been imported in
+this pass.
+
 **Existing live app:** [requisito.vercel.app](https://requisito.vercel.app).
 The Davao civic portal changes in this branch have not been deployed.
 

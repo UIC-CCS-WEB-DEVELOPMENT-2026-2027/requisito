@@ -20,9 +20,12 @@ The current catalog contracts and helper list are maintained in
 - Directory helper functions provide services, the 182 unverified barangay records,
   officials, city facts, updates, history, briefs, budget, procurement,
   elections, accountability, global search, derived status, and City Monitor.
-- History, budget, procurement, and accountability catalogs are empty until
-  sourced data is supplied. The current election catalog contains one
-  unverified COMELEC link; briefs are based only on the supplied Part 1 records.
+- History, procurement, and accountability catalogs are empty until sourced
+  data is supplied. The budget catalog contains three unverified allocations
+  transcribed from a City-published article; these are not independently
+  reviewed or audited budget records. The current election catalog contains
+  one unverified COMELEC link; briefs are based only on the supplied Part 1
+  records.
 
 Barangay population fields are currently null; the supplied names and district
 assignments came from a secondary list and remain unverified. The audit checks

@@ -3,14 +3,13 @@ import EmptyState from '../components/EmptyState.jsx'
 import ServiceCard from '../components/ServiceCard.jsx'
 import { getServices } from '../data/helpers.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
-import { filterServices, sortServices } from '../utils/serviceFilters.js'
+import { filterServices, SERVICE_CATEGORY_TRANSLATION_KEYS, sortServices } from '../utils/serviceFilters.js'
 import { href } from '../routeManifest.js'
 import { Link } from 'react-router-dom'
 
 const services = getServices()
 const categories = [...new Set(services.map((service) => service.category))]
   .sort((left, right) => left.localeCompare(right, 'en', { sensitivity: 'base' }))
-
 function Services() {
   const { t } = useLanguage()
   // Stores the controlled search text so typing immediately updates the visible list.
@@ -26,6 +25,19 @@ function Services() {
   const resultCount = t('services.showingCount')
     .replace('{shown}', String(visibleServices.length))
     .replace('{total}', String(services.length))
+  const serviceCountLabel = (count) => {
+    const countKey = count === 1 ? 'services.singleServiceCountLabel' : 'services.serviceCountLabel'
+    return `${count} ${t(countKey)}`
+  }
+  const categoryCounts = categories.map((item) => ({
+    name: item,
+    count: services.filter((service) => service.category === item).length,
+  }))
+
+  function categoryLabel(name) {
+    const key = SERVICE_CATEGORY_TRANSLATION_KEYS[name]
+    return key ? t(key) : name
+  }
 
   function clearFilters() {
     setQuery('')
@@ -43,6 +55,50 @@ function Services() {
         {' · '}
         <Link to={href('whereToGo')}>{t('feature.whereToGo.title')}</Link>
       </p>
+      <p className="official-service-directory">
+        <a
+          href="https://davaocity.gov.ph/more-services/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {t('services.officialDirectory')}
+        </a>
+        <span>{t('services.officialDirectoryNote')}</span>
+      </p>
+      <section className="service-category-section" aria-labelledby="service-categories-title">
+        <h2 id="service-categories-title">{t('services.browseCategories')}</h2>
+        <div className="service-category-grid" role="group" aria-label={t('services.categoryNavigation')}>
+          <button
+            className={`service-category-card${category === '' ? ' is-selected' : ''}`}
+            type="button"
+            aria-label={`${t('services.allCategories')}, ${serviceCountLabel(services.length)}`}
+            aria-pressed={category === ''}
+            onClick={() => setCategory('')}
+          >
+            <span>{t('services.allCategories')}</span>
+            <span className="service-category-count">
+              {serviceCountLabel(services.length)}
+            </span>
+          </button>
+          {categoryCounts.map(({ name, count }) => {
+            const label = categoryLabel(name)
+            const countLabel = serviceCountLabel(count)
+            return (
+              <button
+                className={`service-category-card${category === name ? ' is-selected' : ''}`}
+                key={name}
+                type="button"
+                aria-label={`${label}, ${countLabel}`}
+                aria-pressed={category === name}
+                onClick={() => setCategory(name)}
+              >
+                <span>{label}</span>
+                <span className="service-category-count">{countLabel}</span>
+              </button>
+            )
+          })}
+        </div>
+      </section>
       <div className="portal-filters">
         <div>
           <label htmlFor="services-search">{t('label.searchServices')}</label>
@@ -53,7 +109,7 @@ function Services() {
           <select id="services-category" value={category} onChange={(event) => setCategory(event.target.value)}>
             <option value="">{t('services.allCategories')}</option>
             {/* Category names are unique values derived from the local service catalog. */}
-            {categories.map((item) => <option key={item} value={item}>{item}</option>)}
+            {categories.map((item) => <option key={item} value={item}>{categoryLabel(item)}</option>)}
           </select>
         </div>
         <div>

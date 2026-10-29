@@ -36,7 +36,7 @@ Requisito destination and limitation are the same.
 | `/services/:category/:documentSlug` | `/services/:slug`, `ServiceDetail.jsx` | **Partial** — service detail pages exist, but no structured category/document transaction route or verified requirements dataset. |
 | `/services/guide/:id` | `/service-guides`, `ServiceGuideFinder`, `GuideCard`, `briefs.json` | **Blocked** — only complete verified guides are shown; there are currently no approved verified briefs, so results are honestly empty. |
 | Government offices (`/government-offices`) | `/officials`, `/services`, `officials.json`, `services.json` | **Partial** — offices and services are separate and source-linked; office holders and service records remain unverified. |
-| `/community-tools` | `/community-tools`, `FeaturePage`, empty `featureCatalogs.json` collection | **Blocked** — no reviewed Davao tools directory or source-backed entries. |
+| `/community-tools` | `/community-tools`, `FeaturePage`, `communityTools` feature catalog | **Partial** — City-listed online portals are source-linked and marked unverified; Requisito does not submit forms or payments. |
 | `/community-tools/saan-ako-lalapit` guided concern finder | `/concern-finder`, `FeaturePage` | **Blocked** — route is an honest empty state; no reviewed Davao decision rules or referral dataset. General `/search` is not equivalent. |
 | `/contact` | `/contact`, `FeaturePage`, `OfficialSourceLeads` | **Partial** — directory leads are shown as unverified and contact submission is explicitly disabled/unconfigured. |
 | `/hotlines` | `/services`, hotline rows in `services.json` | **Partial** — hotlines are searchable with services but have no dedicated hotline route; numbers require review. |
@@ -48,35 +48,35 @@ Requisito destination and limitation are the same.
 | `/barangays/:slug` | `/barangays/:slug`, `BarangayProfile.jsx` | **Partial** — profiles render with district context; source data is not officially verified and the reference's selected-barangay scope is not carried across journeys. |
 | `/officials/:slug` | `/officials/:slug`, `OfficialProfile.jsx`, `officials.json` | **Partial** — route and profile exist; holder/term remain hidden unless verified, and no current verified officeholder dataset is supplied. |
 | `/elections` | `/elections`, `Elections.jsx`, `elections.json` | **Partial** — source-link page exists; the supplied COMELEC link/summary is not verified election guidance or a current Davao election dataset. |
-| `/legislation` | `/legislation`, `FeaturePage`, empty `publicRecords` collection | **Blocked** — no sourced Davao ordinances/resolutions have been supplied; no laws were fabricated. |
+| `/legislation` | `/legislation`, `FeaturePage`, `publicRecords` feature catalog | **Partial** — City transparency pages and two ordinance source pages are listed; this is not a complete legal archive or independent legal review. |
 | `/statistics` | `/statistics`, `FeaturePage`, `/status`, `/monitor` | **Partial** — status/monitor derive counts from local catalogs; this is not the reference's city-indicator/statistics dataset or comparison dashboard. |
 | `/history` | `/history`, `History.jsx`, empty `history.json` | **Blocked** — route is available, but no dated, sourced history entries are supplied. |
 | `/today` | `/status`, `/monitor` (no `/today` route) | **Partial** — local catalog status offers a constrained counterpart; there is no daily current-city feed or dedicated Today experience. |
 | `/news` | `/updates`, `Updates.jsx`, `updates.json` | **Partial** — source-linked updates page exists; it is not a live or comprehensive news product and records are unverified. |
 | `/live` | `/live`, `FeaturePage`, empty `events` collection | **Blocked** — no verified live feed/event source; no scraping or live social feed is claimed. |
-| `/calendar` and `/whats-on` redirect | `/calendar` empty feature page; no `/whats-on` alias | **Blocked** — no complete verified Davao calendar; the reference redirect alias is absent. |
+| `/calendar` and `/whats-on` redirect | `/calendar` source-linked event notice; no `/whats-on` alias | **Partial** — a dated City competition notice is listed, not a complete verified events calendar; the reference redirect alias is absent. |
 | `/briefs` | `/briefs`, `Briefs.jsx`, `briefs.json`, verified-guide filter | **Partial** — source-based brief display exists, but supplied records remain unverified and cannot serve as approved process instructions. |
-| `/reports` and `/reports/:slug` | `/reports`, `/reports/:slug`, `FeaturePage`, empty `reports` collection | **Blocked** — list/detail shells render empty/not-published states; no approved Davao editorial reports/cases. |
+| `/reports` and `/reports/:slug` | `/reports`, `/reports/:slug`, `FeaturePage`, empty `reports` collection | **Blocked** — no citizen reports are stored or published; `/civic-reports` links to the City's separate reporting portal. |
 | `/reports/makati-overview` redirect | No equivalent Davao report | **N/A** — this is a reference-specific Makati report and is not reproduced. |
 | `/accountability` | `/accountability`, `Accountability.jsx`, empty `accountability.json` | **Blocked** — page and schema exist; no reviewed official documents have been supplied. |
-| `/records` and `/records/:id` | `/public-records`, `/public-records/:slug`, `FeaturePage`, empty `publicRecords` | **Blocked** — route shells exist, but not the reference's searchable public-record archive; no Davao records were supplied. |
-| `/projects-budget` | `/budget`, `Budget.jsx`, `budget.json`, CSV importer | **Blocked** — importer/dashboard structure exists but catalog is empty until official source files are reviewed. |
+| `/records` and `/records/:id` | `/public-records`, `/public-records/:slug`, `FeaturePage`, `publicRecords` | **Partial** — source-linked City transparency archive indexes are available; not a complete searchable document archive. |
+| `/projects-budget` | `/budget`, `Budget.jsx`, `budget.json`, CSV importer | **Partial** — page and CSV importer show the three source-linked 2026 fund allocations; values remain unverified and are not project-level spending or audited disbursements. |
 | `/status` | `/status`, `Status.jsx`, `getStatusReport`; data and route tests | **Complete for local source/verification status; partial for reference parity** — current verification gaps derive from local catalogs, not a live external monitor. |
 | `/city-monitor` | `/monitor`, `Monitor.jsx`, `getCityMonitor` | **Partial** — local derived monitor exists, with no source scraping, government score, or live feed. |
 | `/city-monitor/:id` | No equivalent route; metadata appears in monitor/status pages | **Missing** — there is no individual monitor-record detail route. |
 | `/open-government` | `/integrity`, `/status`, `/accountability` (no combined route) | **Partial** — methods and source gaps are disclosed across pages; no combined open-government dashboard or full records dataset. |
 | `/integrity` | `/integrity`, `Integrity.jsx` | **Complete for project methods/disclosure; partial for civic-data breadth** — disclosures and derived coverage exist, but the source catalogs remain incomplete/unverified. |
 | `/transparency` redirect | No compatibility alias; related `/budget`, `/integrity`, `/status` routes | **Missing** — no legacy alias route; no Makati data is copied. |
-| `/civic-map` | `/map`, `FeaturePage`, empty `mapLocations` | **Blocked** — no verified Davao location dataset; a blank map or invented pins would mislead. |
+| `/civic-map` | `/map`, `GovernmentLocations`, service-address catalog | **Partial** — address search and Google Maps directions use existing service records; addresses are visibly unverified, and no coordinates are invented. |
 | `/civic-map/reports` | `/nearby-reports`, `FeaturePage`, empty `reports` | **Blocked** — no local report feed, location collection, or moderation system. |
 | `/civic-map/audits/park-accessibility-2026` | `/civic-audit`, empty `civicAuditEntries` | **Blocked** — no approved Davao observation protocol or reviewed evidence; Makati pilot data is not reused. |
 | `/civic-map/audits/park-accessibility-2026/results` | `/civic-audit/results`, empty `civicAuditEntries` | **Blocked** — results are unavailable without approved observations and a publication/review policy. |
 | `/civic-map/report` | `/civic-reports` empty page; `/contribute` only prepares a GitHub correction issue | **Blocked** — no public report intake, moderation, privacy controls, or Davao case data. A correction issue is not a civic report. |
 | `/civic-map/:assetId` | `/assets`, empty `assets` collection; no detail route | **Blocked** — no reviewed asset inventory or asset details. |
-| `/visit` | `/tourism`, `FeaturePage`, empty `tourismPlaces` | **Blocked** — Davao-specific venues/hours/access information require sourced data; Makati places are not copied. |
-| `/mobility` | `/mobility`, `FeaturePage`, empty `transitRoutes` | **Blocked** — no verified Davao route/schedule dataset. |
+| `/visit` | `/tourism`, `FeaturePage`, `tourismPlaces` | **Partial** — City-linked cultural and museum leads are listed; visitor hours and access are not asserted. |
+| `/mobility` | `/mobility`, `FeaturePage`, `transitRoutes` | **Partial** — a dated City transport-roadmap source is linked as planning material, not represented as an active route/schedule dataset. |
 | `/cinemas` | `/cinemas`, `FeaturePage`, empty `cinemas` | **Blocked** — no verified venue catalogue. |
-| `/heritage` | `/heritage`, `FeaturePage`, empty `heritageSites` | **Blocked** — no reviewed Davao heritage source set. |
+| `/heritage` | `/heritage`, `FeaturePage`, `heritageSites` | **Partial** — Museo Dabawenyo has a City source link; visitor arrangements remain unverified. |
 | `/estates` | `/estates`, `FeaturePage`, empty `estateListings` | **N/A** — real-estate listings are outside the paperwork-pathfinder scope; do not create a Davao market feed. |
 | `/parking` redirect | No equivalent | **N/A** — Makati parking/visit compatibility path has no approved Davao counterpart. |
 | `*` not-found route | `*`, `NotFound.jsx`; route smoke test | **Complete** — unknown routes render the app's not-found page. |

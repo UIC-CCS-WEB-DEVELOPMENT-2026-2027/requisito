@@ -65,6 +65,12 @@ function Search() {
   const input = draft?.query === query ? draft.value : query
   const selectedType = searchParams.get('type') ?? ''
   const groups = searchAll(query)
+  const suggestions = [...new Set(
+    Object.values(groups)
+      .flat()
+      .map((record) => record.title ?? record.label)
+      .filter((title) => typeof title === 'string' && title.trim()),
+  )].slice(0, 8)
   const resultCount = Object.values(groups).reduce((total, items) => total + items.length, 0)
   const typeNames = Object.keys(groups)
   const visibleGroups = Object.entries(groups).filter(([type, records]) =>
@@ -101,7 +107,18 @@ function Search() {
       <p className="page-description">{t('search.description')}</p>
       <form className="portal-search-form" onSubmit={submit}>
         <label htmlFor="portal-search">{t('label.globalSearch')}</label>
-        <input id="portal-search" name="q" type="search" maxLength={100} value={input} onChange={(event) => setDraft({ query, value: event.target.value })} />
+        <input
+          id="portal-search"
+          name="q"
+          type="search"
+          list="portal-search-suggestions"
+          maxLength={100}
+          value={input}
+          onChange={(event) => setDraft({ query, value: event.target.value })}
+        />
+        <datalist id="portal-search-suggestions">
+          {suggestions.map((suggestion) => <option key={suggestion} value={suggestion} />)}
+        </datalist>
         <button type="submit">{t('button.search')}</button>
       </form>
       {query && (

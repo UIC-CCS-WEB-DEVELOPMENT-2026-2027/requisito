@@ -4,6 +4,8 @@ import DisclaimerBanner from './DisclaimerBanner.jsx'
 import Footer from './Footer.jsx'
 import ChatAssistant from './ChatAssistant.jsx'
 import Breadcrumbs from './Breadcrumbs.jsx'
+import InstallAppButton from './InstallAppButton.jsx'
+import VerifiedHotlineTicker from './VerifiedHotlineTicker.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
 import { href, routeManifest } from '../routeManifest.js'
@@ -23,18 +25,24 @@ function Layout() {
   useEffect(() => {
     const heading = document.querySelector('#main-content h1')
     if (!heading) return
-    const title = heading.textContent.trim()
-    document.title = title ? `${title} | Requisito` : 'Requisito'
     heading.tabIndex = -1
     heading.focus({ preventScroll: true })
   }, [location.pathname])
+  useEffect(() => {
+    const title = document.querySelector('#main-content h1')?.textContent.trim()
+    document.title = title ? `${title} | Requisito` : 'Requisito'
+  }, [location.pathname, language])
   return (
     <div className="app-shell">
       <a className="skip-link" href="#main-content">{t('a11y.skip')}</a>
       <header className="site-header">
         <div className="header-content">
           <Link className="brand" to={href('home')}>
-            Requisito
+            <span className="brand-mark" aria-hidden="true">R</span>
+            <span className="brand-name">
+              Requisito
+              <small>Davao City</small>
+            </span>
           </Link>
           <nav aria-label={t('a11y.mainNavigation')} className="site-nav">
             {headerRoutes.map((route) => (
@@ -48,27 +56,31 @@ function Layout() {
               !isLoginPage && <NavLink to={href('login')}>{t('layout.signIn')}</NavLink>
             )}
           </nav>
-          <div className="language-switcher">
-            <label className="visually-hidden" htmlFor="language-select">{t('language.label')}</label>
-            <select id="language-select" value={language} onChange={(event) => setLanguage(event.target.value)}>
-              <option value="en">{t('layout.english')}</option>
-              <option value="fil">{t('layout.filipino')}</option>
-              <option value="ceb">{t('layout.bisaya')}</option>
-            </select>
+          <div className="header-tools">
+            <div className="language-switcher">
+              <label className="visually-hidden" htmlFor="language-select">{t('language.label')}</label>
+              <select id="language-select" value={language} onChange={(event) => setLanguage(event.target.value)}>
+                <option value="en">{t('layout.english')}</option>
+                <option value="fil">{t('layout.filipino')}</option>
+                <option value="ceb">{t('layout.bisaya')}</option>
+              </select>
+            </div>
+            <InstallAppButton />
+            <button
+              className="assistant-open-button"
+              type="button"
+              aria-haspopup="dialog"
+              aria-expanded={assistantOpen}
+              onClick={() => setAssistantOpen(true)}
+            >
+              {t('assistant.open')}
+            </button>
           </div>
-          <button
-            className="assistant-open-button"
-            type="button"
-            aria-haspopup="dialog"
-            aria-expanded={assistantOpen}
-            onClick={() => setAssistantOpen(true)}
-          >
-            {t('assistant.open')}
-          </button>
         </div>
       </header>
 
       <DisclaimerBanner />
+      <VerifiedHotlineTicker />
 
       <main className="main-content" id="main-content" tabIndex="-1">
         <div className="main-content-inner">
