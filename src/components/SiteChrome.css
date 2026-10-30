@@ -39,18 +39,14 @@
   text-decoration: none;
 }
 .brand-mark {
-  position: relative;
   display: grid;
   place-items: center;
-  width: 40px;
-  height: 42px;
-  border-radius: 8px;
-  background: var(--accent);
-  color: #fff;
-  font-size: 1.6rem;
-  font-weight: 750;
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  color: var(--accent);
 }
-.brand-mark > span { position: absolute; width: 9px; height: 9px; right: -3px; bottom: 3px; border: 2px solid #fff; border-radius: 50%; background: var(--danger); }
+.brand-mark svg { display: block; width: 100%; height: 100%; }
 .brand-name { display: grid; font-size: 1.35rem; font-weight: 750; letter-spacing: -0.04em; line-height: 1.1; }
 .brand-name small { margin-top: 0.25rem; color: var(--text); font-size: 0.6rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; }
 .site-nav { display: flex; flex: 1; min-width: 0; justify-content: flex-end; }
@@ -228,7 +224,7 @@
 @media (max-width: 480px) {
   .header-content { padding-inline: 1rem; gap: 1rem; }
   .brand-name { font-size: 1.2rem; }
-  .brand-mark { width: 36px; height: 38px; }
+  .brand-mark { flex-basis: 36px; width: 36px; height: 38px; }
   .main-content { padding-inline: 1rem; }
   .main-content-home { padding: 0; }
   .home-hero-inner { padding-inline: 1rem; }
