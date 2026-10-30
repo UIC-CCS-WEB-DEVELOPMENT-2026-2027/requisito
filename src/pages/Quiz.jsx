@@ -54,7 +54,7 @@ function Quiz() {
           <div role="status">
             <h2 id="quiz-results-title">
               {t('quiz.score').replace('{score}', String(score)).replace('{total}', String(requisitoQuizQuestions.length))}
-            </h2>
+            </h2></div>
           </div>
           <ol className="flow-content">
             {requisitoQuizQuestions.map((question) => {
