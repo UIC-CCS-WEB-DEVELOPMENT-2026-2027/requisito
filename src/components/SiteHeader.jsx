@@ -71,7 +71,12 @@ export default function SiteHeader({ assistantOpen, onAssistantOpen }) {
     }}>
       <div className="header-content">
         <Link className="brand" to={href('home')}>
-          <span className="brand-mark" aria-hidden="true">R<span /></span>
+          <span className="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 180 180" focusable="false">
+              <path fill="currentColor" fillRule="evenodd" d="M90 14c-33 0-60 27-60 60 0 21 12 39 30 53l30 26 30-26c18-14 30-32 30-53 0-33-27-60-60-60Zm0 29a31 31 0 1 0 0 62 31 31 0 0 0 0-62Z" />
+              <path d="m107 89 32 32" fill="none" stroke="white" strokeWidth="8.5" />
+            </svg>
+          </span>
           <span className="brand-name">Requisito<small>Davao City</small></span>
         </Link>
         <nav className="site-nav" aria-label={t('a11y.mainNavigation')}>

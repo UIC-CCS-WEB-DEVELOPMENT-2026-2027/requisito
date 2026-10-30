@@ -19,6 +19,9 @@ function Layout() {
   const location = useLocation()
   const assistantContext = getPageContext(location.pathname)
   useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [location.pathname])
+  useEffect(() => {
     const heading = document.querySelector('#main-content h1')
     if (!heading) return
     heading.tabIndex = -1

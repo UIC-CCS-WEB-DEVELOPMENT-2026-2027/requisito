@@ -32,7 +32,10 @@ function Breadcrumbs({ pathname }) {
     <nav className="breadcrumbs" aria-label={t('a11y.breadcrumbs')}>
       <ol>
         <li><Link to={href('home')}>{t('nav.home')}</Link></li>
-        <li aria-current="page">{currentLabel}</li>
+        <li className="breadcrumbs-current" aria-current="page">
+          <span className="breadcrumbs-separator" aria-hidden="true">/</span>
+          <span>{currentLabel}</span>
+        </li>
       </ol>
     </nav>
   )
