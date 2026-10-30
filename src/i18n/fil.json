@@ -963,5 +963,20 @@
   "feature.publicRecord.openDetails": "Tingnan ang detalye ng tala",
   "feature.civicReports.portalNotice": "Buksan ang hiwalay na portal ng Davao City Reports upang tingnan ang kasalukuyang paraan ng pag-uulat.",
   "feature.civicReports.portalAction": "Buksan ang Davao City Reports",
-  "feature.civicReports.privacyNotice": "Ayon sa paunawa sa privacy ng portal ng Lungsod, maaaring hingin sa pagpaparehistro ang mga detalye sa pakikipag-ugnayan at iba pang personal na impormasyon. Basahin muna ito bago magsumite. Hindi natatanggap o ipinapasa ng Requisito ang mga ulat."
+  "feature.civicReports.privacyNotice": "Ayon sa paunawa sa privacy ng portal ng Lungsod, maaaring hingin sa pagpaparehistro ang mga detalye sa pakikipag-ugnayan at iba pang personal na impormasyon. Basahin muna ito bago magsumite. Hindi natatanggap o ipinapasa ng Requisito ang mga ulat.",
+  "nav.planning": "Checklist ko",
+  "nav.city": "Lungsod",
+  "nav.menu": "Menu",
+  "nav.closeMenu": "Isara ang menu",
+  "home.findService": "Ano ang kailangan mo?",
+  "home.searchHelp": "Maghanap ng mga serbisyo, dokumento, at lokal na impormasyon.",
+  "home.startWith": "Magsimula sa isang layunin",
+  "home.viewAll": "Lahat ng sanggunian",
+  "home.resource.services": "Mga serbisyo at kontak",
+  "home.resource.barangays": "Hanapin ang iyong komunidad",
+  "home.resource.districts": "Mga lokal na distrito",
+  "home.resource.officials": "Mga pampublikong tanggapan",
+  "home.resource.budget": "Badyet at paggastos",
+  "home.resource.updates": "Mga anunsyo ng lungsod",
+  "home.resource.live": "Panahon, oras, at palitan"
 }

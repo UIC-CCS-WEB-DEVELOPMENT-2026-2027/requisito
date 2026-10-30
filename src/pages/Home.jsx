@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import SummaryCard from '../components/SummaryCard.jsx'
+import Icon from '../components/Icon.jsx'
 import { getGoalBySlug, getGoals, getServices, getSummaryCounts } from '../data/helpers.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
 import { href } from '../routeManifest.js'
@@ -39,11 +40,23 @@ function Home() {
   }
 
   return (
-    <section className="page-content" aria-labelledby="home-title">
+    <section className="page-content home-page" aria-labelledby="home-title">
       <section className="home-hero" aria-labelledby="home-title">
+        <div className="home-hero-inner">
+        <div className="home-hero-copy">
         <p className="eyebrow">{t('home.welcome')}</p>
         <h1 id="home-title">{t('page.home')}</h1>
         <p className="page-description">{t('home.description')}</p>
+        <div className="home-hero-actions">
+          <Link className="return-link" to={href('goals')}>
+            {t('home.chooseGoal')} <Icon name="arrow" />
+          </Link>
+          <Link className="return-link hero-secondary" to={href('services')}>{t('nav.services')}</Link>
+        </div>
+        </div>
+        <div className="home-search-card">
+        <h2><Icon name="search" />{t('home.findService')}</h2>
+        <p>{t('home.searchHelp')}</p>
         <form className="home-search-form" role="search" onSubmit={submitSearch}>
           <label className="visually-hidden" htmlFor="home-search">{t('label.globalSearch')}</label>
           <input
@@ -58,33 +71,44 @@ function Home() {
           <datalist id="home-search-suggestions">
             {searchSuggestions.map((suggestion) => <option key={suggestion} value={suggestion} />)}
           </datalist>
-          <button type="submit">{t('button.search')}</button>
+          <button type="submit" aria-label={t('button.search')}><Icon name="arrow" /></button>
         </form>
-        <div className="home-hero-actions">
-          <Link className="return-link" to={href('goals')}>
-            {t('home.chooseGoal')} <span aria-hidden="true">→</span>
-          </Link>
-          <Link className="return-link" to={href('services')}>{t('nav.services')}</Link>
+        <div className="home-search-shortcuts">
+          <span>{t('home.startWith')}</span>
+          {getGoals().slice(0, 3).map((goal) => <Link key={goal.id} to={href('goalDetail', { slug: goal.slug })}>{goal.title}</Link>)}
+        </div>
+        </div>
         </div>
       </section>
 
+      <div className="home-body">
       {firstJobGoal && (
         <section className="featured-goal guidance-card" aria-labelledby="featured-first-job">
+          <span className="resource-icon"><Icon name="checklist" /></span>
+          <div>
           <h2 id="featured-first-job">{t('home.firstJobTitle')}</h2>
           <p>{t('home.firstJobDescription')}</p>
-          <Link to={href('goalDetail', { slug: firstJobGoal.slug })}>{t('goals.viewRequirements')}</Link>
+          </div>
+          <Link to={href('goalDetail', { slug: firstJobGoal.slug })}>{t('goals.viewRequirements')} <Icon name="arrow" /></Link>
         </section>
       )}
 
       <section className="home-resource-section" aria-labelledby="home-resources-title">
+        <div className="section-heading">
         <h2 id="home-resources-title">{t('home.resourcesTitle')}</h2>
+        <Link to={href('sitemap')}>{t('home.viewAll')} <Icon name="arrow" /></Link>
+        </div>
         <p>{t('home.resourcesDescription')}</p>
         <ul className="home-resource-grid">
           {resourceCards.map(({ id, to, label }) => (
             <li key={id}>
               <Link className="portal-card home-resource-card" to={to}>
+                <span className="resource-icon"><Icon name={id} /></span>
+                <div>
                 <h3>{t(label)}</h3>
-                <span>{t('home.openResource')} <span aria-hidden="true">→</span></span>
+                <span>{t(`home.resource.${id}`)}</span>
+                </div>
+                <Icon name="arrow" className="resource-arrow" />
               </Link>
             </li>
           ))}
@@ -92,7 +116,10 @@ function Home() {
       </section>
 
       <section className="overview-section" aria-labelledby="overview-title">
+        <div className="section-heading">
         <h2 id="overview-title">{t('home.overview')}</h2>
+        <Link to={href('status')}>{t('nav.sources')} <Icon name="arrow" /></Link>
+        </div>
         <div className="summary-card-grid">
           {overviewCards.map((card) => (
             <SummaryCard
@@ -104,6 +131,7 @@ function Home() {
           ))}
         </div>
       </section>
+      </div>
     </section>
   )
 }

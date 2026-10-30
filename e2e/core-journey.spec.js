@@ -1,5 +1,13 @@
 import { expect, test } from '@playwright/test'
 
+async function openNavigation(page) {
+  await expect(page.locator('.site-header')).toBeVisible()
+  const toggle = page.locator('.mobile-menu-toggle')
+  if (await toggle.isVisible() && await toggle.getAttribute('aria-expanded') === 'false') {
+    await toggle.click()
+  }
+}
+
 test.beforeEach(async ({ page }) => {
   await page.goto('/')
   await page.evaluate(() => window.localStorage.clear())
@@ -99,6 +107,7 @@ test('browser back and forward navigation preserves the selected checklist route
 })
 
 test('language selection updates the page language and survives reload', async ({ page }) => {
+  await openNavigation(page)
   await page.locator('#language-select').selectOption('fil')
   await expect(page.locator('html')).toHaveAttribute('lang', 'fil')
   await expect(page.getByRole('link', { name: /Pumili ng layunin/i })).toBeVisible()
@@ -278,6 +287,7 @@ test('goal categories survive language changes and official links stay safe', as
   await page.goto('/goals')
   await page.locator('#goal-category').selectOption('Identity and travel')
   for (const language of ['fil', 'ceb', 'en']) {
+    await openNavigation(page)
     await page.locator('#language-select').selectOption(language)
     await expect(page.locator('html')).toHaveAttribute('lang', language)
     await expect(page.locator('.goal-card')).toHaveCount(1)

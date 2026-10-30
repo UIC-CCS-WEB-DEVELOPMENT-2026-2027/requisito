@@ -14,10 +14,12 @@ function Procurement() {
   const visible = rows.filter((row) => (!status || row.status === status) &&
     `${row.referenceNo} ${row.title} ${row.agency} ${row.status}`.toLowerCase().includes(query.trim().toLowerCase()))
   return (
-    <section className="page-content flow-content" aria-labelledby="procurement-title">
-      <p className="eyebrow">{t('budget.eyebrow')}</p>
-      <h1 id="procurement-title">{t('page.procurement')}</h1>
-      <p className="page-description">{t('procurement.description')}</p>
+    <section className="page-content directory-page" aria-labelledby="procurement-title">
+      <header className="page-heading">
+        <p className="eyebrow">{t('budget.eyebrow')}</p>
+        <h1 id="procurement-title">{t('page.procurement')}</h1>
+        <p className="page-description">{t('procurement.description')}</p>
+      </header>
       <div className="portal-search-form">
         <label htmlFor="procurement-query">{t('label.procurementSearch')}</label>
         <input id="procurement-query" value={query} onChange={(event) => setQuery(event.target.value)} />

@@ -10,7 +10,7 @@
     "build": "node scripts/build.mjs",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "node --test",
+    "test": "node --test src/tests/*.test.js src/tests/*.test.mjs scripts/*.test.mjs server/*.test.mjs server/auth/*.test.mjs api/*.test.mjs",
     "test:network-independent": "node --test src/tests/*.test.js src/tests/*.test.mjs scripts/*.test.mjs server/auth/*.test.mjs server/core.test.mjs server/index.test.mjs server/catalogScripts.test.mjs api/chat.test.mjs",
     "test:e2e": "playwright test",
     "audit:links": "node scripts/audit-links.mjs",
