@@ -93,7 +93,7 @@
   max-width: 28rem;
   min-width: 0;
   min-height: 46px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--control-border);
   border-radius: 7px;
   background: var(--surface);
   color: var(--text-h);
@@ -105,7 +105,7 @@
 .login-field input:hover { border-color: var(--accent); }
 
 .login-field input[aria-invalid='true'] {
-  border-color: #b42318;
+  border-color: var(--danger);
   border-width: 2px;
 }
 
@@ -123,7 +123,7 @@
 .login-card .login-error {
   min-height: 1.45em;
   margin: 0;
-  color: #b42318;
+  color: var(--danger);
   font-size: 0.875rem;
   font-weight: 600;
   line-height: 1.45;
@@ -202,10 +202,6 @@
 
 .site-nav button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 
-@media (prefers-color-scheme: dark) {
-  .login-card .login-error { color: #ffb4ab; }
-  .login-field input[aria-invalid='true'] { border-color: #ffb4ab; }
-}
 
 @media (prefers-reduced-motion: reduce) {
   .login-page *,

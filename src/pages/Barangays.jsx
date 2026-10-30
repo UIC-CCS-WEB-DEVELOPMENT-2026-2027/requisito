@@ -42,10 +42,12 @@ function Barangays() {
   }
 
   return (
-    <section className="page-content flow-content" aria-labelledby="barangays-title">
-      <p className="eyebrow">{t('barangays.eyebrow')}</p>
-      <h1 id="barangays-title">{t('page.barangays')}</h1>
-      <p className="page-description">{t('barangays.description')}</p>
+    <section className="page-content directory-page" aria-labelledby="barangays-title">
+      <header className="page-heading">
+        <p className="eyebrow">{t('barangays.eyebrow')}</p>
+        <h1 id="barangays-title">{t('page.barangays')}</h1>
+        <p className="page-description">{t('barangays.description')}</p>
+      </header>
       <form className="portal-filters" onSubmit={(event) => event.preventDefault()}>
         <div>
           <label htmlFor="barangay-search">{t('label.searchBarangays')}</label>

@@ -46,10 +46,12 @@ function Services() {
   }
 
   return (
-    <section className="page-content flow-content" aria-labelledby="services-title">
-      <p className="eyebrow">{t('services.eyebrow')}</p>
-      <h1 id="services-title">{t('page.services')}</h1>
-      <p className="page-description">{t('services.description')}</p>
+    <section className="page-content directory-page" aria-labelledby="services-title">
+      <header className="page-heading">
+        <p className="eyebrow">{t('services.eyebrow')}</p>
+        <h1 id="services-title">{t('page.services')}</h1>
+        <p className="page-description">{t('services.description')}</p>
+      </header>
       <p>
         <Link to={href('serviceGuides')}>{t('feature.serviceGuides.title')}</Link>
         {' · '}

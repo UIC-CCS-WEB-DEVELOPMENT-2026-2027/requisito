@@ -962,5 +962,20 @@
   "feature.publicRecord.openDetails": "View record listing details",
   "feature.civicReports.portalNotice": "Open the separate Davao City Reports portal to review its current reporting options.",
   "feature.civicReports.portalAction": "Open Davao City Reports",
-  "feature.civicReports.privacyNotice": "The City portal's privacy notice says registration may request contact details and other personal information. Review the notice before submitting. Requisito does not receive or forward reports."
+  "feature.civicReports.privacyNotice": "The City portal's privacy notice says registration may request contact details and other personal information. Review the notice before submitting. Requisito does not receive or forward reports.",
+  "nav.planning": "My checklist",
+  "nav.city": "City info",
+  "nav.menu": "Menu",
+  "nav.closeMenu": "Close menu",
+  "home.findService": "What do you need?",
+  "home.searchHelp": "Find services, documents, and local information.",
+  "home.startWith": "Start with a goal",
+  "home.viewAll": "View all resources",
+  "home.resource.services": "Services and contacts",
+  "home.resource.barangays": "Find your community",
+  "home.resource.districts": "Explore local districts",
+  "home.resource.officials": "Public offices",
+  "home.resource.budget": "Budgets and spending",
+  "home.resource.updates": "City announcements",
+  "home.resource.live": "Weather, time, and rates"
 }

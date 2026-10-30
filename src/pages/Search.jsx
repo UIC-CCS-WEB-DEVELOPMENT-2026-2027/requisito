@@ -101,10 +101,12 @@ function Search() {
   }
 
   return (
-    <section className="page-content flow-content" aria-labelledby="search-title">
-      <p className="eyebrow">{t('search.eyebrow')}</p>
-      <h1 id="search-title">{t('page.search')}</h1>
-      <p className="page-description">{t('search.description')}</p>
+    <section className="page-content directory-page" aria-labelledby="search-title">
+      <header className="page-heading">
+        <p className="eyebrow">{t('search.eyebrow')}</p>
+        <h1 id="search-title">{t('page.search')}</h1>
+        <p className="page-description">{t('search.description')}</p>
+      </header>
       <form className="portal-search-form" onSubmit={submit}>
         <label htmlFor="portal-search">{t('label.globalSearch')}</label>
         <input

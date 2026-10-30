@@ -42,12 +42,14 @@ function Goals() {
   ])).entries()]
 
   return (
-    <section className="page-content flow-content" aria-labelledby="goals-title">
-      <p className="eyebrow">{t('goals.eyebrow')}</p>
-      <h1 id="goals-title">{t('page.goals')}</h1>
-      <p className="page-description">
-        {t('goals.description')}
-      </p>
+    <section className="page-content directory-page" aria-labelledby="goals-title">
+      <header className="page-heading">
+        <p className="eyebrow">{t('goals.eyebrow')}</p>
+        <h1 id="goals-title">{t('page.goals')}</h1>
+        <p className="page-description">
+          {t('goals.description')}
+        </p>
+      </header>
       <div className="goal-search" role="search">
         <label htmlFor="goal-search">{t('label.searchGoals')}</label>
         <input

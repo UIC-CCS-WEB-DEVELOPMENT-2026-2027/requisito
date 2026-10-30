@@ -963,5 +963,20 @@
   "feature.publicRecord.openDetails": "Tan-awa ang detalye sa rekord",
   "feature.civicReports.portalNotice": "Ablihi ang lahi nga Davao City Reports portal aron makita ang kasamtangang paagi sa pag-report.",
   "feature.civicReports.portalAction": "Ablihi ang Davao City Reports",
-  "feature.civicReports.privacyNotice": "Sumala sa privacy notice sa portal sa City, mahimong mangayo ang pagrehistro og detalye sa kontak ug ubang personal nga impormasyon. Basaha kini sa dili pa mosumite. Dili modawat o mopasa og report ang Requisito."
+  "feature.civicReports.privacyNotice": "Sumala sa privacy notice sa portal sa City, mahimong mangayo ang pagrehistro og detalye sa kontak ug ubang personal nga impormasyon. Basaha kini sa dili pa mosumite. Dili modawat o mopasa og report ang Requisito.",
+  "nav.planning": "Akong checklist",
+  "nav.city": "Dakbayan",
+  "nav.menu": "Menu",
+  "nav.closeMenu": "Isira ang menu",
+  "home.findService": "Unsa ang imong gikinahanglan?",
+  "home.searchHelp": "Pangitaa ang mga serbisyo, dokumento, ug lokal nga impormasyon.",
+  "home.startWith": "Sugdi sa usa ka tumong",
+  "home.viewAll": "Tanang kapanguhaan",
+  "home.resource.services": "Mga serbisyo ug kontak",
+  "home.resource.barangays": "Pangitaa ang imong komunidad",
+  "home.resource.districts": "Mga lokal nga distrito",
+  "home.resource.officials": "Mga publikong opisina",
+  "home.resource.budget": "Badyet ug paggasto",
+  "home.resource.updates": "Mga pahibalo sa dakbayan",
+  "home.resource.live": "Panahon, oras, ug baylo"
 }

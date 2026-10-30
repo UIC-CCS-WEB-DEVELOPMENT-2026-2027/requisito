@@ -14,12 +14,14 @@ function Documents() {
       .includes(query.trim().toLowerCase()),
   )
   return (
-    <section className="page-content" aria-labelledby="documents-title">
-      <p className="eyebrow">{t('documents.eyebrow')}</p>
-      <h1 id="documents-title">{t('page.documents')}</h1>
-      <p className="page-description">
-        {t('documents.description')}
-      </p>
+    <section className="page-content directory-page" aria-labelledby="documents-title">
+      <header className="page-heading">
+        <p className="eyebrow">{t('documents.eyebrow')}</p>
+        <h1 id="documents-title">{t('page.documents')}</h1>
+        <p className="page-description">
+          {t('documents.description')}
+        </p>
+      </header>
       <div className="goal-search" role="search">
         <label htmlFor="document-search">{t('documents.searchGuides')}</label>
         <input id="document-search" type="search" value={query} onChange={(event) => setQuery(event.target.value)} />

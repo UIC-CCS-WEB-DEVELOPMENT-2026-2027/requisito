@@ -15,10 +15,12 @@ function Budget() {
   const visible = rows.filter((row) => String(row.fiscalYear) === year)
   const total = visible.reduce((sum, row) => sum + row.amountPHP, 0)
   return (
-    <section className="page-content flow-content" aria-labelledby="budget-title">
-      <p className="eyebrow">{t('budget.eyebrow')}</p>
-      <h1 id="budget-title">{t('page.budget')}</h1>
-      <p className="page-description">{t('budget.description')}</p>
+    <section className="page-content directory-page" aria-labelledby="budget-title">
+      <header className="page-heading">
+        <p className="eyebrow">{t('budget.eyebrow')}</p>
+        <h1 id="budget-title">{t('page.budget')}</h1>
+        <p className="page-description">{t('budget.description')}</p>
+      </header>
       <label htmlFor="budget-year">{t('label.fiscalYear')}</label>
       <select id="budget-year" value={year} onChange={(event) => setYear(event.target.value)}>
         <option value="">{t('label.chooseFiscalYear')}</option>

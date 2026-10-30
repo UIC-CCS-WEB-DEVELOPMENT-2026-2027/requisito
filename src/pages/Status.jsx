@@ -23,10 +23,12 @@ function Status() {
     accountability: 'nav.accountability',
   }
   return (
-    <section className="page-content flow-content" aria-labelledby="status-title">
-      <p className="eyebrow">{t('status.eyebrow')}</p>
-      <h1 id="status-title">{t('page.status')}</h1>
-      <p className="page-description">{t('status.description')}</p>
+    <section className="page-content directory-page" aria-labelledby="status-title">
+      <header className="page-heading">
+        <p className="eyebrow">{t('status.eyebrow')}</p>
+        <h1 id="status-title">{t('page.status')}</h1>
+        <p className="page-description">{t('status.description')}</p>
+      </header>
       <p>{t('label.lastSourceWatch')}: {sourceWatch.lastChecked ?? t('status.notRun')}</p>
       <section aria-labelledby="verification-counts-title">
         <h2 id="verification-counts-title">{t('status.verificationCounts')}</h2>
