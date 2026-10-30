@@ -12,12 +12,11 @@ const categories = [...new Set(services.map((service) => service.category))]
   .sort((left, right) => left.localeCompare(right, 'en', { sensitivity: 'base' }))
 function Services() {
   const { t } = useLanguage()
-  // Stores the controlled search text so typing immediately updates the visible list.
+  // These hooks store the filters, and their setters update values without mutating state.
   const [query, setQuery] = useState('')
-  // Stores the selected category; an empty value means every category.
   const [category, setCategory] = useState('')
-  // Stores the selected ordering without changing the imported service records.
   const [sortMode, setSortMode] = useState('status')
+  // Filtering and sorting derive the displayed services from the current filter state.
   const visibleServices = sortServices(
     filterServices(services, { query, category }),
     sortMode,
@@ -104,6 +103,7 @@ function Services() {
       <div className="portal-filters">
         <div>
           <label htmlFor="services-search">{t('label.searchServices')}</label>
+          {/* The input value comes from state, and typing updates that state. */}
           <input id="services-search" type="search" value={query} onChange={(event) => setQuery(event.target.value)} />
         </div>
         <div>
@@ -126,13 +126,14 @@ function Services() {
       <p aria-live="polite">{resultCount}</p>
       {visibleServices.length ? (
         <ul className="portal-grid" aria-label={t('a11y.services')}>
-          {/* The stable service id keeps each card associated with the same record as filters change. */}
+          {/* map creates one card per result, and its service id is the card's unique key. */}
           {visibleServices.map((service) => (
             <ServiceCard key={service.id} service={service} />
           ))}
         </ul>
       ) : (
         <>
+          {/* Show a helpful empty state when no services match the filters. */}
           <EmptyState message={t('form.noRecords')} />
           <p>{t('services.emptyHint')}</p>
           <button className="secondary-button" type="button" onClick={clearFilters}>

@@ -66,6 +66,9 @@ test('install availability survives client-side navigation', async ({ page }) =>
   await expect(page.locator('.install-app-button')).toBeVisible()
   await page.locator('.navigation-links').getByRole('link', { name: 'Services', exact: true }).click()
   await expect(page).toHaveURL(/\/services$/)
+  if (await page.locator('.mobile-menu-toggle').isVisible()) {
+    await expect(page.locator('.mobile-menu-toggle')).toHaveAttribute('aria-expanded', 'false')
+  }
   await openNavigation(page)
   await expect(page.locator('.install-app-button')).toBeVisible()
   await page.locator('.install-app-button').click()

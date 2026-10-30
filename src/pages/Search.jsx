@@ -83,7 +83,9 @@ function Search() {
   }, [t])
 
   function submit(event) {
+    // Stop the browser reload so React can update the search URL itself.
     event.preventDefault()
+    // Copy the current URL parameters before changing them.
     const next = new URLSearchParams(searchParams)
     const normalized = input.trim().slice(0, 100)
     if (normalized) next.set('q', normalized)

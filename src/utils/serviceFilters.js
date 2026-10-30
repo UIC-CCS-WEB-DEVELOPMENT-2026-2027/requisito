@@ -18,6 +18,7 @@ export const SERVICE_CATEGORY_TRANSLATION_KEYS = Object.freeze({
 export function filterServices(services, { query = '', category = '' } = {}) {
   const normalizedQuery = String(query).trim().toLowerCase()
 
+  // Keep only services that match both the optional search text and category.
   return services.filter((service) => {
     const matchesCategory = !category || service.category === category
     const searchableText = [
@@ -32,6 +33,7 @@ export function filterServices(services, { query = '', category = '' } = {}) {
 }
 
 export function sortServices(services, sortMode = 'status') {
+  // Sort a copy so the original service list stays unchanged.
   return [...services].sort((left, right) => {
     if (sortMode === 'time-sensitive') {
       const urgencyOrder = Number(right.timeSensitive) - Number(left.timeSensitive)
