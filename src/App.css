@@ -375,7 +375,7 @@
 }
 
 .form-message[role='alert'] {
-  color: var(--text-h);
+  color: var(--danger);
 }
 
 .primary-button,
@@ -1374,14 +1374,14 @@ fieldset.portal-card {
   min-width: 0;
   padding: 0.7rem max(1rem, calc((100% - var(--content-width, 72rem)) / 2));
   border-bottom: 1px solid var(--border);
-  border-inline-start: 3px solid var(--brand-green);
-  background: var(--surface);
-  color: var(--text-h);
+  border-inline-start: 3px solid var(--danger);
+  background: var(--danger-bg);
+  color: var(--danger);
 }
 
 .hotline-ticker > strong {
   flex: 0 0 auto;
-  color: var(--text-h);
+  color: var(--danger);
 }
 
 .official-service-directory {

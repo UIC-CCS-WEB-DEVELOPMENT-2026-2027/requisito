@@ -1,5 +1,17 @@
 # Credits
 
+The October 2026 UI redesign follows the local
+[BetterSolano.org](https://bettersolano.org/) reference by Ramon Logan Jr.
+Its compact header, grouped dropdowns, split hero and search panel, resource
+cards, service-detail sidebar, and grouped footer were reimplemented in
+Requisito's React and CSS stack with a white, green, and red Davao palette.
+The reference source was inspected in `bettersolano/index.html` and
+`bettersolano/assets/css/{style,responsive,footer}.css`. Requisito retains its
+own content, routes, data, icons, authentication, and integrations. No Solano
+datasets, images, branding, analytics, or credentials were imported.
+The upstream license is retained in
+[`licenses/BetterSolano-LICENSE.txt`](../licenses/BetterSolano-LICENSE.txt).
+
 Requisito was informed by the civic-information and citizen-first design work
 in [BetterMakati](https://github.com/migi-macati/bettermakati) and its
 Better Local Gov starter-kit materials

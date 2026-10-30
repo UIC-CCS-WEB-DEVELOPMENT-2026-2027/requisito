@@ -147,7 +147,9 @@
 }
 
 .status-expired {
-  background: var(--border);
+  background: var(--danger-bg);
+  border-color: var(--danger);
+  color: var(--danger);
 }
 
 .source-link {

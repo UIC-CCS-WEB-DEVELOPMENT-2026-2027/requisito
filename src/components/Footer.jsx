@@ -22,21 +22,21 @@ function Footer() {
     <footer className="site-footer">
       <div className="footer-inner">
         <div className="footer-main">
-        <div className="footer-brand">
-          <p className="footer-wordmark">Requisito<span>Davao City</span></p>
-          <p className="footer-description">{t('footer.disclaimer')}</p>
-          <Link className="footer-contribute" to={href('contribute')}>{t('nav.contribute')} <span aria-hidden="true">→</span></Link>
-        </div>
-        <nav className="footer-nav footer-nav-groups" aria-label={t('a11y.secondaryNavigation')}>
-          {footerGroups.map((group) => (
-            <section aria-label={t(group.labelKey)} key={group.id}>
-              <h2>{t(group.labelKey)}</h2>
-              {routeManifest.filter((route) => route.footer === group.id).map((route) => (
-                <Link key={route.id} to={href(route.id)}>{t(route.labelKey)}</Link>
-              ))}
-            </section>
-          ))}
-        </nav>
+          <div className="footer-brand">
+            <p className="footer-wordmark">Requisito<span>Davao City</span></p>
+            <p className="footer-description">{t('footer.disclaimer')}</p>
+            <Link className="footer-contribute" to={href('contribute')}>{t('nav.contribute')} <span aria-hidden="true">→</span></Link>
+          </div>
+          <nav className="footer-nav footer-nav-groups" aria-label={t('a11y.secondaryNavigation')}>
+            {footerGroups.map((group) => (
+              <section aria-label={t(group.labelKey)} key={group.id}>
+                <h2>{t(group.labelKey)}</h2>
+                {routeManifest.filter((route) => route.footer === group.id).map((route) => (
+                  <Link key={route.id} to={href(route.id)}>{t(route.labelKey)}</Link>
+                ))}
+              </section>
+            ))}
+          </nav>
         </div>
         {additionalRoutes.length > 0 && (
           <details className="footer-feature-index">
